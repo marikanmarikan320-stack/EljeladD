@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منظومة الجلاد - وحدة التدمير</title>
+    <style>
+        body { background-color: #0a0a0a; color: #ff0000; font-family: 'Courier New', monospace; text-align: center; padding: 25px; }
+        .box { border: 3px solid #ff0000; padding: 30px; border-radius: 15px; background: #000; box-shadow: 0 0 30px #ff0000; }
+        .target-url { color: #fff; background: #222; padding: 10px; margin: 15px 0; font-size: 14px; word-break: break-all; border: 1px solid #444; }
+        .btn-fire { background: #ff0000; color: #fff; padding: 20px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; font-size: 20px; box-shadow: 0 6px #660000; }
+        .btn-fire:active { transform: translateY(4px); box-shadow: 0 2px #660000; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>🦅 منظومة الجلاد الجزائري 🇩🇿</h1>
+        <p style="color: #00ff00;">🎯 الرصد الآلي للهدف:</p>
+        <div id="targetDisplay" class="target-url">جاري جلب الإحداثيات...</div>
+        <button class="btn-fire" onclick="executeAttack()">🚀 إطلاق القصف القانوني الشامل</button>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const targetUrl = params.get('target');
+        document.getElementById('targetDisplay').innerText = targetUrl || "لا يوجد هدف مرصود!";
+
+        function executeAttack() {
+            if(!targetUrl) return alert("سيدي القائد، لم يتم رصد هدف!");
+            const emails = "legal@tiktok.com,feedback@tiktok.com,reports@tiktok.com";
+            
+            const hardReports = [
+                `CRITICAL EMERGENCY: Permanent termination request for ${targetUrl}. This account is broadcasting direct physical threats and inciting violence against nations. Immediate action is mandatory.`,
+                `URGENT LEGAL NOTICE: The profile ${targetUrl} is in severe breach of safety terms. It hosts content promoting physical harm and racial hatred. Terminate now.`,
+                `FINAL REPORT: Reporting ${targetUrl} for coordinated harassment and severe national insults. We demand immediate and final closure of this profile.`
+            ];
+            
+            const selectedReport = hardReports[Math.floor(Math.random() * hardReports.length)];
+            const subject = encodeURIComponent("URGENT: Severe Safety & Legal Violation Report");
+            const body = encodeURIComponent(selectedReport);
+            
+            window.location.href = `mailto:${emails}?subject=${subject}&body=${body}`;
+        }
+    </script>
+</body>
+</html>
