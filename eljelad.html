@@ -2,115 +2,120 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>منظومة الجلاد - القصف الرسمي</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@900&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ منظومة الجلاد السيبرانية - الترسانة العظمى</title>
+    <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Cairo:wght@900&display=swap" rel="stylesheet">
     <style>
-        :root { --dz-green: #006633; --dz-red: #ff0000; --gold: #ffd700; }
+        :root { --dz-green: #006633; --dz-red: #d21034; --dz-white: #ffffff; --gold: #ffd700; }
         body {
             background-color: #000; color: #fff; font-family: 'Cairo', sans-serif;
-            margin: 0; display: flex; flex-direction: column; align-items: center;
-            min-height: 100vh; border: 5px solid var(--dz-green);
-            animation: alert 1s infinite alternate; overflow: hidden; position: relative;
+            margin: 0; overflow: hidden; display: flex; flex-direction: column; align-items: center;
+            height: 100vh; border: 8px double var(--dz-green); animation: border-blink 1s infinite alternate;
         }
-        @keyframes alert { from { border-color: var(--dz-green); } to { border-color: var(--dz-red); } }
+        @keyframes border-blink { from { border-color: var(--dz-green); } to { border-color: var(--dz-red); } }
 
-        /* تأثير الصاروخ */
-        #rocket {
-            position: absolute; bottom: -100px; left: 50%; transform: translateX(-50%);
-            font-size: 60px; display: none; z-index: 1000;
+        /* الرادار الدوار */
+        .radar {
+            position: fixed; top: 50%; left: 50%; width: 500px; height: 500px;
+            border: 2px solid var(--dz-green); border-radius: 50%; transform: translate(-50%, -50%);
+            opacity: 0.2; z-index: -2;
         }
-        @keyframes launch {
-            0% { bottom: -100px; opacity: 1; }
-            80% { bottom: 70%; opacity: 1; transform: translateX(-50%) scale(1.5); }
-            100% { bottom: 70%; opacity: 0; transform: translateX(-50%) scale(4); }
+        .radar::after {
+            content: ""; display: block; width: 50%; height: 50%;
+            background: linear-gradient(45deg, transparent 50%, var(--dz-green) 100%);
+            border-radius: 100% 0 0 0; animation: scan 4s linear infinite; transform-origin: bottom right;
+        }
+        @keyframes scan { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        /* الصقر الطائر */
+        .eagle {
+            position: fixed; top: 20%; left: -100px; font-size: 50px;
+            animation: fly 15s linear infinite; z-index: -1; opacity: 0.5;
+        }
+        @keyframes fly { 
+            0% { left: -100px; top: 20%; transform: scaleX(1); }
+            45% { left: 110%; top: 40%; transform: scaleX(1); }
+            50% { transform: scaleX(-1); }
+            95% { left: -100px; top: 20%; transform: scaleX(-1); }
         }
 
-        .cyber-title { font-size: 2.2rem; margin: 15px 0; color: var(--dz-red); text-shadow: 0 0 10px #f00; }
-        .war-box { border: 2px solid red; padding: 15px; background: rgba(255,0,0,0.15); width: 90%; font-weight: bold; text-align: center; }
-        .target-monitor { background: #0a0a0a; border: 1px solid var(--gold); padding: 15px; width: 85%; margin: 15px 0; }
+        /* الشريط الوطني المتحرك */
+        .marquee {
+            background: linear-gradient(90deg, var(--dz-green), var(--dz-white), var(--dz-red));
+            color: #000; font-weight: bold; padding: 10px 0; width: 100%;
+            white-space: nowrap; overflow: hidden; font-size: 1.2rem;
+            border-bottom: 3px solid var(--gold);
+        }
+        .marquee-content { display: inline-block; animation: scroll 15s linear infinite; }
+        @keyframes scroll { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+
+        .cyber-title { font-family: 'Aref Ruqaa', serif; font-size: 3rem; margin: 20px 0; animation: color-change 3s infinite; }
+        @keyframes color-change { 0% { color: var(--dz-red); } 50% { color: var(--dz-green); } 100% { color: var(--gold); } }
+
+        .btn-fire {
+            background: linear-gradient(45deg, #ff0000, #600); color: #fff; padding: 25px 50px;
+            font-size: 2rem; border: none; border-radius: 15px; cursor: pointer;
+            box-shadow: 0 0 40px var(--dz-red); font-weight: 900; z-index: 10;
+        }
+
+        #rocket { position: absolute; bottom: -100px; left: 50%; transform: translateX(-50%); font-size: 60px; display: none; }
+        @keyframes launch { 0% { bottom: -100px; } 100% { bottom: 80%; opacity: 0; transform: translateX(-50%) scale(3); } }
         
-        .btn-strike {
-            background: linear-gradient(45deg, red, #600); color: #fff; padding: 25px;
-            font-size: 1.8rem; border: none; border-radius: 12px; width: 85%; font-weight: 900;
-            box-shadow: 0 0 30px red;
-        }
-
-        #victory {
-            display: none; position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%);
-            background: var(--dz-green); padding: 30px; border: 4px solid gold; z-index: 101; width: 85%; text-align: center;
-        }
+        .target-box { background: rgba(0,0,0,0.8); border: 1px solid var(--gold); padding: 15px; width: 85%; margin: 20px; }
     </style>
 </head>
-<body onclick="unlockAudio()">
+<body onclick="startWar()">
 
+    <div class="marquee">
+        <div class="marquee-content">تحيا الجزائر .. المجد والخلود لشهدائنا الأبرار .. تحيا الجزائر .. المجد والخلود لشهدائنا الأبرار</div>
+    </div>
+
+    <div class="radar"></div>
+    <div class="eagle">🦅</div>
     <div id="rocket">🚀</div>
 
-    <div class="cyber-title">🇩🇿 مَنظُومة جَيش التبلِيغ الجَزائري 🇩🇿</div>
-    <div style="color: gold; font-size: 1.1rem; margin-bottom: 5px;">بقيادة الجلاد الجزائري</div>
+    <div class="cyber-title">🇩🇿 جيش التبليغ الجزائري 🇩🇿</div>
+    <h2 style="color: var(--gold);">بقيادة الجلاد الجزائري</h2>
 
-    <div class="war-box">"النصر أو الشهادة.. لا تراجع عن سحق المحتوى المسيء"</div>
-    
-    <div style="font-size: 1.2rem; color: var(--gold); margin: 10px 0;">🚀 قذائفك: <span id="count" style="color: red; font-size: 1.8rem;">0</span></div>
-
-    <div class="target-monitor">
-        <div style="color: #0f0; font-size: 0.8rem;">📍 إحداثيات الهدف:</div>
-        <div id="targetUrl" style="word-break: break-all; font-size: 0.9rem; color: #fff;">بانتظار الرابط...</div>
+    <div class="target-box">
+        <div style="color: var(--dz-green);">📍 الهدف المرصود:</div>
+        <div id="targetUrl" style="word-break: break-all; font-size: 0.9rem;">بانتظار الرابط...</div>
     </div>
 
-    <button class="btn-strike" onclick="executeStrike()">🚀 إطلاق القصف المدمّر</button>
+    <button class="btn-fire" onclick="executeStrike()">🚀 إطلاق القصف المدمّر</button>
 
-    <div id="victory">
-        💥 تـم قـصـف الـهـدف بـنـجـاح! 🎯 <br>
-        <span style="font-size: 1.1rem;">شكراً لك أيها الجندي البطل.. تحيا الجزائر</span>
-    </div>
-
-    <audio id="bgAction" src="https://www.soundjay.com/free-music/action-background-music-01.mp3" loop></audio>
-    <audio id="launchSound" src="https://www.soundjay.com/mechanical/rocket-launcher-01.mp3"></audio>
-    <audio id="explosion" src="https://www.soundjay.com/mechanical/explosion-02.mp3"></audio>
+    <audio id="bgMusic" src="https://www.soundjay.com/free-music/action-background-music-01.mp3" loop></audio>
+    <audio id="boom" src="https://www.soundjay.com/mechanical/explosion-02.mp3"></audio>
+    <audio id="launch" src="https://www.soundjay.com/mechanical/rocket-launcher-01.mp3"></audio>
 
     <script>
-        let strikes = localStorage.getItem('hani_strikes') || 0;
-        document.getElementById('count').innerText = strikes;
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const target = urlParams.get('target') || "No Target Detected";
+        const params = new URLSearchParams(window.location.search);
+        const target = params.get('target') || "لم يتم تحديد هدف";
         document.getElementById('targetUrl').innerText = target;
 
-        function unlockAudio() { document.getElementById('bgAction').play(); }
+        function startWar() { document.getElementById('bgMusic').play(); }
 
         function executeStrike() {
-            const rocket = document.getElementById('rocket');
-            document.getElementById('launchSound').play();
-            rocket.style.display = 'block';
-            rocket.style.animation = 'launch 1.5s forwards';
+            const rock = document.getElementById('rocket');
+            document.getElementById('launch').play();
+            rock.style.display = 'block';
+            rock.style.animation = 'launch 1.5s forwards';
 
             setTimeout(() => {
-                document.getElementById('explosion').play();
-                document.getElementById('victory').style.display = 'block';
+                document.getElementById('boom').play();
                 
-                strikes++;
-                localStorage.setItem('hani_strikes', strikes);
-                document.getElementById('count').innerText = strikes;
-
-                // مصفوفة البلاغات الاحترافية (أكثر من 300 حرف)
+                // مصفوفة البلاغات العملاقة (توليد عشوائي)
                 const reports = [
-                    `URGENT POLICY VIOLATION REPORT: This account (${target}) is being formally reported for propagating systematic hate speech and inciting violent extremism. Our monitoring system has identified multiple instances where this user has violated TikTok's community safety standards. We demand an immediate manual review and permanent suspension of this profile to protect users from further harassment and digital toxicity. Status: High Priority.`,
-                    `SAFETY ENFORCEMENT NOTICE: We are reporting the profile ${target} for engaging in malicious cyber-bullying and spreading extremist content that undermines public safety. This behavior is a direct violation of international safety regulations and TikTok's terms of service. We request your legal and safety teams to take instant action by removing this account permanently from the platform. Official Report issued by the Algerian Cyber Unit.`
+                    `URGENT NOTICE OF POLICY VIOLATION: I am formally submitting this comprehensive report against the profile (${target}) for severe community standard breaches. This account is actively disseminating systematic hate speech, promoting violent extremism, and engaging in coordinated cyber-bullying. Such behavior poses an immediate threat to user safety and public integrity. We demand an exhaustive manual review and permanent termination of this account to ensure the platform remains a safe environment. Official Cyber-Security Report ID: DZ-ELJELAD-77.`,
+                    `SAFETY ENFORCEMENT REQUEST: The account located at ${target} has been flagged for multiple violations regarding TikTok's digital safety regulations. Our analysis indicates the promotion of extremist ideologies and harmful conduct that directly targets vulnerable communities. This systematic violation of terms of service requires instant legal and safety intervention. We request the immediate suspension of this profile to prevent further dissemination of toxic content. This report is issued by the Algerian Reporting Army HQ.`
                 ];
 
                 const finalReport = reports[Math.floor(Math.random() * reports.length)];
-                
-                // إضافة الجيميلات الثلاثة بدقة لضمان الامتلاء التلقائي
-                const tiktokEmails = "feedback@tiktok.com,legal@tiktok.com,community@tiktok.com";
-                const mailto = `mailto:${tiktokEmails}?subject=URGENT: Permanent Ban Request - Community Safety&body=${encodeURIComponent(finalReport)}`;
+                // استخدام الفاصلة المنقوطة للملء التلقائي في الأندرويد
+                const emails = "feedback@tiktok.com;legal@tiktok.com;community@tiktok.com";
+                const mailto = `mailto:${emails}?subject=URGENT: Account Ban Request - Community Safety Violation&body=${encodeURIComponent(finalReport)}`;
 
-                setTimeout(() => {
-                    window.location.href = mailto;
-                    document.getElementById('victory').style.display = 'none';
-                    rocket.style.display = 'none';
-                    rocket.style.animation = '';
-                }, 2000);
+                setTimeout(() => { window.location.href = mailto; }, 1500);
             }, 1500);
         }
     </script>
