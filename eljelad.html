@@ -3,152 +3,192 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الترسانة الكبرى | الجلاد الجزائري</title>
+    <title>تَرَسَانَة الجَلاد الجَزائِرِي v7.0</title>
     <style>
+        /* تصميم الواجهة الحربية والوميض */
         body {
-            background-color: #000; color: #fff; font-family: 'Tahoma', sans-serif;
-            margin: 0; overflow: hidden; display: flex; flex-direction: column; align-items: center;
-            height: 100vh; border: 10px solid #000; animation: borderPulse 1.5s infinite alternate;
-        }
-        @keyframes borderPulse {
-            0% { border-color: #006633; box-shadow: 0 0 20px #00ff00; }
-            100% { border-color: #d21034; box-shadow: 0 0 20px #ff0000; }
+            background-color: #000;
+            color: #fff;
+            font-family: 'Tahoma', sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            border: 8px solid #000;
+            animation: borderAlert 2s infinite alternate;
         }
 
-        /* الرادار */
-        .radar {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 350px; height: 350px; border: 1px solid #00ff0033; border-radius: 50%; z-index: -1;
+        @keyframes borderAlert {
+            0% { border-color: #d21034; box-shadow: inset 0 0 20px #ff0000; }
+            100% { border-color: #006633; box-shadow: inset 0 0 20px #00ff00; }
         }
-        .radar::after {
-            content: ""; position: absolute; top: 50%; left: 50%; width: 175px; height: 2px;
-            background: linear-gradient(to right, #00ff00, transparent); transform-origin: left;
-            animation: rotate 4s infinite linear;
-        }
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        .header { text-align: center; margin-top: 20px; }
-        .title { color: #00ff00; font-size: 28px; text-shadow: 0 0 10px #00ff00; margin: 5px; }
-        .target-box { background: rgba(255, 0, 0, 0.1); border: 1px dashed #f00; padding: 10px; font-size: 11px; width: 80%; }
+        /* الرادار الأخضر المتحرك */
+        .radar-box {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 350px; height: 350px;
+            border: 1px solid rgba(0, 255, 0, 0.2);
+            border-radius: 50%;
+            z-index: -1;
+        }
+        .radar-sweep {
+            position: absolute;
+            width: 50%; height: 2px;
+            background: linear-gradient(to right, #00ff00, transparent);
+            top: 50%; left: 50%;
+            transform-origin: left;
+            animation: rotating 4s infinite linear;
+        }
+        @keyframes rotating { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        /* العناصر المرئية */
+        .header { margin-top: 30px; text-align: center; z-index: 10; }
+        .army-name { font-size: 32px; color: #00ff00; text-shadow: 0 0 15px #00ff00; margin: 5px; }
+        .leader { color: #ff0000; font-weight: bold; font-size: 18px; }
+
+        .target-display {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px dashed #f00;
+            padding: 10px;
+            margin: 15px;
+            width: 85%;
+            font-size: 11px;
+            color: #ccc;
+        }
+
+        .motivation { color: #ffcc00; font-style: italic; font-size: 14px; padding: 15px; text-align: center; }
 
         .fire-btn {
-            background: #d21034; color: #fff; padding: 20px 40px; border: 2px solid #fff;
-            border-radius: 10px; font-size: 22px; font-weight: bold; cursor: pointer; margin-top: 30px;
+            background: radial-gradient(circle, #ff0000, #8b0000);
+            color: #fff; padding: 20px 40px; border: 2px solid #fff;
+            border-radius: 12px; font-size: 20px; font-weight: bold;
+            cursor: pointer; box-shadow: 0 0 20px #f00;
         }
 
-        /* نافذة العمليات */
-        #ops-panel {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.98); z-index: 1000; flex-direction: column; align-items: center; justify-content: center;
+        /* لوحة العمليات */
+        #ops-modal {
+            display: none; position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.98); z-index: 1000;
+            flex-direction: column; align-items: center; justify-content: center;
         }
-        .btn {
-            width: 80%; max-width: 350px; padding: 15px; margin: 8px; border-radius: 5px;
-            font-weight: bold; text-decoration: none; text-align: center; cursor: pointer; font-size: 16px;
-        }
-        .copy-btn { background: #ffcc00; color: #000; border: none; }
-        .mail-btn { background: #006633; color: #fff; border: 1px solid #00ff00; }
 
-        #rocket { position: fixed; bottom: -100px; left: 50%; font-size: 50px; display: none; z-index: 1100; }
+        .btn-action {
+            width: 85%; max-width: 380px; padding: 15px;
+            margin: 10px; border-radius: 8px; font-weight: bold;
+            text-decoration: none; text-align: center; font-size: 18px;
+        }
+        .copy-yellow { background: #ffcc00; color: #000; border: none; }
+        .mail-green { background: #006633; color: #fff; border: 1px solid #0f0; }
+
+        #rocket { position: fixed; bottom: -100px; left: 50%; font-size: 60px; z-index: 2000; display: none; }
     </style>
 </head>
-<body onclick="enableAudio()">
+<body onclick="startAudio()">
 
-    <audio id="sndTyping" loop src="https://www.soundjay.com/communication/sounds/typewriter-key-01.mp3"></audio>
     <audio id="sndLaunch" src="https://www.soundjay.com/mechanical/sounds/rocket-launch-01.mp3"></audio>
-    <audio id="sndExplosion" src="https://www.soundjay.com/mechanical/sounds/explosion-01.mp3"></audio>
+    <audio id="sndBoom" src="https://www.soundjay.com/mechanical/sounds/explosion-01.mp3"></audio>
+    <audio id="sndAmbient" loop src="https://www.soundjay.com/communication/sounds/typewriter-key-01.mp3"></audio>
 
-    <div class="radar"></div>
+    <div class="radar-box"><div class="radar-sweep"></div></div>
 
     <div class="header">
-        <div style="font-size: 40px;">🇩🇿 🦅</div>
-        <h1 class="title">جيش التبليغ الجزائري</h1>
-        <p style="color:#ff0000; margin:0;">بقيادة: <b>الجلاد الجزائري</b></p>
+        <div style="font-size: 45px;">🇩🇿 🦅 🇩🇿</div>
+        <h1 class="army-name">جَيْشُ التَّبْلِيغِ الجَزَائِرِيِّ</h1>
+        <p class="leader">بِقِيَادَةِ: الجَلادِ الجَزَائِرِيِّ</p>
     </div>
 
-    <div class="target-box" id="targetInfo">جاري رصد الهدف...</div>
+    <div class="target-display">
+        📡 <b>الرابط المرصود:</b> <span id="urlTxt">جاري جلب الإحداثيات...</span>
+    </div>
 
-    <p style="color: #ffcc00; padding: 20px; font-size: 14px; line-height: 1.6;">
-        "إصبعك هو الرصاصة، وهاتفك هو البندقية..<br>اضرب الباطل أينما كان، ولا تأخذك بهم رأفة!"
+    <p class="motivation">
+        "إصبعك رصاصة، وهاتفك بندقية..<br>اضرب الباطل أينما كان، ولا تأخذك بهم رأفة!"
     </p>
 
-    <button class="fire-btn" onclick="openOps()">🔥 ابدأ القصف الشامل</button>
+    <button class="fire-btn" onclick="igniteAttack()">🚀 ابدأ القصف الآن</button>
 
     <div id="rocket">🚀</div>
 
-    <div id="ops-panel">
-        <h2 style="color: #ffcc00;">⚠️ غرفة التحكم والسيطرة</h2>
-        <p style="font-size: 13px; padding: 10px;">1. انسخ البلاغ (يتم توليد نص فريد وطويل).<br>2. اضغط على الأزرار الثلاثة للصق البلاغ.</p>
+    <div id="ops-modal">
+        <h2 style="color: #ffcc00;">⚠️ غُرْفَةُ السَّيْطَرَةِ</h2>
+        <p style="padding: 10px; font-size: 13px; text-align: center;">انسخ البلاغ أولاً، ثم توجه للأقسام الثلاثة وقم باللصق.</p>
         
-        <button class="btn copy-btn" onclick="copyReport()">📋 انسخ البلاغ الرسمي (القوي)</button>
+        <button class="btn-action copy-yellow" onclick="copyUniqueReport()">📋 1. نسخ البلاغ الرسمي (القوي)</button>
         
-        <a class="btn mail-btn" onclick="attack('legal@tiktok.com')">📧 التبليغ عبر الجيميل 1</a>
-        <a class="btn mail-btn" onclick="attack('feedback@tiktok.com')">📧 التبليغ عبر الجيميل 2</a>
-        <a class="btn mail-btn" onclick="attack('community@tiktok.com')">📧 التبليغ عبر الجيميل 3</a>
-
-        <p id="status" style="color: #0f0; margin-top: 10px;"></p>
+        <a id="m1" href="#" class="btn-action mail-green" onclick="playAttackFx()">📧 2. التبليغ عبر الجيميل (1)</a>
+        <a id="m2" href="#" class="btn-action mail-green" onclick="playAttackFx()">📧 3. التبليغ عبر الجيميل (2)</a>
+        <a id="m3" href="#" class="btn-action mail-green" onclick="playAttackFx()">📧 4. التبليغ عبر الجيميل (3)</a>
+        
+        <p id="copyStatus" style="color: #0f0; font-weight: bold; margin-top: 10px;"></p>
     </div>
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const target = urlParams.get('target') || "https://www.tiktok.com/safety";
-        document.getElementById('targetInfo').innerText = "الهدف المكتشف: " + target;
+        // 1. خوارزمية الهروب من التيليجرام (الإجبار على فتح Chrome)
+        (function() {
+            var ua = navigator.userAgent || navigator.vendor || window.opera;
+            if (ua.indexOf("Telegram") > -1) {
+                var currentUrl = window.location.href;
+                // بروتوكول فتح كروم في أندرويد
+                var chromeUrl = "googlechrome://navigate?url=" + encodeURIComponent(currentUrl);
+                alert("⚠️ جاري الانتقال إلى بيئة Chrome لضمان عمل الأصوات والجيميل...");
+                window.location.href = chromeUrl;
+            }
+        })();
 
-        function enableAudio() {
-            document.getElementById('sndTyping').play().catch(()=>{});
+        // 2. معالجة الرابط المستهدف
+        const params = new URLSearchParams(window.location.search);
+        const target = params.get('target') || "https://www.tiktok.com/";
+        document.getElementById('urlTxt').innerText = target;
+
+        function startAudio() {
+            document.getElementById('sndAmbient').play().catch(()=>{});
         }
 
-        function openOps() {
-            document.getElementById('ops-panel').style.display = 'flex';
-        }
-
-        // خوارزمية بلاغات قوية (أكثر من 300 حرف) وبدون ذكر الجيش
-        function generateSecretReport() {
-            const reports = [
-                `URGENT NOTICE: I am writing to formally report a severe violation of safety guidelines found at ${target}. The content broadcasted involves extreme harassment and illegal activities that jeopardize community standards. Under international digital safety regulations, I request an immediate permanent ban on this account to prevent further harm. This is a formal citizen request for a full security review of all activities associated with this link.`,
-                `LEGAL COMPLAINT: Investigation required for the account ${target}. This profile is consistently publishing content that promotes violence and violates the terms of service regarding hate speech and public safety. This behavior is unacceptable and poses a direct threat to younger audiences. Please take immediate action by suspending the broadcast and disabling the account permanently as per your safety protocols.`,
-                `SAFETY REVIEW REQUEST: I am reporting the following broadcast ${target} for multiple violations including harassment and promotion of harmful behavior. This content is in direct breach of the community guidelines and creates an unsafe environment for users. I expect a prompt response and decisive action to terminate this account to maintain the platform's integrity and protect our community.`
-            ];
-            return reports[Math.floor(Math.random() * reports.length)];
-        }
-
-        function copyReport() {
-            const text = generateSecretReport();
-            const el = document.createElement('textarea');
-            el.value = text;
-            document.body.appendChild(el);
-            el.select();
-            document.execCommand('copy');
-            document.body.removeChild(el);
-            document.getElementById('status').innerText = "✅ تم النسخ! الصق الآن في الإيميلات.";
-        }
-
-        function attack(email) {
-            // تشغيل حركة الصاروخ أولاً
-            const rocket = document.getElementById('rocket');
-            const launch = document.getElementById('sndLaunch');
-            const explosion = document.getElementById('sndExplosion');
-            
-            rocket.style.display = 'block';
-            launch.play();
-            
+        function igniteAttack() {
+            document.getElementById('sndLaunch').play();
+            const rkt = document.getElementById('rocket');
+            rkt.style.display = 'block';
             let pos = -100;
             const fly = setInterval(() => {
-                if (pos >= window.innerHeight * 0.5) {
+                if (pos >= window.innerHeight * 0.6) {
                     clearInterval(fly);
-                    rocket.style.display = 'none';
-                    explosion.play();
-                    
-                    // اهتزاز الشاشة
-                    document.body.style.animation = "shake 0.3s linear 2";
-                    
-                    // فتح الجيميل بعد الانفجار بـ 1 ثانية
-                    setTimeout(() => {
-                        window.location.href = `mailto:${email}?subject=Urgent Complaint Regarding Violation`;
-                    }, 1000);
+                    rkt.style.display = 'none';
+                    document.getElementById('sndBoom').play();
+                    document.getElementById('ops-modal').style.display = 'flex';
+                } else {
+                    pos += 25;
+                    rkt.style.bottom = pos + "px";
                 }
-                pos += 25;
-                rocket.style.bottom = pos + 'px';
-            }, 20);
+            }, 30);
+        }
+
+        // 3. خوارزمية توليد البلاغ (سري + طويل + بدون ذكر أسماء)
+        function copyUniqueReport() {
+            const caseId = Math.floor(Math.random() * 888888) + 111111;
+            const reportText = `URGENT SECURITY REPORT - REF: #${caseId}\n\nI am writing to formally report the account at ${target} for serious violations of safety policies. This content is broadcasting harmful and inappropriate material that threatens community standards. We request an immediate review and permanent suspension of this broadcast to ensure a safe environment for all users. This behavior is unacceptable and requires decisive action immediately.\n\nThank you for your prompt response.`;
+            
+            const area = document.createElement('textarea');
+            area.value = reportText;
+            document.body.appendChild(area);
+            area.select();
+            document.execCommand('copy');
+            document.body.removeChild(area);
+            
+            document.getElementById('copyStatus').innerText = "✅ تم النسخ! توجه للجيميلات الآن.";
+            
+            // تجهيز روابط الإيميلات لتكون جاهزة للصق فقط
+            document.getElementById('m1').href = `mailto:legal@tiktok.com?subject=Reporting Violation #${caseId}`;
+            document.getElementById('m2').href = `mailto:feedback@tiktok.com?subject=Safety Concern #${caseId}`;
+            document.getElementById('m3').href = `mailto:community@tiktok.com?subject=Urgent Action Required #${caseId}`;
+        }
+
+        function playAttackFx() {
+            document.getElementById('sndLaunch').play();
         }
     </script>
 </body>
