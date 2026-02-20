@@ -3,149 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>غرفة العمليات - جيش التبليغ الجزائري</title>
+    <title>تَرَسَانَة الجَلاد الجَزائِرِي</title>
     <style>
-        body { background-color: #000; color: #fff; font-family: 'Tahoma', sans-serif; text-align: center; margin: 0; overflow: hidden; }
-        .container { padding: 20px; }
-        h1 { color: #00ff00; text-shadow: 0 0 15px #00ff00; margin-bottom: 5px; }
-        
-        .fire-button {
-            background: radial-gradient(circle, #ff0000, #8b0000);
-            color: white; font-size: 24px; font-weight: bold;
-            padding: 30px 60px; border: none; border-radius: 50px;
-            cursor: pointer; box-shadow: 0 0 30px #ff0000;
-            transition: 0.3s; margin-top: 50px; animation: pulse 1.5s infinite;
+        /* 1. تصميم الواجهة الحربية */
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            /* وميض الحواف */
+            border: 8px solid #000;
+            animation: borderFlash 4s infinite;
         }
 
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-
-        /* نافذة العمليات */
-        #operation-modal {
-            display: none; position: fixed; top: 50%; left: 50%;
-            transform: translate(-50%, -50%); background: #050505;
-            border: 3px solid #00ff00; padding: 25px; z-index: 1000;
-            border-radius: 20px; width: 90%; max-width: 500px;
-            box-shadow: 0 0 50px rgba(0, 255, 0, 0.3);
+        @keyframes borderFlash {
+            0%, 100% { border-color: #004d00; }
+            50% { border-color: #660000; }
         }
 
-        .instruction-box { background: #111; border-right: 5px solid #ffcc00; padding: 10px; margin-bottom: 15px; font-size: 14px; text-align: right; }
-        
-        .action-btn {
-            display: block; width: 100%; padding: 12px; margin: 8px 0;
-            border: none; border-radius: 8px; font-weight: bold;
-            cursor: pointer; text-decoration: none; font-size: 16px;
+        /* 2. الرادار الأخضر */
+        .radar {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            border: 2px solid #00ff0033;
+            border-radius: 50%;
+            z-index: -1;
+            opacity: 0.5;
         }
-        .copy-btn { background: #ffcc00; color: #000; }
-        .mail-btn { background: #006633; color: #fff; border: 1px solid #00ff00; }
+        .radar::after {
+            content: "";
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 150px; height: 2px;
+            background: linear-gradient(to right, #00ff00, transparent);
+            transform-origin: left;
+            animation: sweep 3s infinite linear;
+        }
+        @keyframes sweep { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* 3. الزخارف والنصوص */
+        .header { margin-top: 20px; }
+        .army-name {
+            font-size: 2.5em;
+            color: #00ff00;
+            text-shadow: 0 0 20px #00ff00;
+            margin: 0;
+            font-weight: bold;
+            animation: glow 2s infinite alternate;
+        }
+        @keyframes glow { from { opacity: 0.7; } to { opacity: 1; } }
+
+        .target-info {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px dashed #00ff00;
+            padding: 10px;
+            margin: 15px;
+            width: 80%;
+        }
+
+        .motivation {
+            color: #ffcc00;
+            font-style: italic;
+            font-size: 14px;
+            padding: 10px;
+        }
+
+        .fire-btn {
+            background: #d21034;
+            color: #fff;
+            padding: 20px 40px;
+            border: none;
+            border-radius: 5px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 20px #ff0000;
+            margin-top: 20px;
+        }
+
+        /* نافذة البلاغات */
+        #mission-panel {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 999;
+            padding-top: 50px;
+        }
+
+        .action-card {
+            background: #111;
+            border: 2px solid #00ff00;
+            margin: 10px;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .btn-mail {
+            display: block;
+            background: #006633;
+            color: white;
+            text-decoration: none;
+            padding: 15px;
+            margin: 10px;
+            font-weight: bold;
+            border-radius: 5px;
+        }
         
-        #rocket { position: absolute; bottom: -100px; left: 50%; font-size: 60px; display: none; z-index: 99; }
-        
-        @keyframes shake { 0% { transform: translate(2px, 2px); } 50% { transform: translate(-3px, -2px); } 100% { transform: translate(2px, 2px); } }
+        .btn-copy { background: #ffcc00; color: #000; width: 90%; padding: 15px; font-weight: bold; margin-bottom: 20px;}
+
+        #rocket-fly {
+            position: fixed; bottom: -100px; left: 50%;
+            font-size: 50px; display: none;
+        }
     </style>
 </head>
-<body>
+<body onclick="initAudio()">
 
-    <audio id="alarmSiren" src="https://www.soundjay.com/mechanical/sounds/air-raid-siren-01.mp3"></audio>
-    <audio id="rocketLaunch" src="https://www.soundjay.com/mechanical/sounds/rocket-launch-01.mp3"></audio>
-    <audio id="explosionSound" src="https://www.soundjay.com/mechanical/sounds/explosion-01.mp3"></audio>
+    <audio id="typingSound" loop src="https://www.soundjay.com/communication/sounds/typewriter-key-01.mp3"></audio>
+    <audio id="explosion" src="https://www.soundjay.com/mechanical/sounds/explosion-01.mp3"></audio>
+    <audio id="rocketSnd" src="https://www.soundjay.com/mechanical/sounds/rocket-launch-01.mp3"></audio>
 
-    <div class="container" id="mainUI">
-        <p style="color: #ff0000; font-weight: bold; letter-spacing: 2px;">ALGERIAN CYBER ARMY v4.0</p>
-        <h1>🦅 مَنْظُومَة الهُجُوم الضَّارِب 🦅</h1>
-        <button class="fire-button" onclick="startMission()">🚀 إِطْلَاق الصَّارُوخ الآن</button>
+    <div class="radar"></div>
+
+    <div class="header">
+        <p>🇩🇿 🦅 🇩🇿</p>
+        <h1 class="army-name">جَيْشُ التَّبْلِيغِ الجَزَائِرِيِّ</h1>
+        <p style="color: #ccc;">بِقِيَادَةِ: <span style="color: #ff0000; font-weight: bold;">الجَلادِ الجَزَائِرِيِّ</span></p>
     </div>
 
-    <div id="rocket">🚀</div>
+    <div class="target-info">
+        <small style="color: #00ff00;">🎯 إحداثيات الهدف الحالي:</small>
+        <p id="targetDisplay" style="margin: 5px; font-size: 12px;"></p>
+    </div>
 
-    <div id="operation-modal">
-        <h2 style="color: #00ff00; margin-top: 0;">🎯 خُطَّة القَصْف النِّهَائِي</h2>
-        
-        <div class="instruction-box">
-            <p style="margin: 0; color: #ffcc00;">⚠️ <b>توجيهات القيادة:</b></p>
-            <p style="margin: 5px 0 0 0;">1. اضغط زر النسخ أولاً (سيتم توليد بلاغ فريد).<br>
-            2. ادخل للروابط الثلاثة بالترتيب وألصق البلاغ هناك.<br>
-            <b>"قوتنا في استمراريتنا.. دمر الحساب الآن!"</b></p>
+    <div class="motivation">
+        "إصبعك رصاصة، وهاتفك بندقية.. دافع عن قيمك ودمر الفساد!"
+    </div>
+
+    <button class="fire-btn" onclick="launchMission()">🔥 ابدأ القصف الآن يا بطل</button>
+
+    <div id="rocket-fly">🚀</div>
+
+    <div id="mission-panel">
+        <h2 style="color: #ffcc00;">🛡️ غُرْفَةِ العَمَلِيَّاتِ السِّرِّيَّةِ</h2>
+        <div class="instruction-box" style="padding: 10px; font-size: 13px; color: #eee;">
+            نظام التشفير يولّد بلاغاً جديداً الآن.. <br>
+            <b>1. انسخ الكود أولاً. 2. أرسله للأقسام الثلاثة.</b>
         </div>
-
-        <button class="action-btn copy-btn" onclick="copyReportText()">📋 1. اضغط هنا لنسخ البلاغ المطور</button>
         
-        <a id="m1" class="action-btn mail-btn" href="#" onclick="checkCopy()">📧 2. التبليغ عبر الجيميل (قسم 1)</a>
-        <a id="m2" class="action-btn mail-btn" href="#" onclick="checkCopy()">📧 3. التبليغ عبر الجيميل (قسم 2)</a>
-        <a id="m3" class="action-btn mail-btn" href="#" onclick="checkCopy()">📧 4. التبليغ عبر الجيميل (قسم 3)</a>
-
-        <p id="copyStatus" style="color: #00ff00; font-size: 12px; display: none;">✅ تم نسخ البلاغ بنجاح! توجه للجيميل الآن.</p>
+        <center>
+            <button class="btn-copy" onclick="copyAndNotify()">📋 اضغط لنسخ بلاغ المنظومة</button>
+            
+            <a href="mailto:legal@tiktok.com" class="btn-mail" onclick="playAttackSound()">📩 التبليغ عبر الجيميل 1</a>
+            <a href="mailto:feedback@tiktok.com" class="btn-mail" onclick="playAttackSound()">📩 التبليغ عبر الجيميل 2</a>
+            <a href="mailto:community@tiktok.com" class="btn-mail" onclick="playAttackSound()">📩 التبليغ عبر الجيميل 3</a>
+            
+            <p id="msg" style="color: #00ff00; font-weight: bold;"></p>
+        </center>
     </div>
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const targetLink = urlParams.get('target') || "https://www.tiktok.com/";
-        let isCopied = false;
+        // 1. استخراج الرابط
+        const params = new URLSearchParams(window.location.search);
+        const target = params.get('target') || "https://www.tiktok.com/report";
+        document.getElementById('targetDisplay').innerText = target;
 
-        function startMission() {
-            document.getElementById('alarmSiren').play();
-            document.getElementById('rocketLaunch').play();
-            const rocket = document.getElementById('rocket');
-            rocket.style.display = 'block';
+        // 2. تشغيل الأصوات عند أول لمسة
+        function initAudio() {
+            document.getElementById('typingSound').play().catch(()=>{});
+        }
+
+        // 3. بدء المهمة
+        function launchMission() {
+            document.getElementById('rocketSnd').play();
+            const rkt = document.getElementById('rocket-fly');
+            rkt.style.display = "block";
             
             let pos = -100;
-            const flight = setInterval(() => {
-                if (pos >= window.innerHeight * 0.7) {
-                    clearInterval(flight);
-                    triggerImpact();
-                } else {
-                    pos += 12;
-                    rocket.style.bottom = pos + 'px';
+            const fly = setInterval(() => {
+                if(pos > window.innerHeight) {
+                    clearInterval(fly);
+                    document.getElementById('explosion').play();
+                    showPanel();
                 }
-            }, 25);
+                pos += 20;
+                rkt.style.bottom = pos + "px";
+            }, 30);
         }
 
-        function triggerImpact() {
-            document.getElementById('rocket').style.display = 'none';
-            document.getElementById('explosionSound').play();
-            document.getElementById('alarmSiren').pause();
-            document.body.style.animation = "shake 0.5s linear 3";
-            
-            setTimeout(() => {
-                document.getElementById('mainUI').style.filter = "blur(5px)";
-                document.getElementById('operation-modal').style.display = "block";
-            }, 600);
+        function showPanel() {
+            document.getElementById('mission-panel').style.display = "block";
+            alert("🚀 الصاروخ في اتجاه قصف الهدف! سيفتح البريد الآن..");
         }
 
-        function generateStrongReport() {
-            const randomID = Math.floor(Math.random() * 999999);
-            const codes = ["VX-70", "Z-100", "AL-GER", "CORP-99"];
-            const randomCode = codes[Math.floor(Math.random() * codes.length)];
-            
-            // البلاغ الرسمي القوي بالإنجليزية
-            return `Subject: Urgent Privacy and Community Guidelines Violation Report\n\nDear TikTok Safety and Legal Team,\n\nI am writing to formally report the following account/content for severe violations of community standards: ${targetLink}\n\nThis user is consistently broadcasting content that promotes hate speech, harmful behavior, and violates safety policies. We demand an immediate permanent ban on this account to protect the community. This report is filed under protocol ${randomCode}-${randomID}.\n\nTotal security review is requested.`;
+        // 4. توليد البلاغ المتغير
+        function generateReport() {
+            const date = new Date().getTime();
+            return `DEAR TIKTOK TEAM, This content [ ${target} ] violates community safety standards. It promotes harmful behavior and inappropriate content. We request immediate suspension of this broadcast and account. CASE-ID: AL-GER-${date}`;
         }
 
-        function copyReportText() {
-            const reportText = generateStrongReport();
+        function copyAndNotify() {
+            const txt = generateReport();
             const el = document.createElement('textarea');
-            el.value = reportText;
+            el.value = txt;
             document.body.appendChild(el);
             el.select();
             document.execCommand('copy');
             document.body.removeChild(el);
-            
-            isCopied = true;
-            document.getElementById('copyStatus').style.display = "block";
-            
-            // تجهيز روابط الجيميل
-            const subject = encodeURIComponent("Urgent Action Required: Account Violation");
-            const body = encodeURIComponent(reportText);
-            document.getElementById('m1').href = `mailto:legal@tiktok.com?subject=${subject}&body=${body}`;
-            document.getElementById('m2').href = `mailto:feedback@tiktok.com?subject=${subject}&body=${body}`;
-            document.getElementById('m3').href = `mailto:community@tiktok.com?subject=${subject}&body=${body}`;
+            document.getElementById('msg').innerText = "✅ تم نسخ البلاغ! أرسله الآن للأقسام.";
         }
 
-        function checkCopy() {
-            if (!isCopied) {
-                alert("من فضلك انسخ البلاغ أولاً بالضغط على الزر الأصفر!");
-                event.preventDefault();
-            }
+        function playAttackSound() {
+            document.getElementById('rocketSnd').play();
+            alert("🚀 جاري توجيه البلاغ لقسم الدعم...");
         }
     </script>
 </body>
-</html>
+    </html>
