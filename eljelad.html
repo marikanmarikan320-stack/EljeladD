@@ -3,44 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منظومة الجلاد - وحدة التدمير</title>
+    <title>⚡️ ترسانة الجلاد الجزائري السيبرانية ⚡️</title>
     <style>
-        body { background-color: #0a0a0a; color: #ff0000; font-family: 'Courier New', monospace; text-align: center; padding: 25px; }
-        .box { border: 3px solid #ff0000; padding: 30px; border-radius: 15px; background: #000; box-shadow: 0 0 30px #ff0000; }
-        .target-url { color: #fff; background: #222; padding: 10px; margin: 15px 0; font-size: 14px; word-break: break-all; border: 1px solid #444; }
-        .btn-fire { background: #ff0000; color: #fff; padding: 20px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; font-size: 20px; box-shadow: 0 6px #660000; }
-        .btn-fire:active { transform: translateY(4px); box-shadow: 0 2px #660000; }
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&display=swap');
+
+        body {
+            margin: 0; padding: 0; background: #000; color: #00ff00;
+            font-family: 'Cairo', sans-serif; text-align: center; overflow-x: hidden;
+        }
+
+        /* الخلفية الحربية */
+        .war-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), 
+                        url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=2070'); 
+            background-size: cover; background-position: center; z-index: -1;
+        }
+
+        .container {
+            display: flex; flex-direction: column; justify-content: center;
+            align-items: center; min-height: 100vh; padding: 20px;
+        }
+
+        .battle-station {
+            border: 3px solid #ff0000; border-radius: 20px; padding: 30px;
+            background: rgba(10, 10, 10, 0.95); box-shadow: 0 0 50px rgba(255, 0, 0, 0.6);
+            max-width: 650px; width: 95%; border-top: 10px solid #ff0000;
+            position: relative; animation: glitch 2s infinite;
+        }
+
+        @keyframes glitch {
+            0% { box-shadow: 0 0 50px rgba(255, 0, 0, 0.6); }
+            50% { box-shadow: 0 0 70px rgba(255, 0, 0, 0.9); border-color: #ffffff; }
+            100% { box-shadow: 0 0 50px rgba(255, 0, 0, 0.6); }
+        }
+
+        .logo { width: 120px; height: auto; margin-bottom: 10px; filter: drop-shadow(0 0 10px #ff0000); }
+
+        h1 { color: #ff0000; font-size: 30px; text-shadow: 2px 2px #000; margin: 5px 0; }
+
+        .target-box {
+            background: #000; border: 1px solid #00ff00; padding: 15px;
+            margin: 20px 0; font-family: monospace; color: #00ffff;
+            font-size: 14px; word-break: break-all; border-left: 5px solid #00ff00;
+        }
+
+        .btn-strike {
+            background: linear-gradient(to bottom, #ff0000, #8b0000);
+            color: white; padding: 25px; border: none; font-size: 26px;
+            cursor: pointer; border-radius: 10px; font-weight: 900;
+            width: 100%; box-shadow: 0 8px 0 #440000; transition: 0.1s;
+            text-transform: uppercase;
+        }
+
+        .btn-strike:active { transform: translateY(4px); box-shadow: 0 4px 0 #440000; }
+
+        .footer-tag { margin-top: 20px; font-size: 14px; color: #ffcc00; font-weight: bold; }
+
+        /* نبض العلم الجزائري */
+        .flag-pulse { font-size: 24px; margin-top: 10px; }
     </style>
 </head>
 <body>
-    <div class="box">
-        <h1>🦅 منظومة الجلاد الجزائري 🇩🇿</h1>
-        <p style="color: #00ff00;">🎯 الرصد الآلي للهدف:</p>
-        <div id="targetDisplay" class="target-url">جاري جلب الإحداثيات...</div>
-        <button class="btn-fire" onclick="executeAttack()">🚀 إطلاق القصف القانوني الشامل</button>
+
+<div class="war-bg"></div>
+
+<div class="container">
+    <div class="battle-station">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/7/77/Flag_of_Algeria.svg" class="logo" alt="DZ">
+        <h1>⚡️ غـرفـة الـقـيـادة الـسـيـبـرانـيـة ⚡️</h1>
+        <p style="color: #fff;">بـإمـرة الـقـائـد الـعـام: <span style="color: #00ff00;">هـانـي دوحـة</span></p>
+
+        <div class="target-box" id="targetInfo">جـارِ جـلب إحـداثيات الـهدف...</div>
+
+        <button class="btn-strike" onclick="launchAssault()">🔥 إطـلاق قـذيفة الـتدمـير 🔥</button>
+
+        <p class="footer-tag">⚠️ نـظام تـولـيد الـبلاغات الـتلقائي نـشط ⚠️</p>
+        <div class="flag-pulse">🇩🇿 🦅 🇩🇿</div>
     </div>
+</div>
 
-    <script>
-        const params = new URLSearchParams(window.location.search);
-        const targetUrl = params.get('target');
-        document.getElementById('targetDisplay').innerText = targetUrl || "لا يوجد هدف مرصود!";
+<audio id="openSound" src="https://www.soundjay.com/buttons/sounds/button-19.mp3"></audio>
+<audio id="strikeSound" src="https://www.myinstants.com/media/sounds/hq-explosion.mp3"></audio>
 
-        function executeAttack() {
-            if(!targetUrl) return alert("سيدي القائد، لم يتم رصد هدف!");
-            const emails = "legal@tiktok.com,feedback@tiktok.com,reports@tiktok.com";
-            
-            const hardReports = [
-                `CRITICAL EMERGENCY: Permanent termination request for ${targetUrl}. This account is broadcasting direct physical threats and inciting violence against nations. Immediate action is mandatory.`,
-                `URGENT LEGAL NOTICE: The profile ${targetUrl} is in severe breach of safety terms. It hosts content promoting physical harm and racial hatred. Terminate now.`,
-                `FINAL REPORT: Reporting ${targetUrl} for coordinated harassment and severe national insults. We demand immediate and final closure of this profile.`
-            ];
-            
-            const selectedReport = hardReports[Math.floor(Math.random() * hardReports.length)];
-            const subject = encodeURIComponent("URGENT: Severe Safety & Legal Violation Report");
-            const body = encodeURIComponent(selectedReport);
-            
-            window.location.href = `mailto:${emails}?subject=${subject}&body=${body}`;
-        }
-    </script>
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const target = params.get('target') || "https://www.tiktok.com";
+    document.getElementById('targetInfo').innerText = "📍 الـهدف الـمرصود: " + target;
+
+    // تشغيل صوت التنبيه عند الدخول (بعد أول نقرة)
+    document.body.addEventListener('click', function() {
+        document.getElementById('openSound').play();
+    }, {once: true});
+
+    const reports = [
+        "OFFICIAL LEGAL REPORT: Account ID {id} is promoting violent extremism and terroristic propaganda. This user ({target}) violates global safety laws. Requesting immediate termination.",
+        "URGENT COMPLIANCE NOTICE: The profile {target} is inciting hate speech and public disorder. This extremist content must be removed immediately to protect users. Case Ref: {id}.",
+        "FORMAL SAFETY COMPLAINT: Documentation of harassment and promotion of violent organizations found on {target}. This is a direct breach of TikTok safety pillars. Ban requested. ID: {id}."
+    ];
+
+    function launchAssault() {
+        document.getElementById('strikeSound').play();
+        
+        const randomID = Math.floor(Math.random() * 900000) + 100000;
+        const baseReport = reports[Math.floor(Math.random() * reports.length)];
+        const finalReport = baseReport.replace("{target}", target).replace("{id}", randomID);
+        
+        const subject = `CRITICAL POLICY VIOLATION (REF: ${randomID})`;
+        const recipients = "legal@tiktok.com,info@tiktok.com,feedback@tiktok.com";
+
+        setTimeout(() => {
+            window.location.href = `mailto:${recipients}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(finalReport)}`;
+        }, 500);
+    }
+</script>
+
 </body>
 </html>
