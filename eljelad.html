@@ -3,152 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الترسانة الكبرى | الجلاد الجزائري</title>
+    <title>منظومة جيش التبليغ الجزائري</title>
     <style>
         body {
-            background-color: #000; color: #fff; font-family: 'Tahoma', sans-serif;
-            margin: 0; overflow: hidden; display: flex; flex-direction: column; align-items: center;
-            height: 100vh; border: 10px solid #000; animation: borderPulse 1.5s infinite alternate;
+            background-color: #050505;
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100vh;
         }
-        @keyframes borderPulse {
-            0% { border-color: #006633; box-shadow: 0 0 20px #00ff00; }
-            100% { border-color: #d21034; box-shadow: 0 0 20px #ff0000; }
+        .header { color: #d32f2f; font-size: 24px; text-shadow: 0 0 10px red; margin-bottom: 10px; }
+        .counter-box { font-size: 18px; color: #4caf50; margin-bottom: 20px; }
+        
+        /* تأثير الزر الأحمر */
+        .attack-btn {
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(#ff0000, #800000);
+            border-radius: 50%;
+            border: 5px solid #fff;
+            box-shadow: 0 0 30px #ff0000;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.1s;
+        }
+        .attack-btn:active { transform: scale(0.9); }
+
+        /* تأثير الصاروخ */
+        #missile {
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            display: none;
+            font-size: 40px;
+            transform: translateX(-50%);
         }
 
-        /* الرادار */
-        .radar {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 350px; height: 350px; border: 1px solid #00ff0033; border-radius: 50%; z-index: -1;
+        /* رسالة النجاح */
+        #success-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.95);
+            border: 2px solid #4caf50;
+            padding: 30px;
+            z-index: 1000;
+            width: 80%;
+            border-radius: 15px;
         }
-        .radar::after {
-            content: ""; position: absolute; top: 50%; left: 50%; width: 175px; height: 2px;
-            background: linear-gradient(to right, #00ff00, transparent); transform-origin: left;
-            animation: rotate 4s infinite linear;
-        }
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-        .header { text-align: center; margin-top: 20px; }
-        .title { color: #00ff00; font-size: 28px; text-shadow: 0 0 10px #00ff00; margin: 5px; }
-        .target-box { background: rgba(255, 0, 0, 0.1); border: 1px dashed #f00; padding: 10px; font-size: 11px; width: 80%; }
-
-        .fire-btn {
-            background: #d21034; color: #fff; padding: 20px 40px; border: 2px solid #fff;
-            border-radius: 10px; font-size: 22px; font-weight: bold; cursor: pointer; margin-top: 30px;
-        }
-
-        /* نافذة العمليات */
-        #ops-panel {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.98); z-index: 1000; flex-direction: column; align-items: center; justify-content: center;
-        }
-        .btn {
-            width: 80%; max-width: 350px; padding: 15px; margin: 8px; border-radius: 5px;
-            font-weight: bold; text-decoration: none; text-align: center; cursor: pointer; font-size: 16px;
-        }
-        .copy-btn { background: #ffcc00; color: #000; border: none; }
-        .mail-btn { background: #006633; color: #fff; border: 1px solid #00ff00; }
-
-        #rocket { position: fixed; bottom: -100px; left: 50%; font-size: 50px; display: none; z-index: 1100; }
     </style>
 </head>
-<body onclick="enableAudio()">
+<body>
 
-    <audio id="sndTyping" loop src="https://www.soundjay.com/communication/sounds/typewriter-key-01.mp3"></audio>
-    <audio id="sndLaunch" src="https://www.soundjay.com/mechanical/sounds/rocket-launch-01.mp3"></audio>
-    <audio id="sndExplosion" src="https://www.soundjay.com/mechanical/sounds/explosion-01.mp3"></audio>
+    <div class="header">🦅 مـنـظـومـة الـجـلاد الـجـزائـري 🦅</div>
+    <div class="counter-box">إجمالي قصفك للعدو: <span id="count-num">0</span> مرة</div>
 
-    <div class="radar"></div>
-
-    <div class="header">
-        <div style="font-size: 40px;">🇩🇿 🦅</div>
-        <h1 class="title">جيش التبليغ الجزائري</h1>
-        <p style="color:#ff0000; margin:0;">بقيادة: <b>الجلاد الجزائري</b></p>
+    <div style="position: relative; height: 300px;">
+        <button class="attack-btn" onclick="startAttack()">اضغط<br>لبدء الهجوم</button>
+        <div id="missile">🚀</div>
     </div>
 
-    <div class="target-box" id="targetInfo">جاري رصد الهدف...</div>
-
-    <p style="color: #ffcc00; padding: 20px; font-size: 14px; line-height: 1.6;">
-        "إصبعك هو الرصاصة، وهاتفك هو البندقية..<br>اضرب الباطل أينما كان، ولا تأخذك بهم رأفة!"
-    </p>
-
-    <button class="fire-btn" onclick="openOps()">🔥 ابدأ القصف الشامل</button>
-
-    <div id="rocket">🚀</div>
-
-    <div id="ops-panel">
-        <h2 style="color: #ffcc00;">⚠️ غرفة التحكم والسيطرة</h2>
-        <p style="font-size: 13px; padding: 10px;">1. انسخ البلاغ (يتم توليد نص فريد وطويل).<br>2. اضغط على الأزرار الثلاثة للصق البلاغ.</p>
-        
-        <button class="btn copy-btn" onclick="copyReport()">📋 انسخ البلاغ الرسمي (القوي)</button>
-        
-        <a class="btn mail-btn" onclick="attack('legal@tiktok.com')">📧 التبليغ عبر الجيميل 1</a>
-        <a class="btn mail-btn" onclick="attack('feedback@tiktok.com')">📧 التبليغ عبر الجيميل 2</a>
-        <a class="btn mail-btn" onclick="attack('community@tiktok.com')">📧 التبليغ عبر الجيميل 3</a>
-
-        <p id="status" style="color: #0f0; margin-top: 10px;"></p>
+    <div id="success-modal">
+        <h2 style="color: #4caf50;">تم القصف بنجاح! ✅</h2>
+        <p>بارك الله فيك أيها الجندي. تم تسجيل الضربة.</p>
+        <hr>
+        <h3 style="color: #ffffff;">تـحـيـا الـجـزائر 🇩🇿</h3>
+        <p>المجد والخلد لشهدائنا الأبرار</p>
+        <button onclick="closeModal()" style="padding: 10px 20px;">العودة للميدان</button>
     </div>
+
+    <audio id="war-bg" loop>
+        <source src="https://www.soundjay.com/mechanical/sounds/clanking-01.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="explosion-snd">
+        <source src="https://www.soundjay.com/mechanical/sounds/explosion-01.mp3" type="audio/mpeg">
+    </audio>
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const target = urlParams.get('target') || "https://www.tiktok.com/safety";
-        document.getElementById('targetInfo').innerText = "الهدف المكتشف: " + target;
+        // 1. مصفوفة البلاغات الاحترافية (تتغير تلقائياً)
+        const reports = [
+            "I am writing to formally report this account for multiple violations of platform safety guidelines. The content shared here promotes hate speech, targeted harassment, and incites violence against specific communities. This behavior poses a direct threat to the community safety. Reference link: ",
+            "Emergency Report: This profile is engaging in systematic harassment and spreading harmful misinformation that violates international digital safety standards. We request an immediate review and permanent suspension of this account to protect users from further psychological harm. Target: ",
+            "Technical Complaint: This account is being used to coordinate cyber-bullying and malicious activities. The continuous violation of terms of service regarding human rights and dignity is unacceptable. Please take swift action as per your safety protocols. Account URL: ",
+            "Serious Violation Alert: This user is consistently posting content that infringes upon the community standards regarding safety and respect. The account's activity is harmful and disruptive to the online environment. Immediate termination is required. Documentation: "
+        ];
 
-        function enableAudio() {
-            document.getElementById('sndTyping').play().catch(()=>{});
-        }
+        // 2. الجيميلات المستهدفة
+        const targetEmails = "legal@tiktok.com,info@tiktok.com,feedback@tiktok.com";
 
-        function openOps() {
-            document.getElementById('ops-panel').style.display = 'flex';
-        }
+        // 3. إدارة الصوت والعداد
+        let counter = localStorage.getItem('attack_count') || 0;
+        document.getElementById('count-num').innerText = counter;
 
-        // خوارزمية بلاغات قوية (أكثر من 300 حرف) وبدون ذكر الجيش
-        function generateSecretReport() {
-            const reports = [
-                `URGENT NOTICE: I am writing to formally report a severe violation of safety guidelines found at ${target}. The content broadcasted involves extreme harassment and illegal activities that jeopardize community standards. Under international digital safety regulations, I request an immediate permanent ban on this account to prevent further harm. This is a formal citizen request for a full security review of all activities associated with this link.`,
-                `LEGAL COMPLAINT: Investigation required for the account ${target}. This profile is consistently publishing content that promotes violence and violates the terms of service regarding hate speech and public safety. This behavior is unacceptable and poses a direct threat to younger audiences. Please take immediate action by suspending the broadcast and disabling the account permanently as per your safety protocols.`,
-                `SAFETY REVIEW REQUEST: I am reporting the following broadcast ${target} for multiple violations including harassment and promotion of harmful behavior. This content is in direct breach of the community guidelines and creates an unsafe environment for users. I expect a prompt response and decisive action to terminate this account to maintain the platform's integrity and protect our community.`
-            ];
-            return reports[Math.floor(Math.random() * reports.length)];
-        }
+        // تشغيل صوت الحرب عند أول لمسة للشاشة (قيود المتصفح)
+        window.onclick = () => { document.getElementById('war-bg').play(); };
 
-        function copyReport() {
-            const text = generateSecretReport();
-            const el = document.createElement('textarea');
-            el.value = text;
-            document.body.appendChild(el);
-            el.select();
-            document.execCommand('copy');
-            document.body.removeChild(el);
-            document.getElementById('status').innerText = "✅ تم النسخ! الصق الآن في الإيميلات.";
-        }
-
-        function attack(email) {
-            // تشغيل حركة الصاروخ أولاً
-            const rocket = document.getElementById('rocket');
-            const launch = document.getElementById('sndLaunch');
-            const explosion = document.getElementById('sndExplosion');
+        function startAttack() {
+            const missile = document.getElementById('missile');
+            const expSnd = document.getElementById('explosion-snd');
             
-            rocket.style.display = 'block';
-            launch.play();
+            // صوت الانفجار وحركة الصاروخ
+            missile.style.display = "block";
+            missile.animate([{ bottom: '0px' }, { bottom: '500px' }], { duration: 800 });
             
-            let pos = -100;
-            const fly = setInterval(() => {
-                if (pos >= window.innerHeight * 0.5) {
-                    clearInterval(fly);
-                    rocket.style.display = 'none';
-                    explosion.play();
-                    
-                    // اهتزاز الشاشة
-                    document.body.style.animation = "shake 0.3s linear 2";
-                    
-                    // فتح الجيميل بعد الانفجار بـ 1 ثانية
-                    setTimeout(() => {
-                        window.location.href = `mailto:${email}?subject=Urgent Complaint Regarding Violation`;
-                    }, 1000);
-                }
-                pos += 25;
-                rocket.style.bottom = pos + 'px';
-            }, 20);
+            setTimeout(() => {
+                expSnd.play();
+                launchEmail();
+            }, 700);
+        }
+
+        function launchEmail() {
+            // جلب الرابط من الـ URL (الذي يرسله البوت)
+            const urlParams = new URLSearchParams(window.location.search);
+            const target = urlParams.get('target') || "رابط الحساب مفقود";
+            
+            // اختيار بلاغ عشوائي وتطويله ليتجاوز 400 حرف
+            let randomReport = reports[Math.floor(Math.random() * reports.length)];
+            let fullBody = randomReport + target + "\n\n" + "Additional Details: " + "X".repeat(200) + "\nRegards, Safety Enforcement Team.";
+
+            // فتح الجيميل
+            const mailtoUrl = `mailto:${targetEmails}?subject=Urgent: Safety Violation Report&body=${encodeURIComponent(fullBody)}`;
+            window.location.href = mailtoUrl;
+
+            // تحديث العداد وإظهار رسالة النجاح بعد العودة
+            setTimeout(() => {
+                counter++;
+                localStorage.setItem('attack_count', counter);
+                document.getElementById('count-num').innerText = counter;
+                document.getElementById('success-modal').style.display = "block";
+            }, 2000);
+        }
+
+        function closeModal() {
+            document.getElementById('success-modal').style.display = "none";
+            document.getElementById('missile').style.display = "none";
         }
     </script>
 </body>
