@@ -3,151 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منظومة جيش التبليغ الجزائري</title>
+    <title>منظومة الجلاد الجزائري V2</title>
     <style>
+        :root {
+            --algeria-green: #006233;
+            --algeria-red: #d32f2f;
+        }
+
         body {
-            background-color: #050505;
-            color: #ffffff;
-            font-family: 'Arial', sans-serif;
-            text-align: center;
+            background-color: #000;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             overflow: hidden;
+            height: 100vh;
             display: flex;
             flex-direction: column;
+            align-items: center;
             justify-content: center;
-            height: 100vh;
+            /* أضواء الحواف المتغيرة */
+            border: 4px solid;
+            animation: borderGlow 5s infinite;
         }
-        .header { color: #d32f2f; font-size: 24px; text-shadow: 0 0 10px red; margin-bottom: 10px; }
-        .counter-box { font-size: 18px; color: #4caf50; margin-bottom: 20px; }
-        
-        /* تأثير الزر الأحمر */
+
+        @keyframes borderGlow {
+            0% { border-color: var(--algeria-green); box-shadow: 0 0 20px var(--algeria-green) inset; }
+            50% { border-color: #fff; box-shadow: 0 0 20px #fff inset; }
+            100% { border-color: var(--algeria-red); box-shadow: 0 0 20px var(--algeria-red) inset; }
+        }
+
+        /* نصوص الخلفية المشفرة */
+        #matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            opacity: 0.15;
+        }
+
+        /* اسم المنظومة الملون والمضيء */
+        .system-title {
+            font-size: 28px;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 5px;
+            animation: colorFlash 1.5s infinite;
+        }
+
+        @keyframes colorFlash {
+            0% { color: #fff; text-shadow: 0 0 10px #fff; }
+            33% { color: var(--algeria-green); text-shadow: 0 0 10px var(--algeria-green); }
+            66% { color: var(--algeria-red); text-shadow: 0 0 10px var(--algeria-red); }
+        }
+
+        .flag-icon { width: 60px; margin-bottom: 10px; filter: drop-shadow(0 0 5px #fff); }
+        .eagle-img { width: 80px; position: absolute; top: 10px; left: 10px; opacity: 0.7; }
+
+        .counter-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: 1px solid #4caf50;
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        /* الزر المصغر والمطور */
         .attack-btn {
-            width: 150px;
-            height: 150px;
-            background: radial-gradient(#ff0000, #800000);
+            width: 130px;
+            height: 130px;
+            background: radial-gradient(circle, #ff0000 0%, #440000 100%);
+            border: 3px solid #fff;
             border-radius: 50%;
-            border: 5px solid #fff;
-            box-shadow: 0 0 30px #ff0000;
-            color: white;
-            font-weight: bold;
-            font-size: 20px;
             cursor: pointer;
-            position: relative;
-            transition: transform 0.1s;
-        }
-        .attack-btn:active { transform: scale(0.9); }
-
-        /* تأثير الصاروخ */
-        #missile {
-            position: absolute;
-            bottom: -50px;
-            left: 50%;
-            display: none;
-            font-size: 40px;
-            transform: translateX(-50%);
+            box-shadow: 0 0 30px #ff0000;
+            color: #fff;
+            font-weight: bold;
+            font-size: 18px;
+            transition: 0.2s;
+            z-index: 10;
         }
 
-        /* رسالة النجاح */
+        .attack-btn:active { transform: scale(0.85); box-shadow: 0 0 5px #ff0000; }
+
         #success-modal {
             display: none;
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.95);
-            border: 2px solid #4caf50;
-            padding: 30px;
+            background: #0a0a0a;
+            border: 3px solid var(--algeria-green);
+            padding: 40px;
             z-index: 1000;
             width: 80%;
             border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 0 100px #000;
         }
     </style>
 </head>
-<body>
+<body onclick="enableAudio()">
 
-    <div class="header">🦅 مـنـظـومـة الـجـلاد الـجـزائـري 🦅</div>
-    <div class="counter-box">إجمالي قصفك للعدو: <span id="count-num">0</span> مرة</div>
+    <canvas id="matrix-canvas"></canvas>
+    
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/77/Flag_of_Algeria.svg" class="flag-icon" alt="العلم الجزائري">
+    <div class="system-title">🦅 مـنـظـومـة الـجـلاد الـجـزائـري 🦅</div>
+    <div style="color: #ccc; font-size: 12px; margin-bottom: 20px;">قـيـادة الأركـان الإلـكـتـرونـيـة</div>
 
-    <div style="position: relative; height: 300px;">
-        <button class="attack-btn" onclick="startAttack()">اضغط<br>لبدء الهجوم</button>
-        <div id="missile">🚀</div>
-    </div>
+    <div class="counter-box">ضـربـات الـجـندي: <span id="count-num" style="color: #4caf50;">0</span></div>
+
+    <button class="attack-btn" id="attackBtn" onclick="startAttack()">إطـلاق<br>الـقـصـف</button>
 
     <div id="success-modal">
-        <h2 style="color: #4caf50;">تم القصف بنجاح! ✅</h2>
-        <p>بارك الله فيك أيها الجندي. تم تسجيل الضربة.</p>
-        <hr>
-        <h3 style="color: #ffffff;">تـحـيـا الـجـزائر 🇩🇿</h3>
-        <p>المجد والخلد لشهدائنا الأبرار</p>
-        <button onclick="closeModal()" style="padding: 10px 20px;">العودة للميدان</button>
+        <h1 style="color: var(--algeria-green);">تـم الـقـصـف بـنـجـاح!</h1>
+        <p>تم تسجيل العملية في خوادم المنظومة.</p>
+        <hr style="border-color: #333;">
+        <h2 style="color: #fff;">تـحـيـا الـجـزائر 🇩🇿</h2>
+        <p style="color: var(--algeria-red);">المجد والخلد لشهدائنا الأبرار</p>
+        <button onclick="closeModal()" style="padding: 10px 30px; border: none; background: #333; color: #fff; cursor: pointer;">إغـلاق</button>
     </div>
 
-    <audio id="war-bg" loop>
-        <source src="https://www.soundjay.com/mechanical/sounds/clanking-01.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="explosion-snd">
-        <source src="https://www.soundjay.com/mechanical/sounds/explosion-01.mp3" type="audio/mpeg">
-    </audio>
+    <audio id="war-bg" loop><source src="https://lasonotheque.org/upload/mp3/1418.mp3" type="audio/mpeg"></audio>
+    <audio id="exp-snd"><source src="https://www.soundjay.com/mechanical/sounds/explosion-02.mp3" type="audio/mpeg"></audio>
 
     <script>
-        // 1. مصفوفة البلاغات الاحترافية (تتغير تلقائياً)
-        const reports = [
-            "I am writing to formally report this account for multiple violations of platform safety guidelines. The content shared here promotes hate speech, targeted harassment, and incites violence against specific communities. This behavior poses a direct threat to the community safety. Reference link: ",
-            "Emergency Report: This profile is engaging in systematic harassment and spreading harmful misinformation that violates international digital safety standards. We request an immediate review and permanent suspension of this account to protect users from further psychological harm. Target: ",
-            "Technical Complaint: This account is being used to coordinate cyber-bullying and malicious activities. The continuous violation of terms of service regarding human rights and dignity is unacceptable. Please take swift action as per your safety protocols. Account URL: ",
-            "Serious Violation Alert: This user is consistently posting content that infringes upon the community standards regarding safety and respect. The account's activity is harmful and disruptive to the online environment. Immediate termination is required. Documentation: "
+        // --- ⚙️ محرك الـ Matrix في الخلفية ---
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const chars = "01010101ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        const drops = Array(Math.floor(canvas.width / 20)).fill(1);
+        function drawMatrix() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#0F0";
+            ctx.font = "15px monospace";
+            drops.forEach((y, i) => {
+                const text = chars[Math.floor(Math.random() * chars.length)];
+                ctx.fillText(text, i * 20, y * 20);
+                if (y * 20 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            });
+        }
+        setInterval(drawMatrix, 50);
+
+        // --- 🌪️ مصفوفات توليد آلاف البلاغات ---
+        const intros = ["Urgent Notice:", "Formal Complaint:", "Emergency Safety Alert:", "Direct Violation Report:"];
+        const bodies = [
+            "This account is systematically spreading hateful ideologies that endanger community peace.",
+            "Coordinated harassment and cyber-bullying have been detected from this specific user profile.",
+            "The content published by this user promotes violence and illegal activities against public safety.",
+            "I am reporting this profile for severe breaches of the terms of service regarding human dignity."
         ];
+        const closings = ["Take immediate action.", "Permanent suspension is required.", "Investigate this matter urgently.", "This is a priority safety case."];
 
-        // 2. الجيميلات المستهدفة
-        const targetEmails = "legal@tiktok.com,info@tiktok.com,feedback@tiktok.com";
-
-        // 3. إدارة الصوت والعداد
         let counter = localStorage.getItem('attack_count') || 0;
         document.getElementById('count-num').innerText = counter;
 
-        // تشغيل صوت الحرب عند أول لمسة للشاشة (قيود المتصفح)
-        window.onclick = () => { document.getElementById('war-bg').play(); };
+        function enableAudio() {
+            const bg = document.getElementById('war-bg');
+            if (bg.paused) { bg.volume = 0.3; bg.play(); }
+        }
 
         function startAttack() {
-            const missile = document.getElementById('missile');
-            const expSnd = document.getElementById('explosion-snd');
+            // 1. الاهتزاز
+            if (navigator.vibrate) navigator.vibrate([100, 50, 200]);
+
+            // 2. الصوت والحركة
+            document.getElementById('exp-snd').play();
+            document.getElementById('attackBtn').style.backgroundColor = "white";
             
-            // صوت الانفجار وحركة الصاروخ
-            missile.style.display = "block";
-            missile.animate([{ bottom: '0px' }, { bottom: '500px' }], { duration: 800 });
-            
-            setTimeout(() => {
-                expSnd.play();
-                launchEmail();
-            }, 700);
+            setTimeout(launchEmail, 500);
         }
 
         function launchEmail() {
-            // جلب الرابط من الـ URL (الذي يرسله البوت)
             const urlParams = new URLSearchParams(window.location.search);
-            const target = urlParams.get('target') || "رابط الحساب مفقود";
+            const target = urlParams.get('target') || "No Target Found";
             
-            // اختيار بلاغ عشوائي وتطويله ليتجاوز 400 حرف
-            let randomReport = reports[Math.floor(Math.random() * reports.length)];
-            let fullBody = randomReport + target + "\n\n" + "Additional Details: " + "X".repeat(200) + "\nRegards, Safety Enforcement Team.";
+            // --- ⚙️ توليد بلاغ فريد من آلاف الاحتمالات ---
+            const rIntro = intros[Math.floor(Math.random() * intros.length)];
+            const rBody = bodies[Math.floor(Math.random() * bodies.length)];
+            const rClose = closings[Math.floor(Math.random() * closings.length)];
+            const rId = Math.random().toString(36).toUpperCase().substring(2, 12);
+            
+            const finalReport = `${rIntro}\n\n${rBody}\n\nTarget Evidence: ${target}\n\n${rClose}\n\nCaseID: DZ-FORCE-${rId}\nDetailed Log: ${"REPORT-SQUAD-".repeat(20)}`;
 
-            // فتح الجيميل
-            const mailtoUrl = `mailto:${targetEmails}?subject=Urgent: Safety Violation Report&body=${encodeURIComponent(fullBody)}`;
+            const targetEmails = "legal@tiktok.com,info@tiktok.com,feedback@tiktok.com";
+            const mailtoUrl = `mailto:${targetEmails}?subject=CRITICAL_SAFETY_VIOLATION_${rId}&body=${encodeURIComponent(finalReport)}`;
+            
             window.location.href = mailtoUrl;
 
-            // تحديث العداد وإظهار رسالة النجاح بعد العودة
+            // تحديث العداد
+            counter++;
+            localStorage.setItem('attack_count', counter);
+            document.getElementById('count-num').innerText = counter;
+            
             setTimeout(() => {
-                counter++;
-                localStorage.setItem('attack_count', counter);
-                document.getElementById('count-num').innerText = counter;
                 document.getElementById('success-modal').style.display = "block";
-            }, 2000);
+                document.getElementById('attackBtn').style.backgroundColor = "";
+            }, 1500);
         }
 
-        function closeModal() {
-            document.getElementById('success-modal').style.display = "none";
-            document.getElementById('missile').style.display = "none";
-        }
+        function closeModal() { document.getElementById('success-modal').style.display = "none"; }
     </script>
 </body>
 </html>
