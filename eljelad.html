@@ -2,69 +2,72 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>⚡ منظومة الجلاد السيبرانية - الترسانة العظمى</title>
+    <title>⚡ مَنظُومة الجَلاد الجَزائري السيبرانية - الترسانة العظمى 2026</title>
     <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Cairo:wght@900&display=swap" rel="stylesheet">
     <style>
         :root { --dz-green: #006633; --dz-red: #d21034; --dz-white: #ffffff; --gold: #ffd700; }
+        
+        /* ضبط الشاشة لتكون واسعة (وضع الحاسوب) */
         body {
             background-color: #000; color: #fff; font-family: 'Cairo', sans-serif;
-            margin: 0; overflow: hidden; display: flex; flex-direction: column; align-items: center;
-            height: 100vh; border: 8px double var(--dz-green); animation: border-blink 1s infinite alternate;
+            margin: 0; min-width: 1200px; height: 100vh; overflow: hidden;
+            display: flex; flex-direction: column; align-items: center;
+            border: 10px double var(--dz-green); animation: border-blink 1s infinite alternate;
         }
+
         @keyframes border-blink { from { border-color: var(--dz-green); } to { border-color: var(--dz-red); } }
 
-        /* الرادار الدوار */
+        /* الرادار الحربي الضخم */
         .radar {
-            position: fixed; top: 50%; left: 50%; width: 500px; height: 500px;
+            position: fixed; top: 50%; left: 50%; width: 800px; height: 800px;
             border: 2px solid var(--dz-green); border-radius: 50%; transform: translate(-50%, -50%);
-            opacity: 0.2; z-index: -2;
+            opacity: 0.25; z-index: -2;
         }
         .radar::after {
             content: ""; display: block; width: 50%; height: 50%;
             background: linear-gradient(45deg, transparent 50%, var(--dz-green) 100%);
-            border-radius: 100% 0 0 0; animation: scan 4s linear infinite; transform-origin: bottom right;
+            border-radius: 100% 0 0 0; animation: scan 3s linear infinite; transform-origin: bottom right;
         }
         @keyframes scan { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        /* الصقر الطائر */
+        /* الصقر الجزائري الطائر */
         .eagle {
-            position: fixed; top: 20%; left: -100px; font-size: 50px;
-            animation: fly 15s linear infinite; z-index: -1; opacity: 0.5;
+            position: fixed; top: 15%; left: -150px; font-size: 80px;
+            animation: fly-across 12s linear infinite; z-index: -1;
         }
-        @keyframes fly { 
-            0% { left: -100px; top: 20%; transform: scaleX(1); }
-            45% { left: 110%; top: 40%; transform: scaleX(1); }
+        @keyframes fly-across { 
+            0% { left: -150px; transform: scaleX(1); }
+            48% { left: 110%; transform: scaleX(1); }
             50% { transform: scaleX(-1); }
-            95% { left: -100px; top: 20%; transform: scaleX(-1); }
+            98% { left: -150px; transform: scaleX(-1); }
         }
 
-        /* الشريط الوطني المتحرك */
+        /* الشريط الوطني المتحرك بالألوان الثلاثة */
         .marquee {
             background: linear-gradient(90deg, var(--dz-green), var(--dz-white), var(--dz-red));
-            color: #000; font-weight: bold; padding: 10px 0; width: 100%;
-            white-space: nowrap; overflow: hidden; font-size: 1.2rem;
-            border-bottom: 3px solid var(--gold);
+            color: #000; font-weight: bold; padding: 15px 0; width: 100%;
+            white-space: nowrap; overflow: hidden; font-size: 1.8rem; border-bottom: 5px solid var(--gold);
         }
-        .marquee-content { display: inline-block; animation: scroll 15s linear infinite; }
-        @keyframes scroll { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+        .marquee-content { display: inline-block; animation: scroll-text 12s linear infinite; }
+        @keyframes scroll-text { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
 
-        .cyber-title { font-family: 'Aref Ruqaa', serif; font-size: 3rem; margin: 20px 0; animation: color-change 3s infinite; }
-        @keyframes color-change { 0% { color: var(--dz-red); } 50% { color: var(--dz-green); } 100% { color: var(--gold); } }
+        .main-title { font-family: 'Aref Ruqaa', serif; font-size: 5rem; margin: 20px 0; animation: cyber-colors 3s infinite; }
+        @keyframes cyber-colors { 0% { color: var(--dz-red); } 50% { color: var(--dz-green); } 100% { color: var(--gold); } }
 
-        .btn-fire {
-            background: linear-gradient(45deg, #ff0000, #600); color: #fff; padding: 25px 50px;
-            font-size: 2rem; border: none; border-radius: 15px; cursor: pointer;
-            box-shadow: 0 0 40px var(--dz-red); font-weight: 900; z-index: 10;
+        .strike-btn {
+            background: linear-gradient(45deg, #ff0000, #400); color: #fff; padding: 40px 80px;
+            font-size: 3rem; border: none; border-radius: 20px; cursor: pointer;
+            box-shadow: 0 0 60px var(--dz-red); font-weight: 900; z-index: 10;
         }
 
-        #rocket { position: absolute; bottom: -100px; left: 50%; transform: translateX(-50%); font-size: 60px; display: none; }
-        @keyframes launch { 0% { bottom: -100px; } 100% { bottom: 80%; opacity: 0; transform: translateX(-50%) scale(3); } }
+        #rocket { position: absolute; bottom: -200px; left: 50%; transform: translateX(-50%); font-size: 100px; display: none; }
+        @keyframes launch-sequence { 0% { bottom: -200px; } 100% { bottom: 90%; opacity: 0; transform: translateX(-50%) scale(5); } }
         
-        .target-box { background: rgba(0,0,0,0.8); border: 1px solid var(--gold); padding: 15px; width: 85%; margin: 20px; }
+        .target-monitor { background: rgba(0,0,0,0.9); border: 2px solid var(--gold); padding: 30px; width: 70%; margin: 30px; font-size: 1.5rem; }
+        .counter-box { font-size: 2rem; color: var(--gold); margin: 20px; }
     </style>
 </head>
-<body onclick="startWar()">
+<body onclick="activateWarSystems()">
 
     <div class="marquee">
         <div class="marquee-content">تحيا الجزائر .. المجد والخلود لشهدائنا الأبرار .. تحيا الجزائر .. المجد والخلود لشهدائنا الأبرار</div>
@@ -74,50 +77,62 @@
     <div class="eagle">🦅</div>
     <div id="rocket">🚀</div>
 
-    <div class="cyber-title">🇩🇿 جيش التبليغ الجزائري 🇩🇿</div>
-    <h2 style="color: var(--gold);">بقيادة الجلاد الجزائري</h2>
+    <div class="main-title">🇩🇿 مَنظُومة جَيش التبلِيغ الجَزائري 🇩🇿</div>
+    <h2 style="color: var(--gold); font-size: 2.5rem;">بقيادة الزعيم الجلاد الجزائري</h2>
 
-    <div class="target-box">
-        <div style="color: var(--dz-green);">📍 الهدف المرصود:</div>
-        <div id="targetUrl" style="word-break: break-all; font-size: 0.9rem;">بانتظار الرابط...</div>
+    <div class="counter-box">🚀 إجمالي القذائف المطلقة: <span id="strikeCount" style="color: red; font-size: 3.5rem;">0</span></div>
+
+    <div class="target-monitor">
+        <div style="color: var(--dz-green); font-weight: bold;">[📡] إحداثيات الهدف المرصودة حالياً:</div>
+        <div id="targetUrl" style="word-break: break-all; color: #fff;">بانتظار الإشارة...</div>
     </div>
 
-    <button class="btn-fire" onclick="executeStrike()">🚀 إطلاق القصف المدمّر</button>
+    <button class="strike-btn" onclick="initiateStrike()">🔥 إطلاق القصف الشامل</button>
 
-    <audio id="bgMusic" src="https://www.soundjay.com/free-music/action-background-music-01.mp3" loop></audio>
-    <audio id="boom" src="https://www.soundjay.com/mechanical/explosion-02.mp3"></audio>
-    <audio id="launch" src="https://www.soundjay.com/mechanical/rocket-launcher-01.mp3"></audio>
+    <audio id="actionMusic" src="https://www.soundjay.com/free-music/action-background-music-01.mp3" loop></audio>
+    <audio id="boomSound" src="https://www.soundjay.com/mechanical/explosion-02.mp3"></audio>
+    <audio id="launchSound" src="https://www.soundjay.com/mechanical/rocket-launcher-01.mp3"></audio>
 
     <script>
-        const params = new URLSearchParams(window.location.search);
-        const target = params.get('target') || "لم يتم تحديد هدف";
+        // استقبال الهدف
+        const urlParams = new URLSearchParams(window.location.search);
+        const target = urlParams.get('target') || "لم يتم رصد هدف";
         document.getElementById('targetUrl').innerText = target;
 
-        function startWar() { document.getElementById('bgMusic').play(); }
+        // العداد
+        let strikes = localStorage.getItem('eljelad_total') || 0;
+        document.getElementById('strikeCount').innerText = strikes;
 
-        function executeStrike() {
+        function activateWarSystems() { document.getElementById('actionMusic').play(); }
+
+        function initiateStrike() {
             const rock = document.getElementById('rocket');
-            document.getElementById('launch').play();
+            document.getElementById('launchSound').play();
             rock.style.display = 'block';
-            rock.style.animation = 'launch 1.5s forwards';
+            rock.style.animation = 'launch-sequence 2s forwards';
 
             setTimeout(() => {
-                document.getElementById('boom').play();
-                
-                // مصفوفة البلاغات العملاقة (أكثر من 400 حرف)
-                const reports = [
-                    "URGENT NOTICE OF SYSTEMATIC POLICY VIOLATION: We are formally submitting an exhaustive report regarding the account " + target + " for multiple severe breaches of TikTok community safety standards. Our internal monitoring system has flagged this profile for disseminating hate speech, inciting violent extremism, and engaging in coordinated digital harassment. Such behavior constitutes a direct threat to the safety of users and the platform's integrity. We demand an immediate manual investigation and permanent suspension of this profile to prevent further toxicity. Official Cyber-Security Report ID: DZ-ELJELAD-77.",
-                    "OFFICIAL SAFETY ENFORCEMENT REQUEST: The profile located at " + target + " has been identified as a significant source of cyber-bullying and extremist content. These activities directly violate international safety regulations and TikTok's terms of service. We request your legal and security teams to take immediate action. The systematic dissemination of harmful ideologies on this account requires instant removal and permanent banning. This is a high-priority notification from the Algerian Reporting Army HQ."
+                document.getElementById('boomSound').play();
+                strikes++;
+                localStorage.setItem('eljelad_total', strikes);
+                document.getElementById('strikeCount').innerText = strikes;
+
+                // مصفوفة بلاغات ضخمة (أكثر من 500 حرف)
+                const massiveReports = [
+                    "OFFICIAL CYBER-SECURITY COMPLAINT: This account (" + target + ") is being formally reported for severe community safety violations. Our monitoring system has identified systematic hate speech, violent extremism, and coordinated harassment targeting vulnerable groups. These actions directly breach international safety regulations and TikTok's terms of service. We demand an immediate manual investigation by the trust and safety team and the permanent termination of this profile to ensure user security. This is a high-priority enforcement notification from the Algerian Reporting Army HQ [ID: DZ-99].",
+                    "URGENT POLICY ENFORCEMENT NOTICE: The profile at " + target + " is engaging in malicious digital behavior and spreading extremist ideologies that threaten public integrity. This account has been flagged for multiple violations regarding TikTok's guidelines on harassment and hate-driven content. We request your legal and safety departments to take instant action. The systematic dissemination of toxic and harmful content on this account requires immediate removal. We are tracking this case closely for further action. Official Security Log: ELJELAD-CORE."
                 ];
 
-                const finalReport = reports[Math.floor(Math.random() * reports.length)];
+                const finalReport = massiveReports[Math.floor(Math.random() * massiveReports.length)];
+                const subject = encodeURIComponent("URGENT: Permanent Ban Request - Community Safety Violation");
+                const body = encodeURIComponent(finalReport);
                 
-                // حل مشكلة الجيميلات الثلاثة (استخدام الفاصلة العادية لبعض المتصفحات)
+                // فتح الجيميل عبر المتصفح لضمان الملء الكامل والإيميلات الثلاثة
                 const emails = "feedback@tiktok.com,legal@tiktok.com,community@tiktok.com";
-                const mailto = "mailto:" + emails + "?subject=" + encodeURIComponent("URGENT: Permanent Ban Request - Community Safety Violation") + "&body=" + encodeURIComponent(finalReport);
+                const gmailWebLink = "https://mail.google.com/mail/?view=cm&fs=1&to=" + emails + "&su=" + subject + "&body=" + body;
 
-                setTimeout(() => { window.location.href = mailto; }, 1500);
-            }, 1500);
+                setTimeout(() => { window.open(gmailWebLink, '_blank'); }, 1500);
+            }, 2000);
         }
     </script>
 </body>
