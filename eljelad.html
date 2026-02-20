@@ -2,151 +2,110 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منظومة جيش التبليغ الجزائري - غرفة العمليات</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>منظومة جيش التبليغ الجزائري</title>
     <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Cairo:wght@900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --dz-green: #006633;
-            --dz-red: #ff0000;
-            --cyber-gold: #ffd700;
-        }
-
+        :root { --dz-green: #006633; --dz-red: #ff0000; --gold: #ffd700; }
         body {
-            background-color: #000;
-            color: #fff;
-            font-family: 'Cairo', sans-serif;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            border: 10px double var(--dz-green);
-            animation: war-alert 1s infinite alternate;
-            overflow: hidden;
-            position: relative;
+            background-color: #000; color: #fff; font-family: 'Cairo', sans-serif;
+            margin: 0; display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh; border: 4px solid var(--dz-green);
+            animation: alert 1s infinite alternate; overflow-x: hidden; position: relative;
         }
+        @keyframes alert { from { border-color: var(--dz-green); } to { border-color: var(--dz-red); } }
 
-        /* تأثير الرادار العسكري في الخلفية */
-        .radar {
-            position: absolute;
-            top: 50%; left: 50%;
-            width: 600px; height: 600px;
-            border: 2px solid var(--dz-green);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            z-index: -1;
-            opacity: 0.3;
+        /* الرادار */
+        .radar-sys {
+            position: absolute; top: 50%; left: 50%; width: 280px; height: 280px;
+            border: 1px solid var(--dz-green); border-radius: 50%;
+            transform: translate(-50%, -50%); z-index: -1; opacity: 0.3;
         }
-        .radar::after {
-            content: "";
-            display: block;
-            width: 50%; height: 50%;
+        .radar-sys::after {
+            content: ""; display: block; width: 50%; height: 50%;
             background: linear-gradient(45deg, transparent 50%, var(--dz-green) 100%);
-            border-radius: 100% 0 0 0;
-            animation: scanning 4s linear infinite;
-            transform-origin: bottom right;
+            border-radius: 100% 0 0 0; animation: scan 4s linear infinite; transform-origin: bottom right;
         }
-        @keyframes scanning { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes scan { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        @keyframes war-alert {
-            from { border-color: var(--dz-green); box-shadow: 0 0 20px var(--dz-green); }
-            to { border-color: var(--dz-red); box-shadow: 0 0 40px var(--dz-red); }
+        .header-title {
+            font-family: 'Aref Ruqaa', serif; font-size: 2.2rem; margin: 15px 0;
+            animation: rgb 3s infinite; text-align: center;
         }
+        @keyframes rgb { 0% { color: red; } 50% { color: #0f0; } 100% { color: gold; } }
 
-        .marquee-national {
-            background: linear-gradient(90deg, var(--dz-green), #fff, var(--dz-red));
-            color: #000; font-weight: bold; padding: 10px 0; width: 100%;
-            white-space: nowrap; overflow: hidden; font-size: 1.2rem;
-        }
-        .marquee-text { display: inline-block; animation: scroll-text 15s linear infinite; }
-        @keyframes scroll-text { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+        .war-box { border: 2px solid red; padding: 10px; background: rgba(255,0,0,0.1); width: 90%; font-weight: bold; }
+        .target-area { background: #0a0a0a; border: 1px solid var(--gold); padding: 15px; width: 85%; margin: 15px 0; }
+        
+        /* العداد */
+        .counter-vibe { font-size: 1.2rem; color: var(--gold); margin: 10px 0; border-bottom: 2px solid red; }
 
-        .cyber-title {
-            font-family: 'Aref Ruqaa', serif; font-size: 4rem;
-            margin: 20px 0; animation: rgb-shift 3s infinite;
-            text-shadow: 0 0 20px currentColor;
-        }
-        @keyframes rgb-shift {
-            0% { color: var(--dz-red); }
-            50% { color: var(--dz-green); }
-            100% { color: var(--cyber-gold); }
+        .btn-fire {
+            background: linear-gradient(45deg, red, #600); color: #fff; padding: 20px;
+            font-size: 1.5rem; border: none; border-radius: 10px; width: 85%; font-weight: 900;
+            box-shadow: 0 0 20px red;
         }
 
-        .war-word-box {
-            border: 3px solid var(--dz-red); padding: 20px;
-            background: rgba(255, 0, 0, 0.15); width: 90%;
-            max-width: 800px; font-size: 24px; font-weight: bold; color: var(--dz-red);
-        }
-
-        .target-monitor {
-            background: rgba(10, 10, 10, 0.9); border: 1px solid var(--cyber-gold);
-            padding: 25px; width: 85%; margin: 20px 0; box-shadow: 0 0 15px var(--cyber-gold);
-        }
-
-        .btn-attack {
-            background: linear-gradient(45deg, #ff0000, #440000);
-            color: white; padding: 25px 50px; font-size: 30px;
-            border: none; border-radius: 5px; cursor: pointer;
-            box-shadow: 0 0 30px #f00; font-weight: 900;
-        }
-
-        #successMessage {
-            display: none; position: fixed; top: 50%; left: 50%;
-            transform: translate(-50%, -50%); background: rgba(0, 102, 51, 0.95);
-            color: white; padding: 40px; border: 5px solid var(--cyber-gold);
-            font-size: 2.5rem; z-index: 1000; text-align: center; width: 80%;
+        #win {
+            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: var(--dz-green); padding: 30px; border: 3px solid gold; z-index: 100; width: 80%; text-align: center;
         }
     </style>
 </head>
-<body onclick="initSystems()">
+<body onclick="activateWarMode()">
 
-    <div class="radar"></div>
+    <div class="radar-sys"></div>
 
-    <div class="marquee-national">
-        <div class="marquee-text">تحيا الجزائر .. المجد والخلود لشهدائنا الأبرار .. تحيا الجزائر .. المجد والخلود لشهدائنا الأبرار</div>
-    </div>
+    <div class="header-title">🇩🇿 مَنظُومة جَيش التبلِيغ الجَزائري 🇩🇿</div>
+    <div style="color: gold; font-size: 1.1rem; margin-bottom: 10px;">بقيادة الجلاد الجزائري</div>
 
-    <div class="cyber-title">🇩🇿 مَنظُومة جَيش التبلِيغ الجَزائري 🇩🇿</div>
-    <h2 style="color: var(--cyber-gold);">بقيادة الجلاد الجزائري</h2>
-
-    <div class="war-word-box">"النصر أو الشهادة.. لا تراجع عن سحق المحتوى المسيء"</div>
+    <div class="war-box">"النصر أو الشهادة.. لا تراجع عن سحق المحتوى المسيء"</div>
     
-    <p style="color: #ffd700; font-style: italic; padding: 10px;">"يا جندي الوطن، إصبعك هو سلاحك في هذه المعركة السيبرانية، اضرب بقوة!"</p>
+    <div class="counter-vibe">🚀 قذائفك المطلقة: <span id="strikeVal" style="color: red; font-size: 1.8rem;">0</span></div>
 
-    <div class="target-monitor">
-        <div style="color: var(--dz-green); font-weight: bold;">[+] إحداثيات الهدف المرصود:</div>
-        <div id="targetUrl" style="word-break: break-all; color: #fff; font-size: 1.2rem;">جاري سحب البيانات من البوت...</div>
+    <div class="target-area">
+        <div style="color: #0f0; font-size: 0.8rem;">[+] الهدف المرصود:</div>
+        <div id="targetUrl" style="word-break: break-all; font-size: 0.9rem;">جاري سحب الهدف...</div>
     </div>
 
-    <button class="btn-attack" onclick="launchMissile()">🚀 إطلاق القصف المدمّر</button>
+    <button class="btn-fire" onclick="fire()">🚀 إرسال القصف المدمّر</button>
 
-    <div id="successMessage">
+    <div id="win">
         🎯 تم قصف الهدف بنجاح! <br>
-        <span style="font-size: 1.5rem;">شكراً لك أيها الجندي البطل على مجهوداتك</span>
+        <small>شكراً لك أيها الجندي البطل</small>
     </div>
 
-    <audio id="explosion" src="https://www.soundjay.com/mechanical/explosion-02.mp3"></audio>
-    <audio id="bgMusic" src="https://www.soundjay.com/free-music/action-background-music-01.mp3" loop></audio>
+    <audio id="siren" src="https://www.soundjay.com/buttons/beep-01a.mp3" loop></audio>
+    <audio id="boom" src="https://www.soundjay.com/mechanical/explosion-02.mp3"></audio>
+    <audio id="action" src="https://www.soundjay.com/free-music/action-background-music-01.mp3" loop></audio>
 
     <script>
-        const params = new URLSearchParams(window.location.search);
-        const target = params.get('target') || "No Target Detected";
-        document.getElementById('targetUrl').innerText = target;
+        // العداد يحفظ في ذاكرة الهاتف
+        let count = localStorage.getItem('hani_count') || 0;
+        document.getElementById('strikeVal').innerText = count;
 
-        function initSystems() { document.getElementById('bgMusic').play(); }
+        const p = new URLSearchParams(window.location.search);
+        const t = p.get('target') || "No Target Detected";
+        document.getElementById('targetUrl').innerText = t;
 
-        function launchMissile() {
-            document.getElementById('explosion').play();
-            const msg = document.getElementById('successMessage');
-            msg.style.display = 'block';
+        function activateWarMode() {
+            // تشغيل صوت الإنذار والموسيقى فور لمس الشاشة
+            document.getElementById('siren').play();
+            document.getElementById('action').play();
+        }
 
-            const report = `OFFICIAL CYBER REPORT\nTarget: ${target}\n\nThis account violates community guidelines.`;
+        function fire() {
+            document.getElementById('boom').play();
+            count++;
+            localStorage.setItem('hani_count', count);
+            document.getElementById('strikeVal').innerText = count;
 
+            document.getElementById('win').style.display = 'block';
+            
             setTimeout(() => {
-                msg.style.display = 'none';
-                window.location.href = `mailto:reports@tiktok.com?subject=Urgent Ban Request&body=${encodeURIComponent(report)}`;
-            }, 3000);
+                const mailBody = `URGENT BAN REQUEST\nTarget: ${t}\n\nThis account violates safety rules.`;
+                window.location.href = `mailto:reports@tiktok.com?subject=Policy Violation&body=${encodeURIComponent(mailBody)}`;
+            }, 2000);
         }
     </script>
 </body>
