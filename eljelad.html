@@ -2,110 +2,68 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>⚡ مَنظُومة جَيش التبلِيغ الجَزائري السيبرانية</title>
-    <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Cairo:wght@900&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>غرفة عمليات جيش التبليغ الجزائري</title>
     <style>
-        :root { --dz-green: #006633; --dz-red: #d21034; --gold: #ffd700; }
         body {
-            background-color: #000; color: #fff; font-family: 'Cairo', sans-serif;
-            margin: 0; min-width: 1200px; height: 100vh; overflow: hidden;
-            display: flex; flex-direction: column; align-items: center;
-            border: 10px double var(--dz-green); animation: border-blink 1s infinite alternate;
+            background-color: #000;
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 0;
+            overflow-x: hidden;
+            border: 5px solid #006633;
         }
-        @keyframes border-blink { from { border-color: var(--dz-green); } to { border-color: var(--dz-red); } }
-        .radar {
-            position: fixed; top: 50%; left: 50%; width: 800px; height: 800px;
-            border: 2px solid var(--dz-green); border-radius: 50%; transform: translate(-50%, -50%);
-            opacity: 0.25; z-index: -2;
+        .container { padding: 20px; }
+        h1 { color: #00ff00; text-shadow: 0 0 10px #00ff00; }
+        
+        /* تصميم الزر الأحمر */
+        .fire-button {
+            background: radial-gradient(circle, #ff0000, #8b0000);
+            color: white;
+            font-size: 26px;
+            padding: 25px 50px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 20px #ff0000;
+            position: relative;
+            z-index: 10;
+            transition: 0.3s;
         }
-        .radar::after {
-            content: ""; display: block; width: 50%; height: 50%;
-            background: linear-gradient(45deg, transparent 50%, var(--dz-green) 100%);
-            border-radius: 100% 0 0 0; animation: scan 3s linear infinite; transform-origin: bottom right;
+
+        /* أنيميشن الصاروخ */
+        #rocket {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 50px;
+            display: none;
+            z-index: 100;
         }
-        @keyframes scan { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .marquee {
-            background: linear-gradient(90deg, var(--dz-green), #fff, var(--dz-red));
-            color: #000; font-weight: bold; padding: 15px 0; width: 100%;
-            white-space: nowrap; overflow: hidden; font-size: 1.8rem; border-bottom: 5px solid var(--gold);
+
+        @keyframes rocketFly {
+            0% { bottom: -100px; }
+            100% { bottom: 80%; transform: translateX(-50%) scale(2); opacity: 0; }
         }
-        .marquee-content { display: inline-block; animation: scroll-text 12s linear infinite; }
-        @keyframes scroll-text { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
-        .main-title { font-family: 'Aref Ruqaa', serif; font-size: 5rem; margin: 20px 0; animation: cyber-colors 3s infinite; }
-        @keyframes cyber-colors { 0% { color: var(--dz-red); } 50% { color: var(--dz-green); } 100% { color: var(--gold); } }
-        .strike-btn {
-            background: linear-gradient(45deg, #ff0000, #400); color: #fff; padding: 40px 80px;
-            font-size: 3rem; border: none; border-radius: 20px; cursor: pointer;
-            box-shadow: 0 0 60px var(--dz-red); font-weight: 900; z-index: 10;
+
+        /* مربع الرسالة المضيئة */
+        #successMessage {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            border: 3px solid #00ff00;
+            box-shadow: 0 0 30px #00ff00;
+            padding: 30px;
+            z-index: 200;
+            border-radius: 15px;
         }
-        #rocket { position: absolute; bottom: -200px; left: 50%; transform: translateX(-50%); font-size: 100px; display: none; }
-        @keyframes launch-sequence { 0% { bottom: -200px; } 100% { bottom: 90%; opacity: 0; transform: translateX(-50%) scale(5); } }
-        .target-monitor { background: rgba(0,0,0,0.9); border: 2px solid var(--gold); padding: 30px; width: 70%; margin: 30px; font-size: 1.5rem; }
+
+        .target-box { background: #111; border: 1px solid #d21034; padding: 15px; margin: 20px auto; width: 80%; }
     </style>
 </head>
-<body onclick="forceAudio()">
-
-    <div class="marquee">
-        <div class="marquee-content">تحيا الجزائر .. المجد والخلود لشهدائنا الأبرار .. تحيا الجزائر .. المجد والخلود لشهدائنا الأبرار</div>
-    </div>
-
-    <div class="radar"></div>
-    <div id="rocket">🚀</div>
-
-    <div class="main-title">🇩🇿 مَنظُومة جَيش التبلِيغ الجَزائري 🇩🇿</div>
-    <h2 style="color: var(--gold); font-size: 2.5rem;">بقيادة الزعيم الجلاد الجزائري</h2>
-
-    <div class="target-monitor">
-        <div style="color: var(--dz-green); font-weight: bold;">[📡] إحداثيات الهدف المرصودة:</div>
-        <div id="targetUrl">بانتظار الإشارة...</div>
-    </div>
-
-    <button class="strike-btn" onclick="initiateStrike()">🔥 إطلاق القصف الشامل</button>
-
-    <audio id="actionMusic" src="https://www.soundjay.com/free-music/action-background-music-01.mp3" loop></audio>
-    <audio id="boomSound" src="https://www.soundjay.com/mechanical/explosion-02.mp3"></audio>
-    <audio id="launchSound" src="https://www.soundjay.com/mechanical/rocket-launcher-01.mp3"></audio>
-
-    <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const target = urlParams.get('target') || "لم يتم رصد هدف";
-        document.getElementById('targetUrl').innerText = target;
-
-        function forceAudio() {
-            // تشغيل الموسيقى فور أول لمسة للشاشة
-            let audio = document.getElementById('actionMusic');
-            audio.play().catch(e => console.log("الصوت ينتظر تفاعل المستخدم"));
-        }
-
-        function initiateStrike() {
-            const rock = document.getElementById('rocket');
-            document.getElementById('launchSound').play();
-            rock.style.display = 'block';
-            rock.style.animation = 'launch-sequence 2s forwards';
-
-            setTimeout(() => {
-                document.getElementById('boomSound').play();
-                
-                // البلاغ الرسمي الضخم (أكثر من 500 حرف)
-                const finalReport = "URGENT SAFETY VIOLATION REPORT: This is a formal notification regarding the account located at " + target + ". We are reporting this profile for severe breaches of platform policies, specifically promoting violent extremism, hate speech, and systematic digital harassment. Such behavior constitutes a direct violation of international digital safety laws and TikTok's community integrity standards. We demand a manual review by your legal and safety departments and the immediate, permanent suspension of this account. This report is issued as part of a coordinated cyber-defense mission by the Algerian Reporting Army [OFFICIAL LOG: ELJELAD-V4].";
-
-                // الحل الجذري للجيميلات الثلاثة: دمج الإيميلات بفاصلة منقوطة وتكرار الرابط لضمان فتحه
-                const emails = "feedback@tiktok.com;legal@tiktok.com;community@tiktok.com";
-                const subject = "URGENT: Permanent Ban Request - Policy Violation";
-                
-                // محاولة الفتح عبر رابط mailto المباشر ولكن بتنسيق محمي
-                const mailtoUrl = "mailto:" + emails + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(finalReport);
-                
-                window.location.href = mailtoUrl;
-
-                // تحسين إضافي: فتح نافذة ثانية للمتصفح إذا فشل الأول
-                setTimeout(() => {
-                    const gmailWeb = "https://mail.google.com/mail/?view=cm&fs=1&to=" + emails + "&su=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(finalReport);
-                    window.open(gmailWeb, '_blank');
-                }, 500);
-
-            }, 2000);
-        }
-    </script>
-</body>
-</html>
+<body onclick="startAmbiance()">
