@@ -3,115 +3,216 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منظومة جيش التبليغ الجزائري - غرفة العمليات</title>
+    <title>الترسانة العظمى - القصف الشامل</title>
     <style>
-        :root { --green: #006233; --red: #d32f2f; --glow: #00ff00; }
-        
+        :root {
+            --algeria-green: #006633;
+            --algeria-red: #d21034;
+        }
+
         body {
-            background-color: #000; color: #fff; font-family: 'Courier New', monospace;
-            margin: 0; overflow: hidden; height: 100vh; display: flex; flex-direction: column; align-items: center;
-            border: 5px double var(--green); box-sizing: border-box; animation: sideGlow 3s infinite;
+            background-color: #000;
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            overflow: hidden;
+            text-align: center;
+            border: 8px double var(--algeria-green);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: background 0.1s;
         }
 
-        @keyframes sideGlow { 0%, 100% { border-color: var(--green); } 50% { border-color: var(--red); } }
-
-        /* الرادار العسكري الخلفي */
+        /* تأثير الرادار في الخلفية */
         .radar {
-            position: fixed; top: 50%; left: 50%; width: 450px; height: 450px;
-            border: 2px solid rgba(0, 255, 0, 0.15); border-radius: 50%;
-            transform: translate(-50%, -50%); z-index: -1;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 500px;
+            height: 500px;
+            border: 2px solid rgba(0, 255, 0, 0.1);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
         }
-        .radar:after {
-            content: ""; position: absolute; top: 50%; left: 50%; width: 50%; height: 2px;
-            background: linear-gradient(to right, transparent, var(--glow));
-            transform-origin: left; animation: rotateRadar 4s linear infinite;
-        }
-        @keyframes rotateRadar { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-        /* العنوان المضيء بالألوان الوطنية */
-        .title {
-            font-size: 28px; font-weight: bold; margin-top: 15px;
-            animation: triColor 3s infinite; text-align: center; text-shadow: 0 0 10px rgba(255,255,255,0.5);
-        }
-        @keyframes triColor { 
-            0% { color: #fff; } 
-            33% { color: var(--green); } 
-            66% { color: var(--red); } 
-            100% { color: #fff; }
+        .radar::after {
+            content: "";
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 50%; height: 2px;
+            background: rgba(0, 255, 0, 0.5);
+            transform-origin: left;
+            animation: scan 4s linear infinite;
         }
 
-        .leader-info {
-            background: rgba(17, 17, 17, 0.9); border: 1px solid var(--glow); 
-            padding: 8px 20px; margin: 10px; border-radius: 5px; color: var(--glow);
-            font-size: 14px; box-shadow: 0 0 10px var(--green);
+        .container { position: relative; z-index: 5; }
+
+        h1 { 
+            color: #00ff00; 
+            text-shadow: 0 0 20px #00ff00; 
+            font-size: 2.5em;
+            margin-bottom: 5px;
         }
 
-        /* شاشة عرض الهدف */
+        /* صندوق إحداثيات الهدف المتحرك */
         .target-box {
-            width: 85%; background: rgba(0, 30, 0, 0.7); border: 1px solid var(--glow);
-            padding: 12px; font-size: 13px; color: #fff; margin: 10px 0; text-align: left;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--algeria-red);
+            padding: 20px;
+            margin: 20px auto;
+            width: 80%;
+            box-shadow: inset 0 0 15px var(--algeria-red);
+            clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%);
         }
 
-        /* زر السلاح المطور */
-        .weapon-btn {
-            position: relative; width: 240px; height: 70px; background: #1a1a1a;
-            border: 3px solid var(--red); border-radius: 15px; color: #fff;
-            font-weight: bold; font-size: 18px; cursor: pointer;
-            box-shadow: 0 0 25px var(--red); margin-top: 25px; transition: 0.1s;
-        }
-        .weapon-btn:active { transform: scale(0.9); box-shadow: 0 0 5px var(--red); }
-        .weapon-btn:before { content: "🔫"; position: absolute; left: 15px; font-size: 24px; }
-
-        /* تأثير الرصاصة */
-        .bullet {
-            position: absolute; bottom: 150px; left: 50%; width: 5px; height: 25px;
-            background: #fff176; display: none; transform: translateX(-50%); 
-            box-shadow: 0 0 15px #ffd600; border-radius: 50% 50% 0 0;
+        .fire-button {
+            background: linear-gradient(45deg, #ff0000, #440000);
+            color: #fff;
+            font-size: 28px;
+            font-weight: bold;
+            padding: 30px 60px;
+            border: 3px solid #fff;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 0 30px #ff0000;
+            text-transform: uppercase;
+            animation: pulse 1.5s infinite;
         }
 
-        /* عداد الرتب */
-        .rank-display { margin-top: 15px; font-size: 16px; border-bottom: 1px solid #333; padding-bottom: 5px; }
-
-        /* نافذة النجاح */
-        #modal {
-            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: rgba(5, 5, 5, 0.98); border: 2px solid var(--green); padding: 25px;
-            width: 80%; z-index: 1000; text-align: center; border-radius: 15px;
-            box-shadow: 0 0 50px #000;
+        /* أنيميشن النبض للزر */
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 20px #ff0000; }
+            50% { transform: scale(1.05); box-shadow: 0 0 40px #ff0000; }
+            100% { transform: scale(1); box-shadow: 0 0 20px #ff0000; }
         }
 
-        .matrix-footer { font-size: 9px; color: var(--green); position: absolute; bottom: 5px; width: 100%; opacity: 0.6; }
+        @keyframes scan { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        #rocket {
+            position: absolute;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 80px;
+            z-index: 100;
+        }
+
+        /* رسالة النجاح الإحترافية */
+        #success-modal {
+            display: none;
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: #000;
+            border: 5px solid #00ff00;
+            padding: 50px;
+            z-index: 1000;
+            border-radius: 0; /* شكل عسكري حاد */
+            box-shadow: 0 0 100px #00ff00;
+        }
+
+        /* فلاش الطوارئ */
+        .emergency-flash { animation: flash-bg 0.2s infinite; }
+        @keyframes flash-bg {
+            0% { background-color: #440000; }
+            50% { background-color: #002200; }
+            100% { background-color: #440000; }
+        }
+
+        @keyframes shake {
+            0% { transform: translate(2px, 2px); }
+            25% { transform: translate(-2px, -2px); }
+            50% { transform: translate(2px, -2px); }
+            75% { transform: translate(-2px, 2px); }
+            100% { transform: translate(0, 0); }
+        }
     </style>
 </head>
-<body onclick="startWarMusic()">
+<body id="mainBody">
 
     <div class="radar"></div>
-    <div class="title">🇩🇿 جيـش التبليـغ الجزائـري 🇩🇿</div>
-    
-    <div class="leader-info">
-        ⚡ بقيـادة الجـلاد الجزائـري ⚡
+
+    <audio id="alarmSiren" src="https://www.soundjay.com/mechanical/sounds/air-raid-siren-01.mp3" loop></audio>
+    <audio id="rocketLaunch" src="https://www.soundjay.com/mechanical/sounds/rocket-launch-01.mp3"></audio>
+    <audio id="explosionSound" src="https://www.soundjay.com/mechanical/sounds/explosion-01.mp3"></audio>
+
+    <div class="container" id="uiContent">
+        <p style="color: var(--algeria-green); letter-spacing: 5px;">STRIKE SYSTEM ONLINE</p>
+        <h1>🇩🇿 الـجـلاد الـجـزائـري 🇩🇿</h1>
+        <p style="color: #555;">SECURITY CLEARANCE: LEVEL ALPHA</p>
+        
+        <div class="target-box">
+            <p style="color: #00ff00; font-family: monospace;">[ SEARCHING TARGET... ]</p>
+            <p id="targetUrl" style="font-size: 20px; color: #fff; font-weight: bold;">جاري تحديد المواقع...</p>
+        </div>
+
+        <button class="fire-button" onclick="initiateAttack()">تـأكـيـد الـقـصـف 🔥</button>
     </div>
 
-    <div class="target-box">
-        <span style="color:var(--glow)">[TARGET_DETECTED]:</span><br>
-        <span id="target-link">جاري تعقب الرابط...</span>
+    <div id="rocket" style="display:none;">🚀</div>
+
+    <div id="success-modal">
+        <h1 style="color: #00ff00;">TARGET DESTROYED</h1>
+        <p style="font-size: 20px;">تـم تـحـطـيـم الـهـدف بـنـجـاح يـا بـطـل!</p>
+        <p style="color: #aaa;">جاري إرسال التقارير لـ TikTok Legal...</p>
     </div>
 
-    <div style="color: #ffeb3b; font-size: 13px; margin: 10px; font-style: italic;">
-        "إصبعك هو زنادك.. وهاتفك هو سلاحك"
-    </div>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const target = urlParams.get('target') || "No Target Detected";
+        document.getElementById('targetUrl').innerText = target;
 
-    <div class="rank-display">
-        🎖️ الرتبة: <span id="user-rank" style="color:var(--red)">متطوع</span> | 
-        🎯 الضربات: <span id="hit-count">0</span>
-    </div>
+        function initiateAttack() {
+            const body = document.getElementById('mainBody');
+            const alarm = document.getElementById('alarmSiren');
+            const launch = document.getElementById('rocketLaunch');
+            const explode = document.getElementById('explosionSound');
+            const rocket = document.getElementById('rocket');
 
-    <button class="weapon-btn" onclick="fireAction()">
-        ابدأ القصف الآن
-    </button>
+            // 1. بدء الإنذار الصوتي
+            alarm.play();
+            launch.play();
 
-    <div class="bullet" id="bullet"></div>
+            // 2. تفعيل الصاروخ
+            rocket.style.display = 'block';
+            let pos = -100;
+            const flight = setInterval(() => {
+                if (pos >= window.innerHeight * 0.8) {
+                    clearInterval(flight);
+                    executeExplosion();
+                } else {
+                    pos += 15;
+                    rocket.style.bottom = pos + 'px';
+                    rocket.style.opacity = (1 - pos/window.innerHeight);
+                }
+            }, 20);
 
-    <div id="modal">
-        <h2 style="color: var(--green);">تـم قـصـف الـهـدف بـنـجـاح! ✅</h2>
-        <p>تم تسجيل الضربة في السجلات العسكرية للم
+            function executeExplosion() {
+                rocket.style.display = 'none';
+                explode.play();
+                alarm.pause();
+
+                // 3. تأثير الانفجار البصري (فلاش + زلزال)
+                body.classList.add('emergency-flash');
+                body.style.animation = "shake 0.1s infinite";
+
+                // 4. إظهار رسالة النصر
+                document.getElementById('uiContent').style.display = "none";
+                document.getElementById('success-modal').style.display = "block";
+
+                // 5. فتح الجيميل ببلاغ "قاتل"
+                setTimeout(() => {
+                    body.style.animation = "none";
+                    const emails = "legal@tiktok.com,feedback@tiktok.com,community@tiktok.com";
+                    const subject = "EMERGENCY: Systematic Community Guidelines Violation Report";
+                    const mailBody = `OFFICIAL REPORT - ALGERIAN REPORTING ARMY\n\nTarget Link: ${target}\n\nViolation: This account is spreading harmful content and violating TikTok's safety policies. We demand an immediate permanent ban.\n\nEvidence ID: DZ-99-REPORT\nStatus: High Priority`;
+                    
+                    window.location.href = `mailto:${emails}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(mailBody)}`;
+                }, 4000);
+            }
+        }
+    </script>
+</body>
+</html>
