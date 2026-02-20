@@ -3,216 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الترسانة العظمى - القصف الشامل</title>
+    <title>إمبراطورية الجلاد - نظام الرتب</title>
     <style>
-        :root {
-            --algeria-green: #006633;
-            --algeria-red: #d21034;
+        :root { --algeria-green: #006633; --algeria-red: #d21034; --gold: #ffcc00; }
+        body { background: #000; color: #fff; font-family: 'Courier New', monospace; margin: 0; overflow-x: hidden; text-align: center; }
+        
+        .header { background: linear-gradient(90deg, var(--algeria-green), #000, var(--algeria-red)); padding: 10px; border-bottom: 2px solid var(--gold); }
+        .stats-bar { display: flex; justify-content: space-around; background: #111; padding: 15px; border-bottom: 1px solid #333; }
+        .stat-item { border: 1px solid var(--gold); padding: 5px 15px; border-radius: 5px; }
+        .stat-value { color: var(--gold); font-weight: bold; font-size: 20px; }
+
+        .strike-zone { padding: 40px; }
+        .fire-btn { 
+            background: radial-gradient(circle, #ff0000, #440000); 
+            color: #fff; padding: 30px 60px; font-size: 25px; border: 3px solid #fff;
+            border-radius: 50px; cursor: pointer; box-shadow: 0 0 30px #f00;
         }
 
-        body {
-            background-color: #000;
-            color: #fff;
-            font-family: 'Courier New', Courier, monospace;
-            margin: 0;
-            overflow: hidden;
-            text-align: center;
-            border: 8px double var(--algeria-green);
-            height: 100vh;
-            display: flex;
+        /* نافذة النصر النهائية */
+        #victoryModal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 2000; justify-content: center; align-items: center;
             flex-direction: column;
-            justify-content: center;
-            transition: background 0.1s;
+        }
+        .flash-bg { animation: police-flash 0.3s infinite; }
+        @keyframes police-flash {
+            0% { border: 20px solid var(--algeria-red); }
+            50% { border: 20px solid var(--algeria-green); }
+            100% { border: 20px solid var(--algeria-red); }
         }
 
-        /* تأثير الرادار في الخلفية */
-        .radar {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 500px;
-            height: 500px;
-            border: 2px solid rgba(0, 255, 0, 0.1);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 1;
-        }
-        .radar::after {
-            content: "";
-            position: absolute;
-            top: 50%; left: 50%;
-            width: 50%; height: 2px;
-            background: rgba(0, 255, 0, 0.5);
-            transform-origin: left;
-            animation: scan 4s linear infinite;
-        }
-
-        .container { position: relative; z-index: 5; }
-
-        h1 { 
-            color: #00ff00; 
-            text-shadow: 0 0 20px #00ff00; 
-            font-size: 2.5em;
-            margin-bottom: 5px;
-        }
-
-        /* صندوق إحداثيات الهدف المتحرك */
-        .target-box {
-            background: rgba(0, 0, 0, 0.8);
-            border: 2px solid var(--algeria-red);
-            padding: 20px;
-            margin: 20px auto;
-            width: 80%;
-            box-shadow: inset 0 0 15px var(--algeria-red);
-            clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%);
-        }
-
-        .fire-button {
-            background: linear-gradient(45deg, #ff0000, #440000);
-            color: #fff;
-            font-size: 28px;
-            font-weight: bold;
-            padding: 30px 60px;
-            border: 3px solid #fff;
-            border-radius: 10px;
-            cursor: pointer;
-            box-shadow: 0 0 30px #ff0000;
-            text-transform: uppercase;
-            animation: pulse 1.5s infinite;
-        }
-
-        /* أنيميشن النبض للزر */
-        @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 0 20px #ff0000; }
-            50% { transform: scale(1.05); box-shadow: 0 0 40px #ff0000; }
-            100% { transform: scale(1); box-shadow: 0 0 20px #ff0000; }
-        }
-
-        @keyframes scan { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-        #rocket {
-            position: absolute;
-            bottom: -100px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 80px;
-            z-index: 100;
-        }
-
-        /* رسالة النجاح الإحترافية */
-        #success-modal {
-            display: none;
-            position: fixed;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            background: #000;
-            border: 5px solid #00ff00;
-            padding: 50px;
-            z-index: 1000;
-            border-radius: 0; /* شكل عسكري حاد */
-            box-shadow: 0 0 100px #00ff00;
-        }
-
-        /* فلاش الطوارئ */
-        .emergency-flash { animation: flash-bg 0.2s infinite; }
-        @keyframes flash-bg {
-            0% { background-color: #440000; }
-            50% { background-color: #002200; }
-            100% { background-color: #440000; }
-        }
-
-        @keyframes shake {
-            0% { transform: translate(2px, 2px); }
-            25% { transform: translate(-2px, -2px); }
-            50% { transform: translate(2px, -2px); }
-            75% { transform: translate(-2px, 2px); }
-            100% { transform: translate(0, 0); }
-        }
+        .victory-text { font-size: 30px; font-weight: bold; text-shadow: 0 0 20px #fff; margin: 20px; }
+        
+        /* الرتبة */
+        #rankTitle { color: var(--gold); text-transform: uppercase; letter-spacing: 2px; }
     </style>
 </head>
-<body id="mainBody">
+<body>
 
-    <div class="radar"></div>
-
-    <audio id="alarmSiren" src="https://www.soundjay.com/mechanical/sounds/air-raid-siren-01.mp3" loop></audio>
-    <audio id="rocketLaunch" src="https://www.soundjay.com/mechanical/sounds/rocket-launch-01.mp3"></audio>
-    <audio id="explosionSound" src="https://www.soundjay.com/mechanical/sounds/explosion-01.mp3"></audio>
-
-    <div class="container" id="uiContent">
-        <p style="color: var(--algeria-green); letter-spacing: 5px;">STRIKE SYSTEM ONLINE</p>
-        <h1>🇩🇿 الـجـلاد الـجـزائـري 🇩🇿</h1>
-        <p style="color: #555;">SECURITY CLEARANCE: LEVEL ALPHA</p>
-        
-        <div class="target-box">
-            <p style="color: #00ff00; font-family: monospace;">[ SEARCHING TARGET... ]</p>
-            <p id="targetUrl" style="font-size: 20px; color: #fff; font-weight: bold;">جاري تحديد المواقع...</p>
-        </div>
-
-        <button class="fire-button" onclick="initiateAttack()">تـأكـيـد الـقـصـف 🔥</button>
+    <div class="header">
+        <h2>🇩🇿 مَنْظُومَةُ الـجَلادِ الـجَزائِرِي 🇩🇿</h2>
+        <p>المجد والخلود لشهدائنا الأبرار</p>
     </div>
 
-    <div id="rocket" style="display:none;">🚀</div>
+    <div class="stats-bar">
+        <div class="stat-item">الرتبة: <span id="rankTitle">جندي</span></div>
+        <div class="stat-item">إجمالي القصف: <span id="strikeCount" class="stat-value">0</span></div>
+    </div>
 
-    <div id="success-modal">
-        <h1 style="color: #00ff00;">TARGET DESTROYED</h1>
-        <p style="font-size: 20px;">تـم تـحـطـيـم الـهـدف بـنـجـاح يـا بـطـل!</p>
-        <p style="color: #aaa;">جاري إرسال التقارير لـ TikTok Legal...</p>
+    <div class="strike-zone">
+        <div style="background: #050505; border: 1px dashed var(--algeria-green); padding: 20px; margin-bottom: 30px;">
+            <p style="color: #0f0;">📡 إحداثيات الهدف الحالي:</p>
+            <p id="targetUrl">جاري جلب البيانات...</p>
+        </div>
+        
+        <button class="fire-btn" onclick="executeStrike()">🚀 إِطْلاقُ القَصْفِ الشَّامِلِ</button>
+    </div>
+
+    <div id="victoryModal" class="flash-bg">
+        <h1 style="color: #fff; font-size: 50px;">🎯 تَمَّ القَصْفُ بِنَجَاح!</h1>
+        <div class="victory-text">بُورِكَتْ يَا أَسَدَ الجَزَائِرِ</div>
+        <p style="font-size: 22px; color: var(--gold);">شُكراً لَكَ أَيُّهَا الجُنْدِيُّ البَطَلُ عَلَى وَفَائِكَ لِلْوَطَن</p>
+        <h2 style="color: #fff; margin-top: 30px;">🇩🇿 تَحْيَا الجَزَائِر 🇩🇿</h2>
+        <button onclick="closeVictory()" style="margin-top:20px; padding:10px 30px; cursor:pointer;">العودة للقيادة</button>
     </div>
 
     <script>
+        // 1. نظام الذاكرة والرتب
+        let strikes = localStorage.getItem('strikeCount') ? parseInt(localStorage.getItem('strikeCount')) : 0;
+        
+        const ranks = [
+            { min: 0, title: "جندي متدرب 🪖" },
+            { min: 5, title: "قناص محترف 🎯" },
+            { min: 15, title: "نقيب الصاعقة ⚡" },
+            { min: 30, title: "عقيد الجلاد 🦅" },
+            { min: 50, title: "جنرال الجيش الإلكتروني 🎖️" }
+        ];
+
+        function updateDisplay() {
+            document.getElementById('strikeCount').innerText = strikes;
+            let currentRank = ranks[0].title;
+            ranks.forEach(r => {
+                if (strikes >= r.min) currentRank = r.title;
+            });
+            document.getElementById('rankTitle').innerText = currentRank;
+        }
+
+        // جلب الهدف من الرابط
         const urlParams = new URLSearchParams(window.location.search);
         const target = urlParams.get('target') || "No Target Detected";
         document.getElementById('targetUrl').innerText = target;
 
-        function initiateAttack() {
-            const body = document.getElementById('mainBody');
-            const alarm = document.getElementById('alarmSiren');
-            const launch = document.getElementById('rocketLaunch');
-            const explode = document.getElementById('explosionSound');
-            const rocket = document.getElementById('rocket');
+        function executeStrike() {
+            // فتح الجيميل أولاً
+            const emails = "legal@tiktok.com,feedback@tiktok.com,community@tiktok.com";
+            const subject = encodeURIComponent("Emergency Policy Violation Report");
+            const body = encodeURIComponent(`Reporting harmful content: ${target}\n\nRegards,\nAlgerian Reporting Army.`);
+            
+            window.open(`mailto:${emails}?subject=${subject}&body=${body}`, '_blank');
 
-            // 1. بدء الإنذار الصوتي
-            alarm.play();
-            launch.play();
+            // زيادة النقاط
+            strikes++;
+            localStorage.setItem('strikeCount', strikes);
+            updateDisplay();
 
-            // 2. تفعيل الصاروخ
-            rocket.style.display = 'block';
-            let pos = -100;
-            const flight = setInterval(() => {
-                if (pos >= window.innerHeight * 0.8) {
-                    clearInterval(flight);
-                    executeExplosion();
-                } else {
-                    pos += 15;
-                    rocket.style.bottom = pos + 'px';
-                    rocket.style.opacity = (1 - pos/window.innerHeight);
-                }
-            }, 20);
-
-            function executeExplosion() {
-                rocket.style.display = 'none';
-                explode.play();
-                alarm.pause();
-
-                // 3. تأثير الانفجار البصري (فلاش + زلزال)
-                body.classList.add('emergency-flash');
-                body.style.animation = "shake 0.1s infinite";
-
-                // 4. إظهار رسالة النصر
-                document.getElementById('uiContent').style.display = "none";
-                document.getElementById('success-modal').style.display = "block";
-
-                // 5. فتح الجيميل ببلاغ "قاتل"
-                setTimeout(() => {
-                    body.style.animation = "none";
-                    const emails = "legal@tiktok.com,feedback@tiktok.com,community@tiktok.com";
-                    const subject = "EMERGENCY: Systematic Community Guidelines Violation Report";
-                    const mailBody = `OFFICIAL REPORT - ALGERIAN REPORTING ARMY\n\nTarget Link: ${target}\n\nViolation: This account is spreading harmful content and violating TikTok's safety policies. We demand an immediate permanent ban.\n\nEvidence ID: DZ-99-REPORT\nStatus: High Priority`;
-                    
-                    window.location.href = `mailto:${emails}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(mailBody)}`;
-                }, 4000);
-            }
+            // إظهار نافذة النصر بعد العودة
+            setTimeout(() => {
+                document.getElementById('victoryModal').style.display = 'flex';
+            }, 1000);
         }
+
+        function closeVictory() {
+            document.getElementById('victoryModal').style.display = 'none';
+        }
+
+        // تشغيل التحديث عند التحميل
+        updateDisplay();
     </script>
 </body>
 </html>
