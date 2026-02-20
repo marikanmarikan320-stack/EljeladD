@@ -3,186 +3,214 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>جيش التبليغ الجزائري - نسخة الجوال</title>
+    <title>ترسانة الجلاد الجزائري</title>
     <style>
-        :root { --green: #006633; --red: #d21034; --gold: #ffcc00; --neon: #00ff00; }
+        :root { --green: #00ff00; --red: #ff0000; --gold: #ffcc00; --dark: #000; }
         
-        body { 
-            background: #000; color: #fff; font-family: 'Arial', sans-serif; 
-            margin: 0; padding: 0; overflow: hidden; text-align: center;
+        body, html { 
+            margin: 0; padding: 0; width: 100%; height: 100%; 
+            background: var(--dark); color: #fff; font-family: 'Arial', sans-serif; 
+            overflow: hidden; 
         }
 
-        /* خلفية الهكر المتحركة */
-        #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.4; }
-
-        /* الإطار العسكري للجوال */
-        .mobile-frame {
-            height: 100vh; display: flex; flex-direction: column;
-            border: 4px solid var(--green); box-sizing: border-box;
-            background: rgba(0,0,0,0.8);
+        /* الحواف المضيئة التي تشتعل وتنطفئ */
+        .border-glow {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            border: 5px solid var(--green); box-sizing: border-box;
+            animation: borderFlash 1s infinite alternate; z-index: 999; pointer-events: none;
         }
 
-        /* العدادات والرتب */
-        .stats-header {
-            display: flex; justify-content: space-around; background: #111;
-            padding: 10px; border-bottom: 2px solid var(--gold);
-        }
-        .stat-box { font-size: 14px; border: 1px solid var(--gold); padding: 5px; border-radius: 5px; flex: 1; margin: 0 5px; }
-        .stat-value { color: var(--gold); display: block; font-weight: bold; font-size: 16px; }
-
-        /* منطقة القيادة */
-        .war-zone { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
-        
-        .main-title { font-size: 24px; color: var(--neon); text-shadow: 0 0 10px var(--neon); margin: 10px 0; }
-        .target-display { 
-            background: rgba(210,16,52,0.1); border: 1px dashed var(--red);
-            padding: 15px; width: 90%; word-break: break-all; font-size: 13px; color: #fff;
+        /* خلفية الهكر الجزائري */
+        .hacker-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://i.pinimg.com/originals/11/4a/1c/114a1c5d55b08e2f099c15e8840b904d.jpg') no-repeat center;
+            background-size: cover; filter: brightness(30%) grayscale(50%); z-index: -1;
         }
 
-        /* أزرار الهجوم الكبيرة */
-        .action-btn {
-            width: 100%; max-width: 300px; padding: 20px; margin: 10px 0;
-            font-size: 20px; font-weight: bold; border: none; border-radius: 10px;
-            cursor: pointer; text-transform: uppercase;
+        /* الهيدر المضيء والمزخرف */
+        .header-section {
+            padding: 20px 10px; text-align: center;
+            background: rgba(0,0,0,0.7); border-bottom: 2px solid var(--green);
         }
-        .btn-copy { background: var(--gold); color: #000; box-shadow: 0 0 15px var(--gold); }
-        .btn-strike { background: var(--red); color: #fff; box-shadow: 0 0 15px var(--red); }
+        .main-title {
+            font-size: 22px; font-weight: bold; color: var(--green);
+            text-shadow: 0 0 10px var(--green); animation: textPulse 1.5s infinite;
+            margin: 0;
+        }
+        .leader-name { color: var(--gold); font-size: 16px; margin-top: 5px; }
 
-        /* الصاروخ والانفجار */
-        #missile { position: absolute; bottom: 50px; left: 50%; font-size: 50px; display: none; transform: translateX(-50%); z-index: 100; }
-        
-        /* شاشة النجاح */
-        #victoryOverlay {
+        /* الرادار */
+        .radar-container {
+            position: relative; width: 100px; height: 100px; margin: 10px auto;
+            border: 1px solid var(--green); border-radius: 50%; overflow: hidden;
+        }
+        .radar-sweep {
+            position: absolute; width: 50%; height: 2px; background: var(--green);
+            top: 50%; left: 50%; transform-origin: left; animation: rotate 3s linear infinite;
+        }
+
+        /* إحصائيات الجندي */
+        .soldier-stats {
+            display: flex; justify-content: space-around; background: rgba(0,255,0,0.1);
+            padding: 10px; margin: 10px; border: 1px solid var(--green);
+        }
+
+        /* منطقة الهدف والتحفيز */
+        .target-zone { padding: 10px; }
+        .target-url { 
+            background: #111; color: var(--red); padding: 10px; border: 1px dashed var(--red);
+            word-break: break-all; font-size: 12px; border-radius: 5px; margin-bottom: 10px;
+        }
+        .motivate-text { font-size: 14px; color: var(--gold); font-style: italic; }
+
+        /* زر الهجوم الرئيسي */
+        .main-attack-btn {
+            background: var(--red); color: #fff; font-size: 20px; font-weight: bold;
+            padding: 15px 40px; border: 3px solid #fff; border-radius: 10px;
+            animation: borderFlash 0.5s infinite; cursor: pointer; box-shadow: 0 0 20px var(--red);
+        }
+
+        /* النافذة المنبثقة */
+        .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 2000; justify-content: center; align-items: center; flex-direction: column;
+            background: rgba(0,0,0,0.95); z-index: 2000; flex-direction: column; justify-content: center; align-items: center;
         }
-        .flash-anim { animation: flash-bg 0.2s infinite; }
-        @keyframes flash-bg { 0% { border: 10px solid var(--red); } 50% { border: 10px solid var(--green); } 100% { border: 10px solid var(--red); } }
+        .modal-content {
+            width: 85%; background: #111; border: 2px solid var(--gold); padding: 20px; text-align: right;
+        }
+        .btn-action {
+            width: 100%; padding: 15px; margin: 10px 0; border: none; font-weight: bold; font-size: 16px;
+        }
 
-        @keyframes missileLaunch { 0% { bottom: 50px; } 100% { bottom: 90%; opacity: 0; transform: translateX(-50%) scale(2); } }
+        /* أنيميشن */
+        @keyframes borderFlash { 0% { opacity: 0.3; } 100% { opacity: 1; } }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes textPulse { 0% { text-shadow: 0 0 5px var(--green); } 50% { text-shadow: 0 0 20px var(--green); } 100% { text-shadow: 0 0 5px var(--green); } }
+        
+        #rocket { position: absolute; bottom: 50px; left: 50%; font-size: 50px; display: none; transform: translateX(-50%); }
+        @keyframes launch { 0% { bottom: 50px; } 100% { bottom: 90%; opacity: 0; } }
     </style>
 </head>
 <body>
 
-    <canvas id="bg-canvas"></canvas>
+    <div class="border-glow"></div>
+    <div class="hacker-bg"></div>
 
-    <div class="mobile-frame">
-        <div class="stats-header">
-            <div class="stat-box">الرتبة<span id="rankText" class="stat-value">جندي</span></div>
-            <div class="stat-box">قصفاتك<span id="strikeCount" class="stat-value">0</span></div>
+    <audio id="snd-launch" src="https://www.soundjay.com/mechanical/sounds/rocket-launch-01.mp3"></audio>
+    <audio id="snd-boom" src="https://www.soundjay.com/mechanical/sounds/explosion-01.mp3"></audio>
+
+    <div class="header-section">
+        <h1 class="main-title">🇩🇿 مَنْظُومَةُ جَيْشِ التَّبْلِيغِ الْجَزَائِرِيِّ 🇩🇿</h1>
+        <div class="leader-name">بِقِيَادَةِ الزَّعِيمِ: الْجَلادِ الْجَزَائِرِيِّ</div>
+        <div class="radar-container"><div class="radar-sweep"></div></div>
+    </div>
+
+    <div class="soldier-stats">
+        <div>الرتبة: <span id="rank" style="color:var(--gold)">جندي</span></div>
+        <div>القصفات: <span id="count" style="color:var(--gold)">0</span></div>
+    </div>
+
+    <div class="target-zone">
+        <div class="target-url" id="targetDisplay">جاري سحب الهدف...</div>
+        <div class="motivate-text">
+            "أصبعك هو زينتك.. وهاتفك هو سلاحك"<br>
+            👊 اضربوا كبرياء الباطل ولا تبالوا! 👊
         </div>
+        <br>
+        <button class="main-attack-btn" onclick="showModal()">🔥 ابْدَأْ بِضَرْبِ الْهَدَفِ</button>
+    </div>
 
-        <div class="war-zone">
-            <h1 class="main-title">🦅 جيش التبليغ الجزائري 🦅</h1>
-            <p style="color: var(--gold); font-size: 14px; margin: 0;">بقيادة الجلاد الجزائري</p>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <h3 style="color:var(--gold)">📋 تَعْلِيمَاتُ الْقِيَادَةِ:</h3>
+            <p style="font-size:12px;">1- ولد البلاغ وانسخه.<br>2- اضغط هجوم لفتح الجيميل.<br>3- الصق البلاغ وأرسل.</p>
+            <textarea id="reportArea" readonly style="width:100%; height:100px; background:#000; color:#0f0; border:1px solid #333; font-size:10px;"></textarea>
             
-            <div class="target-display">
-                📡 الهدف المرصود:<br>
-                <span id="targetLink">جاري التحميل...</span>
-            </div>
-
-            <button class="action-btn btn-copy" onclick="copyOfficialReport()">⚡ نسخ البلاغ الرسمي</button>
-            <button class="action-btn btn-strike" onclick="launchAttack()">🚀 إطلاق القصف (GMAIL)</button>
-        </div>
-
-        <div style="padding: 10px; font-size: 12px; background: #111; border-top: 1px solid var(--green);">
-            تحيا الجزائر.. المجد والخلود لشهدائنا الأبرار
+            <button class="btn-action" style="background:var(--gold);" onclick="generateAndCopy()">⚡ تَوْلِيدُ وَنَسْخُ الْبَلَاغِ</button>
+            <button class="btn-action" style="background:var(--red); color:#fff;" onclick="startFinalAttack()">🚀 ابْدَأِ الْهُجُومَ الآنَ</button>
+            <button onclick="hideModal()" style="background:none; border:none; color:#777; width:100%;">إلغاء</button>
         </div>
     </div>
 
-    <div id="missile">🚀</div>
-
-    <div id="victoryOverlay" class="flash-anim">
-        <h1 style="color: #fff; font-size: 30px;">🎯 تم الهجوم بنجاح!</h1>
-        <p style="color: var(--gold); font-size: 18px; padding: 20px;">شكراً لك أيها البطل الجزائري على أداء المهمة</p>
-        <h2 style="color: #fff;">🇩🇿 تحيا الجزائر 🇩🇿</h2>
-        <button onclick="closeVictory()" style="padding: 10px 40px; border-radius: 5px;">العودة</button>
-    </div>
-
-    <audio id="sndLaunch" src="https://www.soundjay.com/mechanical/sounds/rocket-launch-01.mp3"></audio>
-    <audio id="sndExplode" src="https://www.soundjay.com/mechanical/sounds/explosion-01.mp3"></audio>
+    <div id="rocket">🚀</div>
 
     <script>
-        // 1. إدارة الهدف والبيانات
+        // 1. نظام الرتب والبيانات
         const urlParams = new URLSearchParams(window.location.search);
-        const target = urlParams.get('target') || "No Target Detected";
-        document.getElementById('targetLink').innerText = target;
+        const target = urlParams.get('target') || "No Link Provided";
+        document.getElementById('targetDisplay').innerText = target;
 
-        let strikes = localStorage.getItem('hani_strikes') ? parseInt(localStorage.getItem('hani_strikes')) : 0;
+        let strikes = localStorage.getItem('hani_dz_strikes') ? parseInt(localStorage.getItem('hani_dz_strikes')) : 0;
         
         function updateStats() {
-            document.getElementById('strikeCount').innerText = strikes;
-            let rank = "جندي متطوع";
-            if(strikes >= 5) rank = "قناص محترف";
-            if(strikes >= 15) rank = "عقيد الجلاد";
-            if(strikes >= 50) rank = "جنرال الثورة";
-            document.getElementById('rankText').innerText = rank;
+            document.getElementById('count').innerText = strikes;
+            let rank = "جندي";
+            if(strikes >= 100) rank = "عقيد";
+            if(strikes >= 200) rank = "جنرال";
+            document.getElementById('rank').innerText = rank;
         }
         updateStats();
 
-        // 2. دالة نسخ البلاغ
-        function copyOfficialReport() {
-            const reports = [
-                `URGENT: This account ${target} is violating community standards. Please take immediate action.`,
-                `Report ID: DZ-${Math.floor(Math.random()*9999)}. This profile spreads harmful content.`,
-                `Legal Complaint: Systematic violation of safety policies detected on ${target}.`
+        // 2. مولد البلاغات (أكثر من 500 حرف)
+        function generateReport() {
+            const intros = ["Dear TikTok Legal Team, ", "Official Violation Notice: ", "Urgent Community Safety Report: "];
+            const bodies = [
+                "The account mentioned below is systematically violating international safety standards. We have observed content that promotes harm, misinformation, and direct breaches of community guidelines that protect users. This user's activity poses a significant risk and requires an immediate permanent ban without further warning. ",
+                "We are formally reporting severe policy violations on this profile. Our monitoring system has flagged this account for repeated harassment, inappropriate behavior, and distribution of restricted content. This is a direct violation of the terms of service that every user must adhere to. "
             ];
-            const selected = reports[Math.floor(Math.random()*reports.length)];
-            navigator.clipboard.writeText(selected).then(() => {
-                alert("✅ تم نسخ البلاغ الرسمي تلقائياً! قم بلصقه في الجيميل.");
-            });
+            const details = ["The target account URL is: " + target + ". ", "Specific Link under investigation: " + target + ". "];
+            const closings = ["We demand swift legal action to maintain platform integrity. Regards, Global Security Unit.", "Platform safety is our priority. Please terminate this account immediately. Reference ID: " + Math.random().toString(36).substr(2, 9)];
+            
+            let final = intros[Math.floor(Math.random()*intros.length)] + 
+                        bodies[Math.floor(Math.random()*bodies.length)] + 
+                        details[Math.floor(Math.random()*details.length)] + 
+                        closings[Math.floor(Math.random()*closings.length)];
+            
+            // إضافة نص عشوائي لزيادة الحجم عن 500 حرف
+            while(final.length < 550) {
+                final += " Protecting our digital environment from such harmful entities is crucial for all users worldwide. Immediate intervention is non-negotiable.";
+            }
+            return final;
         }
 
-        // 3. دالة الهجوم
-        function launchAttack() {
-            document.getElementById('sndLaunch').play();
-            const missile = document.getElementById('missile');
-            missile.style.display = 'block';
-            missile.style.animation = 'missileLaunch 1s forwards';
+        // 3. التحكم بالنافذة
+        function showModal() { document.getElementById('modal').style.display = 'flex'; }
+        function hideModal() { document.getElementById('modal').style.display = 'none'; }
+
+        function generateAndCopy() {
+            const report = generateReport();
+            document.getElementById('reportArea').value = report;
+            navigator.clipboard.writeText(report);
+            alert("✅ تم توليد البلاغ ونسخه تلقائياً!");
+        }
+
+        function startFinalAttack() {
+            const report = document.getElementById('reportArea').value;
+            if(!report) { alert("ولد البلاغ أولاً!"); return; }
+
+            // صوت وصاروخ
+            document.getElementById('snd-launch').play();
+            const rocket = document.getElementById('rocket');
+            rocket.style.display = 'block';
+            rocket.style.animation = 'launch 1s forwards';
 
             setTimeout(() => {
-                document.getElementById('sndExplode').play();
-                missile.style.display = 'none';
+                document.getElementById('snd-boom').play();
+                rocket.style.display = 'none';
                 
-                // تحديث النقاط والرتبة
+                // تحديث العداد
                 strikes++;
-                localStorage.setItem('hani_strikes', strikes);
+                localStorage.setItem('hani_dz_strikes', strikes);
                 updateStats();
 
-                // إظهار شاشة النصر
-                document.getElementById('victoryOverlay').style.display = 'flex';
+                // رسالة النصر النهائية
+                alert("🎯 تَمَّ قَصْفُ الْهَدَفِ بِنَجَاح!\nشُكراً لَكَ يَا بَطَلُ.. تَحْيَا الْجَزَائِرُ\nالْمَجْدُ وَالْخُلُودُ لِشُهَدَائِنَا الأَبْرَارِ");
 
-                // فتح الجيميل بعد 2 ثانية
-                setTimeout(() => {
-                    const emails = "legal@tiktok.com,feedback@tiktok.com,community@tiktok.com";
-                    window.location.href = `mailto:${emails}?subject=Violation Report&body=قم بلصق البلاغ المنسوخ هنا لرابط الهدف: ${target}`;
-                }, 2000);
-
+                // فتح الجيميل
+                const emails = "legal@tiktok.com,feedback@tiktok.com,community@tiktok.com";
+                window.location.href = `mailto:${emails}?subject=Emergency Violation Report&body=${encodeURIComponent(report)}`;
             }, 1000);
         }
-
-        function closeVictory() {
-            document.getElementById('victoryOverlay').style.display = 'none';
-        }
-
-        // 4. خلفية الماتريكس (خفيفة للجوال)
-        const canvas = document.getElementById('bg-canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        const columns = canvas.width / 20;
-        const drops = Array(Math.floor(columns)).fill(1);
-        function draw() {
-            ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "#0F0";
-            drops.forEach((y, i) => {
-                ctx.fillText("01", i * 20, y * 20);
-                if (y * 20 > canvas.height && Math.random() > 0.975) drops[i] = 0;
-                drops[i]++;
-            });
-        }
-        setInterval(draw, 50);
     </script>
 </body>
 </html>
