@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>منظومة الجلاد - وحدة القصف الرسمي</title>
-    <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Cairo:wght@900&display=swap" rel="stylesheet">
+    <title>منظومة الجلاد - القصف الرسمي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@900&display=swap" rel="stylesheet">
     <style>
         :root { --dz-green: #006633; --dz-red: #ff0000; --gold: #ffd700; }
         body {
@@ -18,7 +18,7 @@
         /* تأثير الصاروخ */
         #rocket {
             position: absolute; bottom: -100px; left: 50%; transform: translateX(-50%);
-            font-size: 50px; display: none; z-index: 1000;
+            font-size: 60px; display: none; z-index: 1000;
         }
         @keyframes launch {
             0% { bottom: -100px; opacity: 1; }
@@ -26,19 +26,15 @@
             100% { bottom: 70%; opacity: 0; transform: translateX(-50%) scale(4); }
         }
 
-        .cyber-title { font-family: 'Aref Ruqaa', serif; font-size: 2.5rem; margin: 15px 0; animation: rgb 3s infinite; }
-        @keyframes rgb { 0% { color: red; } 50% { color: #0f0; } 100% { color: gold; } }
-
+        .cyber-title { font-size: 2.2rem; margin: 15px 0; color: var(--dz-red); text-shadow: 0 0 10px #f00; }
         .war-box { border: 2px solid red; padding: 15px; background: rgba(255,0,0,0.15); width: 90%; font-weight: bold; text-align: center; }
-        .target-monitor { background: #0a0a0a; border: 1px solid var(--gold); padding: 15px; width: 85%; margin: 15px 0; box-shadow: 0 0 15px var(--gold); }
-        .counter { font-size: 1.3rem; color: var(--gold); border-bottom: 2px solid red; margin: 10px; }
-
+        .target-monitor { background: #0a0a0a; border: 1px solid var(--gold); padding: 15px; width: 85%; margin: 15px 0; }
+        
         .btn-strike {
             background: linear-gradient(45deg, red, #600); color: #fff; padding: 25px;
             font-size: 1.8rem; border: none; border-radius: 12px; width: 85%; font-weight: 900;
-            box-shadow: 0 0 30px red; animation: pulse 1s infinite;
+            box-shadow: 0 0 30px red;
         }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
 
         #victory {
             display: none; position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%);
@@ -50,19 +46,19 @@
 
     <div id="rocket">🚀</div>
 
-    <div class="cyber-title">🇩🇿 جيش التبليغ الجزائري 🇩🇿</div>
-    <div style="color: gold; font-size: 1.2rem;">بقيادة الجلاد الجزائري</div>
+    <div class="cyber-title">🇩🇿 مَنظُومة جَيش التبلِيغ الجَزائري 🇩🇿</div>
+    <div style="color: gold; font-size: 1.1rem; margin-bottom: 5px;">بقيادة الجلاد الجزائري</div>
 
     <div class="war-box">"النصر أو الشهادة.. لا تراجع عن سحق المحتوى المسيء"</div>
     
-    <div class="counter">🚀 قذائفك المطلقة: <span id="count" style="color: red; font-size: 2rem;">0</span></div>
+    <div style="font-size: 1.2rem; color: var(--gold); margin: 10px 0;">🚀 قذائفك: <span id="count" style="color: red; font-size: 1.8rem;">0</span></div>
 
     <div class="target-monitor">
-        <div style="color: #0f0; font-size: 0.9rem;">📍 إحداثيات الهدف المرصود:</div>
-        <div id="targetUrl" style="word-break: break-all; font-size: 1rem; color: #fff;">بانتظار الرابط...</div>
+        <div style="color: #0f0; font-size: 0.8rem;">📍 إحداثيات الهدف:</div>
+        <div id="targetUrl" style="word-break: break-all; font-size: 0.9rem; color: #fff;">بانتظار الرابط...</div>
     </div>
 
-    <button class="btn-strike" onclick="executeStrike()">🚀 إرسال القصف المدمّر</button>
+    <button class="btn-strike" onclick="executeStrike()">🚀 إطلاق القصف المدمّر</button>
 
     <div id="victory">
         💥 تـم قـصـف الـهـدف بـنـجـاح! 🎯 <br>
@@ -74,52 +70,47 @@
     <audio id="explosion" src="https://www.soundjay.com/mechanical/explosion-02.mp3"></audio>
 
     <script>
-        let strikes = localStorage.getItem('eljelad_strikes') || 0;
+        let strikes = localStorage.getItem('hani_strikes') || 0;
         document.getElementById('count').innerText = strikes;
 
         const urlParams = new URLSearchParams(window.location.search);
         const target = urlParams.get('target') || "No Target Detected";
         document.getElementById('targetUrl').innerText = target;
 
-        function unlockAudio() {
-            document.getElementById('bgAction').play();
-        }
+        function unlockAudio() { document.getElementById('bgAction').play(); }
 
         function executeStrike() {
-            // 1. تشغيل صوت الإطلاق وتأثير الصاروخ
             const rocket = document.getElementById('rocket');
             document.getElementById('launchSound').play();
             rocket.style.display = 'block';
             rocket.style.animation = 'launch 1.5s forwards';
 
             setTimeout(() => {
-                // 2. صوت الانفجار وإظهار الرسالة
                 document.getElementById('explosion').play();
                 document.getElementById('victory').style.display = 'block';
                 
-                // 3. تحديث العداد
                 strikes++;
-                localStorage.setItem('eljelad_strikes', strikes);
+                localStorage.setItem('hani_strikes', strikes);
                 document.getElementById('count').innerText = strikes;
 
-                // 4. تجهيز البلاغ الرسمي الطويل (أكثر من 300 حرف)
+                // مصفوفة البلاغات الاحترافية (أكثر من 300 حرف)
                 const reports = [
-                    `URGENT COMPLAINT: I am formally reporting the account (${target}) for severe violations of TikTok's safety policies. This user is actively spreading hate speech, engaging in systematic harassment, and promoting violent extremism which threatens the safety of our community. We demand an immediate permanent ban and removal of all associated content to maintain a safe environment. This is an official cybersecurity notification from the Algerian Reporting Army.`,
-                    `POLICY VIOLATION NOTICE: The profile located at ${target} has been identified as a source of extreme cyber-bullying and harmful behavior. This user violates community guidelines regarding violent extremism and digital safety. We request a manual review by your safety team and the immediate suspension of this account. Failure to act poses a risk to public integrity and user safety online. Official Report ID: DZ-ELJELAD.`
+                    `URGENT POLICY VIOLATION REPORT: This account (${target}) is being formally reported for propagating systematic hate speech and inciting violent extremism. Our monitoring system has identified multiple instances where this user has violated TikTok's community safety standards. We demand an immediate manual review and permanent suspension of this profile to protect users from further harassment and digital toxicity. Status: High Priority.`,
+                    `SAFETY ENFORCEMENT NOTICE: We are reporting the profile ${target} for engaging in malicious cyber-bullying and spreading extremist content that undermines public safety. This behavior is a direct violation of international safety regulations and TikTok's terms of service. We request your legal and safety teams to take instant action by removing this account permanently from the platform. Official Report issued by the Algerian Cyber Unit.`
                 ];
 
                 const finalReport = reports[Math.floor(Math.random() * reports.length)];
-                const emails = "feedback@tiktok.com,legal@tiktok.com,community@tiktok.com";
-                const mailto = `mailto:${emails}?subject=URGENT: Permanent Ban Request - Policy Violation&body=${encodeURIComponent(finalReport)}`;
+                
+                // إضافة الجيميلات الثلاثة بدقة لضمان الامتلاء التلقائي
+                const tiktokEmails = "feedback@tiktok.com,legal@tiktok.com,community@tiktok.com";
+                const mailto = `mailto:${tiktokEmails}?subject=URGENT: Permanent Ban Request - Community Safety&body=${encodeURIComponent(finalReport)}`;
 
-                // 5. فتح الجيميل بعد الانفجار
                 setTimeout(() => {
                     window.location.href = mailto;
                     document.getElementById('victory').style.display = 'none';
                     rocket.style.display = 'none';
                     rocket.style.animation = '';
                 }, 2000);
-
             }, 1500);
         }
     </script>
