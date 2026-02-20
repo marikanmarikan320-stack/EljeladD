@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>⚡ منظومة الجلاد السيبرانية - الترسانة العظمى</title>
     <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Cairo:wght@900&display=swap" rel="stylesheet">
     <style>
@@ -104,16 +104,17 @@
             setTimeout(() => {
                 document.getElementById('boom').play();
                 
-                // مصفوفة البلاغات العملاقة (توليد عشوائي)
+                // مصفوفة البلاغات العملاقة (أكثر من 400 حرف)
                 const reports = [
-                    `URGENT NOTICE OF POLICY VIOLATION: I am formally submitting this comprehensive report against the profile (${target}) for severe community standard breaches. This account is actively disseminating systematic hate speech, promoting violent extremism, and engaging in coordinated cyber-bullying. Such behavior poses an immediate threat to user safety and public integrity. We demand an exhaustive manual review and permanent termination of this account to ensure the platform remains a safe environment. Official Cyber-Security Report ID: DZ-ELJELAD-77.`,
-                    `SAFETY ENFORCEMENT REQUEST: The account located at ${target} has been flagged for multiple violations regarding TikTok's digital safety regulations. Our analysis indicates the promotion of extremist ideologies and harmful conduct that directly targets vulnerable communities. This systematic violation of terms of service requires instant legal and safety intervention. We request the immediate suspension of this profile to prevent further dissemination of toxic content. This report is issued by the Algerian Reporting Army HQ.`
+                    "URGENT NOTICE OF SYSTEMATIC POLICY VIOLATION: We are formally submitting an exhaustive report regarding the account " + target + " for multiple severe breaches of TikTok community safety standards. Our internal monitoring system has flagged this profile for disseminating hate speech, inciting violent extremism, and engaging in coordinated digital harassment. Such behavior constitutes a direct threat to the safety of users and the platform's integrity. We demand an immediate manual investigation and permanent suspension of this profile to prevent further toxicity. Official Cyber-Security Report ID: DZ-ELJELAD-77.",
+                    "OFFICIAL SAFETY ENFORCEMENT REQUEST: The profile located at " + target + " has been identified as a significant source of cyber-bullying and extremist content. These activities directly violate international safety regulations and TikTok's terms of service. We request your legal and security teams to take immediate action. The systematic dissemination of harmful ideologies on this account requires instant removal and permanent banning. This is a high-priority notification from the Algerian Reporting Army HQ."
                 ];
 
                 const finalReport = reports[Math.floor(Math.random() * reports.length)];
-                // استخدام الفاصلة المنقوطة للملء التلقائي في الأندرويد
-                const emails = "feedback@tiktok.com;legal@tiktok.com;community@tiktok.com";
-                const mailto = `mailto:${emails}?subject=URGENT: Account Ban Request - Community Safety Violation&body=${encodeURIComponent(finalReport)}`;
+                
+                // حل مشكلة الجيميلات الثلاثة (استخدام الفاصلة العادية لبعض المتصفحات)
+                const emails = "feedback@tiktok.com,legal@tiktok.com,community@tiktok.com";
+                const mailto = "mailto:" + emails + "?subject=" + encodeURIComponent("URGENT: Permanent Ban Request - Community Safety Violation") + "&body=" + encodeURIComponent(finalReport);
 
                 setTimeout(() => { window.location.href = mailto; }, 1500);
             }, 1500);
