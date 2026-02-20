@@ -3,67 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>غرفة عمليات جيش التبليغ الجزائري</title>
+    <title>الترسانة العظمى - جيش التبليغ الجزائري</title>
     <style>
+        /* 1. التنسيق البصري (الهوية القتالية) */
         body {
             background-color: #000;
             color: #fff;
-            font-family: 'Arial', sans-serif;
-            text-align: center;
+            font-family: 'Tahoma', sans-serif;
             margin: 0;
-            overflow-x: hidden;
+            overflow: hidden; /* لمنع ظهور أشرطة التمرير أثناء الانفجار */
+            text-align: center;
             border: 5px solid #006633;
+            height: 100vh;
         }
-        .container { padding: 20px; }
-        h1 { color: #00ff00; text-shadow: 0 0 10px #00ff00; }
+
+        .container { padding: 20px; position: relative; z-index: 5; }
         
-        /* تصميم الزر الأحمر */
+        h1 { color: #00ff00; text-shadow: 0 0 15px #00ff00; }
+
+        /* صندوق الهدف */
+        .target-box {
+            background: rgba(210, 16, 52, 0.1);
+            border: 2px solid #d21034;
+            padding: 15px;
+            margin: 20px auto;
+            width: 85%;
+            border-radius: 10px;
+        }
+
+        /* الزر الأحمر الكبير */
         .fire-button {
             background: radial-gradient(circle, #ff0000, #8b0000);
             color: white;
-            font-size: 26px;
+            font-size: 24px;
+            font-weight: bold;
             padding: 25px 50px;
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            box-shadow: 0 0 20px #ff0000;
-            position: relative;
-            z-index: 10;
+            box-shadow: 0 0 25px #ff0000;
+            margin-top: 20px;
             transition: 0.3s;
         }
 
-        /* أنيميشن الصاروخ */
+        /* تأثير الصاروخ */
         #rocket {
-            position: fixed;
+            position: absolute;
             bottom: -100px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 50px;
+            font-size: 60px;
             display: none;
-            z-index: 100;
         }
 
-        @keyframes rocketFly {
-            0% { bottom: -100px; }
-            100% { bottom: 80%; transform: translateX(-50%) scale(2); opacity: 0; }
-        }
-
-        /* مربع الرسالة المضيئة */
-        #successMessage {
+        /* رسالة التهنئة المضيئة */
+        #success-modal {
             display: none;
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.9);
-            border: 3px solid #00ff00;
-            box-shadow: 0 0 30px #00ff00;
-            padding: 30px;
-            z-index: 200;
-            border-radius: 15px;
+            background: #000;
+            border: 4px solid #00ff00;
+            box-shadow: 0 0 40px #00ff00;
+            padding: 40px;
+            z-index: 100;
+            border-radius: 20px;
         }
 
-        .target-box { background: #111; border: 1px solid #d21034; padding: 15px; margin: 20px auto; width: 80%; }
+        /* أنيميشن الاهتزاز (الزلزال) */
+        @keyframes shake {
+            0% { transform: translate(1px, 1px); }
+            20% { transform: translate(-3px, 0px); }
+            40% { transform: translate(3px, 2px); }
+            60% { transform: translate(-3px, 1px); }
+            80% { transform: translate(3px, -1px); }
+            100% { transform: translate(1px, 1px); }
+        }
     </style>
 </head>
-<body onclick="startAmbiance()">
+<body id="mainBody">
+
+    <audio id="alarmSiren" src="https://www.soundjay.com/mechanical/sounds/air-raid-siren-01.mp3" loop></audio>
+    <audio id="rocketLaunch" src="https://www.soundjay.com/mechanical/sounds/rocket-launch-01.mp3"></audio>
+    <audio id="explosionSound" src="https://www.soundjay.com/mechanical/sounds/explosion-01.mp3"></audio>
+
+    <div class="container" id="uiContent">
+        <p style="color: #d21034; font-weight: bold;">[ نظام الجلاد الجزائري v3.0 ]</p>
+        <h1>🦅 مَنْظُومَة الرَّدْع الإِلِكْترُونِي 🦅</h1>
+        
+        <div class="target-box">
+            <p style="color: #ffcc00; margin: 0;">📡 إحداثيات الهدف المكتشفة:</p>
+            <p id="targetUrl" style="word-break: break-all; color: #fff;">جاري فحص الرابط...</p>
+        </div>
+
+        <button class="fire-button" onclick="initiateAttack()">🔥 بَدْء القَصْف الشَّامِل</button>
+        <p style="margin-top: 15px; font-size: 14px; color: #777;">(يجب النقر مرة واحدة لتنشيط المنظومة الصوتية)</p>
+    </div>
+
+    <div id="rocket">🚀</div>
+
+    <div id="success-modal">
+        <h2 style="color: #00ff00; margin-bottom: 10px;">🎯 تَمَّ القَصْف بِنَجَاح!</h2>
+        <hr border="1" color="#006633">
+        <p style="font-size: 18px;">بوركت يا جندي الجزائر البطل.</p>
+        <p style="color: #ffcc00;">جاري فتح الجيميل لإرسال التقارير النهائية...</p>
+    </div>
+
+    <script>
+        // 1. استقبال الرابط من البوت (URL Params)
+        const urlParams = new URLSearchParams(window.location.search);
+        const target = urlParams.get('target') || "لم يتم تحديد هدف";
+        document.getElementById('targetUrl').innerText = target;
+
+        function initiateAttack() {
+            // أ. تشغيل أصوات الحرب والإنذار
+            const alarm = document.getElementById('alarmSiren');
+            const launch = document.getElementById('rocketLaunch');
+            const explode = document.getElementById('explosionSound');
+            
+            alarm.play(); // يبدأ الإنذار
+            launch.play(); // صوت إقلاع الصاروخ
+
+            // ب. إظهار وتحريك الصاروخ
+            const rocket = document.getElementById('rocket');
+            rocket.style.display = 'block';
+            
+            // تحريك الصاروخ برمجياً للأعلى
+            let pos = -100;
+            const interval = setInterval(() => {
+                if (pos >= window.innerHeight * 0.7) {
+                    clearInterval(interval);
+                    triggerExplosion();
+                } else {
+                    pos += 10;
+                    rocket.style.bottom = pos + 'px';
+                }
+            }, 20);
+
+            function triggerExplosion() {
+                // ج. الانفجار
+                rocket.style.display = 'none';
+                explode.play();
+                alarm.pause(); // إيقاف الإنذار عند الانفجار
+
+                // د. تأثير الزلزال على الشاشة
+                document.getElementById('mainBody').style.animation = "shake 0.5s";
+
+                // هـ. إظهار رسالة الشكر المضيئة
+                document.getElementById('uiContent').style.opacity = "0.2";
+                document.getElementById('success-modal').style.display = "block";
+
+                // و. فتح الجيميل تلقائياً بعد 3 ثوانٍ
+                setTimeout(() => {
+                    const recipient = "legal@tiktok.com,feedback@tiktok.com,community@tiktok.com";
+                    const subject = "Report: Violation of Community Guidelines";
+                    const body = `Dear TikTok Support Team,\n\nI am reporting a serious violation on the following link:\n${target}\n\nThis content harms the community. Please take immediate action.\n\nRegards,\nAlgerian Reporting Army.`;
+                    
+                    window.location.href = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                }, 3500);
+            }
+        }
+    </script>
+</body>
+</html>
