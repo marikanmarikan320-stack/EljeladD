@@ -3,47 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ترسانة الجلاد - v14.0 الإحترافية</title>
+    <title>ترسانة الجلاد - v15.0 المحرك الذكي</title>
     <style>
-        :root { --neon-green: #00ff41; --danger-red: #ff0000; --gold: #ffcc00; }
+        :root { --neon: #00ff41; --danger: #ff0000; --gold: #ffcc00; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; color: #fff; font-family: 'Courier New', monospace; overflow: hidden; }
 
-        /* خلفية أمن سيبراني متحركة */
-        .cyber-bg {
+        /* خلفية الهكر المتطورة */
+        .hacker-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: url('https://w0.peakpx.com/wallpaper/445/266/HD-wallpaper-anonymous-black-hacker.jpg') no-repeat center;
-            background-size: cover; filter: brightness(30%) contrast(130%); z-index: -2;
+            background: url('https://img.freepik.com/premium-photo/hacker-hoodie-mask-dark-background_931878-107055.jpg') no-repeat center;
+            background-size: cover; filter: brightness(25%) contrast(140%); z-index: -2;
         }
 
-        /* حواف مضيئة بأسلوب الرادع */
+        /* الحواف المضيئة المتفاعلة */
         .glow-frame {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            border: 5px solid var(--neon-green); box-sizing: border-box;
-            animation: pulseFrame 1s infinite alternate; z-index: 9999; pointer-events: none;
+            border: 5px solid var(--neon); box-sizing: border-box;
+            animation: borderPulse 0.6s infinite alternate; z-index: 9999; pointer-events: none;
         }
 
         /* الرادار العسكري */
-        .military-radar {
-            width: 110px; height: 110px; border: 2px solid var(--neon-green);
+        .radar-box {
+            width: 100px; height: 100px; border: 2px solid var(--neon);
             border-radius: 50%; position: relative; margin: 15px auto;
             background: radial-gradient(circle, rgba(0,255,65,0.1) 0%, transparent 80%);
         }
         .sweep {
             position: absolute; width: 50%; height: 100%;
             background: linear-gradient(90deg, transparent, rgba(0,255,65,0.4));
-            top: 0; left: 50%; transform-origin: left; animation: rotate 2.5s linear infinite;
+            top: 0; left: 50%; transform-origin: left; animation: rotate 2s linear infinite;
         }
 
         /* إحصائيات الجندي */
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 90%; margin: auto; }
-        .card { background: rgba(0,0,0,0.8); border: 1px solid var(--gold); padding: 10px; border-radius: 5px; text-align: center; }
+        .stats { display: flex; justify-content: space-around; background: rgba(0,0,0,0.8); border: 1px solid var(--gold); padding: 10px; margin: 10px; border-radius: 5px; }
 
         /* زر المدفع الأوسط */
-        .war-btn {
+        .fire-btn {
             background: radial-gradient(circle, #f00, #800);
             color: #fff; width: 85%; padding: 25px; font-size: 22px; font-weight: bold;
             border: 3px solid #fff; border-radius: 15px; cursor: pointer;
-            box-shadow: 0 0 30px var(--danger-red);
+            box-shadow: 0 0 30px var(--danger); margin-top: 20px;
         }
 
         /* النافذة المنبثقة */
@@ -51,20 +50,16 @@
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.95); z-index: 10000; flex-direction: column; justify-content: center; align-items: center;
         }
-        .modal-content {
-            width: 85%; border: 2px solid var(--gold); background: #000; padding: 20px; text-align: center;
-            background: url('https://wallpaperaccess.com/full/1598211.jpg') center/cover;
-        }
 
-        #missile { position: fixed; bottom: -100px; left: 50%; font-size: 50px; transform: translateX(-50%); z-index: 11000; transition: 1s; }
+        #rocket { position: fixed; bottom: -100px; left: 50%; font-size: 60px; transform: translateX(-50%); z-index: 11000; transition: 1s; }
 
         @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes pulseFrame { 0% { border-color: var(--neon-green); } 100% { border-color: var(--danger-red); } }
+        @keyframes borderPulse { 0% { border-color: var(--neon); } 100% { border-color: var(--danger); } }
     </style>
 </head>
-<body onclick="unlockAudio()">
+<body onclick="activateEngine()">
 
-    <div class="cyber-bg"></div>
+    <div class="hacker-bg"></div>
     <div class="glow-frame"></div>
 
     <audio id="anthem" src="https://upload.wikimedia.org/wikipedia/commons/2/25/Kassaman.ogg" loop></audio>
@@ -72,54 +67,52 @@
     <audio id="sndExplosion" src="https://www.soundjay.com/mechanical/sounds/explosion-01.mp3"></audio>
 
     <div style="padding-top:20px; text-align:center;">
-        <h1 style="color:var(--neon-green); font-size:18px;">🇩🇿 جَيْشُ التَّبْلِيغِ الْجَزَائِرِيُّ 🇩🇿</h1>
+        <h1 style="color:var(--neon); font-size:18px;">🇩🇿 مَنْظُومَةُ جَيْشِ التَّبْلِيغِ الْجَزَائِرِيِّ 🇩🇿</h1>
         <p style="color:var(--gold); margin:0;">بِقِيَادَةِ: الْجَلادِ الْجَزَائِرِيِّ 🦅</p>
 
-        <div class="military-radar"><div class="sweep"></div></div>
+        <div class="radar-box"><div class="sweep"></div></div>
 
-        <div class="stat-grid">
-            <div class="card">الرتبة<br><span id="rankLabel" style="color:var(--gold); font-weight:bold;">جندي</span></div>
-            <div class="card">القصفات<br><span id="strikeLabel" style="color:var(--gold); font-weight:bold;">0</span></div>
+        <div class="stats">
+            <div>الرتبة: <span id="rankLabel" style="color:var(--gold)">جندي</span></div>
+            <div>القصفات: <span id="countLabel" style="color:var(--gold)">0</span></div>
         </div>
 
-        <div id="targetDisplay" style="background:rgba(255,0,0,0.1); border:1px dashed #f00; padding:8px; width:80%; margin:15px auto; font-size:10px; color:#0f0;"></div>
+        <div id="targetDisplay" style="background:rgba(255,0,0,0.1); border:1px dashed #f00; padding:10px; width:80%; margin:15px auto; font-size:10px; color:#0f0;"></div>
 
-        <button class="war-btn" onclick="openControlPanel()">🚀 بَدْءُ مَهَمَّةِ الْقَصْفِ</button>
+        <button class="fire-btn" onclick="openPanel()">🚀 بَدْءُ مَهَمَّةِ الْقَصْفِ</button>
         <p style="color:var(--gold); font-size:12px; margin-top:10px;">"أصبعك هو زينتك.. وهاتفك هو سلاحك"</p>
     </div>
 
     <div id="warPanel" class="modal">
-        <div class="modal-content">
-            <div style="background:rgba(0,0,0,0.85); padding:20px;">
-                <h2 style="color:var(--neon-green);">غرفة التحكم v14</h2>
-                <button onclick="aiGenerator()" style="width:100%; padding:20px; background:var(--gold); border:none; font-weight:bold; margin-bottom:15px;">⚡ تَوْلِيدُ بَلَاغٍ ذَكِيٍّ (AI)</button>
-                <button onclick="executeStrike()" style="width:100%; padding:20px; background:var(--danger-red); color:#fff; border:none; font-weight:bold;">🔥 إِطْلاقُ الْقَصْفِ الشَّامِلِ</button>
-                <br><br>
-                <button onclick="closeControlPanel()" style="background:none; border:none; color:#777; cursor:pointer;">🔙 عَوْدَةٌ لِلْخَلْفِ</button>
-            </div>
+        <div style="width:85%; background:rgba(0,0,0,0.9); border:2px solid var(--gold); padding:20px; text-align:center;">
+            <h2 style="color:var(--neon);">غرفة التحكم v15</h2>
+            <button onclick="advancedAIReport()" style="width:100%; padding:20px; background:var(--gold); border:none; font-weight:bold; margin-bottom:15px;">⚡ تَوْلِيدُ بَلَاغٍ ذَكِيٍّ (AI)</button>
+            <button onclick="startStrike()" style="width:100%; padding:20px; background:var(--danger); color:#fff; border:none; font-weight:bold;">🔥 إِطْلاقُ الْقَصْفِ الشَّامِلِ</button>
+            <br><br>
+            <button onclick="closePanel()" style="background:none; border:none; color:#777; cursor:pointer;">🔙 عودة</button>
         </div>
     </div>
 
-    <div id="missile">🚀</div>
+    <div id="rocket">🚀</div>
 
-    <div id="victoryScreen" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:20000; text-align:center; flex-direction:column; justify-content:center;">
-        <h1 style="color:var(--neon-green); font-size:35px;">🎯 تَمَّ الْقَصْفُ بِنَجَاح!</h1>
+    <div id="successPanel" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:20000; text-align:center; flex-direction:column; justify-content:center; align-items:center;">
+        <h1 style="color:var(--neon); font-size:35px;">🎯 تَمَّ الْقَصْفُ بِنَجَاح!</h1>
         <p style="color:var(--gold); font-size:20px;">شُكراً لَكَ يَا بَطَلَ الْجَزَائِر</p>
         <h2 style="color:#fff;">🇩🇿 تَحْيَا الْجَزَائِر 🇩🇿</h2>
         <p style="font-size:12px; color:#555;">المجد والخلود لشهدائنا الأبرار</p>
-        <button onclick="location.reload()" style="padding:15px 40px; background:var(--green); color:#fff; border:none; margin-top:20px;">إغلاق</button>
+        <button onclick="location.reload()" style="padding:15px 40px; margin-top:20px;">مهمة جديدة</button>
     </div>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        const target = urlParams.get('target') || "No Link Detected";
+        const target = urlParams.get('target') || "No Target Found";
         document.getElementById('targetDisplay').innerText = target;
 
-        let strikeCount = localStorage.getItem('dz_strikes_v14') ? parseInt(localStorage.getItem('dz_strikes_v14')) : 0;
-        let departureTime = 0; 
+        let strikeCount = localStorage.getItem('hani_v15_strikes') ? parseInt(localStorage.getItem('hani_v15_strikes')) : 0;
+        let departTimestamp = 0; 
 
         function updateUI() {
-            document.getElementById('strikeLabel').innerText = strikeCount;
+            document.getElementById('countLabel').innerText = strikeCount;
             let r = "جندي متطوع";
             if(strikeCount >= 100) r = "عقيد الجلاد";
             if(strikeCount >= 200) r = "جنرال الثورة";
@@ -127,64 +120,60 @@
         }
         updateUI();
 
-        function unlockAudio() { document.getElementById('anthem').play().catch(e=>{}); }
+        // تفعيل الصوت عند أول لمسة
+        function activateEngine() { document.getElementById('anthem').play().catch(e=>{}); }
 
-        function openControlPanel() { document.getElementById('warPanel').style.display = 'flex'; }
-        function closeControlPanel() { document.getElementById('warPanel').style.display = 'none'; }
+        function openPanel() { document.getElementById('warPanel').style.display = 'flex'; }
+        function closePanel() { document.getElementById('warPanel').style.display = 'none'; }
 
-        // محرك توليد البلاغات العشوائي الذكي (AI Logic)
-        function aiGenerator() {
-            const intros = ["Urgent: Systematic violation report. ", "Official notice of guideline breach. ", "Critical safety concern report. "];
-            const reasons = [
-                "The account " + target + " promotes harmful behavior and cyber-harassment. ",
-                "I am flagging " + target + " for repeated violations of platform safety. ",
-                "Content from " + target + " poses a risk to the digital community. "
-            ];
-            const legal = [
-                "Under TikTok safety protocols, this activity is prohibited. ",
-                "We demand a permanent ban to ensure platform integrity. ",
-                "Immediate review is required by the legal department. "
-            ];
-            const footer = [" Reference ID: " + Math.random().toString(36).substr(2, 9).toUpperCase(), " Priority: HIGH.", " Case DZ-SOLDIER."];
-            
+        // محرك البلاغات الذكي v15 (نظام التركيب العشوائي)
+        function advancedAIReport() {
+            const intros = ["Urgent: Systematic violation report. ", "Official legal notice regarding guideline breach. ", "Critical safety concern for immediate review. "];
+            const технический = ["Technical analysis of account " + target + " reveals persistent violations. ", "We are flagging the link " + target + " for breach of service terms. ", "Our monitoring system detected harmful activity on " + target + ". "];
+            const violations = ["This entity is spreading prohibited content that harms the community. ", "This user is engaged in cyber-harassment and systematic bullying. ", "Prohibited behavior has been documented on this profile multiple times. "];
+            const codes = ["Reference Case: DZ-SOLDIER-" + Math.random().toString(36).substr(2, 5).toUpperCase(), "Priority Code: ALPHA-01.", "Internal ID: " + Date.now()];
+            const closings = [" Immediate ban is required. ", " Termination of this account is non-negotiable. ", " Platform safety protocols demand swift action. "];
+
+            // تركيب البلاغ
             let final = intros[Math.floor(Math.random()*intros.length)] + 
-                        reasons[Math.floor(Math.random()*reasons.length)] + 
-                        legal[Math.floor(Math.random()*legal.length)] + 
-                        footer[Math.floor(Math.random()*footer.length)];
+                        технический[Math.floor(Math.random()*технический.length)] + 
+                        violations[Math.floor(Math.random()*violations.length)] + 
+                        closings[Math.floor(Math.random()*closings.length)] + 
+                        codes[Math.floor(Math.random()*codes.length)];
 
-            while(final.length < 520) { final += " Safety standards must be upheld at all times across the platform."; }
+            while(final.length < 520) { final += " The safety of the TikTok community depends on removing such accounts immediately."; }
 
             navigator.clipboard.writeText(final);
-            alert("✅ تم توليد بلاغ ذكي فريد ونسخه آلياً!");
+            alert("✅ تم توليد بلاغ فريد 100% ونسخه بنجاح!");
         }
 
-        function executeStrike() {
+        function startStrike() {
             document.getElementById('sndLaunch').play();
-            const missile = document.getElementById('missile');
-            missile.style.display = 'block';
-            setTimeout(() => { missile.style.bottom = "120%"; missile.style.transition = "1s"; }, 50);
+            const rocket = document.getElementById('rocket');
+            rocket.style.display = 'block';
+            setTimeout(() => { rocket.style.bottom = "120%"; rocket.style.transition = "1.2s"; }, 50);
 
             setTimeout(() => {
                 document.getElementById('sndExplosion').play();
-                departureTime = Date.now(); // تسجيل وقت الخروج
-                window.location.href = `mailto:legal@tiktok.com,feedback@tiktok.com,community@tiktok.com?subject=Emergency Violation Report&body=Link: ${target}`;
-            }, 1000);
+                departTimestamp = Date.now(); // تفعيل حساس المصداقية
+                window.location.href = `mailto:legal@tiktok.com,feedback@tiktok.com,community@tiktok.com?subject=Policy Violation Report&body=Link: ${target}`;
+            }, 1200);
         }
 
-        // حساس المصداقية (Anti-Cheat Validation)
+        // حساس الرؤية المطور (حساس المصداقية)
         document.addEventListener("visibilitychange", function() {
-            if (document.visibilityState === 'visible' && departureTime > 0) {
-                let timeSpent = (Date.now() - departureTime) / 1000;
-                if (timeSpent > 8) { // إذا غاب الجندي أكثر من 8 ثوانٍ (وقت كافٍ للتبليغ)
+            if (document.visibilityState === 'visible' && departTimestamp > 0) {
+                let duration = (Date.now() - departTimestamp) / 1000;
+                if (duration > 10) { // يجب أن يغيب الجندي 10 ثوانٍ على الأقل للتبليغ
                     strikeCount++;
-                    localStorage.setItem('dz_strikes_v14', strikeCount);
+                    localStorage.setItem('hani_v15_strikes', strikeCount);
                     updateUI();
                     document.getElementById('warPanel').style.display = 'none';
-                    document.getElementById('victoryScreen').style.display = 'flex';
+                    document.getElementById('successPanel').style.display = 'flex';
                 } else {
-                    alert("⚠️ المنظومة اكتشفت تلاعباً! لم تقم بالتبليغ حقاً داخل الجيميل.");
+                    alert("⚠️ المنظومة اكتشفت تلاعباً! لم ترسل الإيميل حقاً.");
                 }
-                departureTime = 0;
+                departTimestamp = 0;
             }
         });
     </script>
