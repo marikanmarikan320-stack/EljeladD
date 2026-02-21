@@ -3,56 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>واجهة العمليات السيبرانية - الجلاد الجزائري</title>
+    <title>واجهة العمليات التكتيكية - الجلاد الجزائري</title>
     <style>
         /* الخطوط */
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Share+Tech+Mono&display=swap');
 
-        /* الخلفية العامة والأساسية */
+        /* الخلفية العامة مع الصورة المدمجة */
         body {
             margin: 0;
             padding: 0;
-            background-color: #0d0d0d; /* أسود داكن جداً */
+            background-color: #1a1a1a; /* لون احتياطي للخلفية */
+            background-image: url('https://images.unsplash.com/photo-1517402127271-e7724a7374d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'); /* رابط الصورة الخلفية */
+            background-size: cover; /* تغطية كاملة للخلفية */
+            background-position: center; /* توسيط الصورة */
+            background-attachment: fixed; /* لتثبيت الصورة أثناء التمرير إذا كان هناك محتوى طويل */
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
             font-family: 'Share Tech Mono', monospace; /* خط هاكرز */
-            color: #00ff41; /* أخضر نيون */
-            overflow: hidden; /* لمنع ظهور scrollbar بسبب تأثيرات الخلفية */
+            color: #e0e0e0; /* لون نص عام */
+            overflow: hidden;
             position: relative;
         }
 
-        /* تأثير الماتريكس في الخلفية */
-        .matrix-background {
+        /* طبقة تظليل فوق الصورة لزيادة وضوح الأزرار */
+        body::before {
+            content: '';
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: #0d0d0d;
-            z-index: -1;
-            overflow: hidden;
-            opacity: 0.2; /* شفافية خفيفة */
-        }
-
-        .matrix-column {
-            position: absolute;
-            width: 15px; /* عرض العمود */
-            left: 0;
-            top: 0;
-            color: #00ff41;
-            font-size: 15px;
-            text-shadow: 0 0 8px #00ff41;
-            white-space: pre; /* للحفاظ على المسافات والأسطر */
-            animation: matrix-fall linear infinite;
-        }
-
-        @keyframes matrix-fall {
-            0% { transform: translateY(-100%); opacity: 0; }
-            5% { opacity: 1; }
-            100% { transform: translateY(100vh); opacity: 0; }
+            background: rgba(0, 0, 0, 0.7); /* تظليل أسود شفاف */
+            z-index: 1;
         }
 
         /* العنوان الرئيسي للواجهة */
@@ -65,6 +50,8 @@
             letter-spacing: 5px;
             animation: pulse-red 2s infinite alternate; /* نبض أحمر */
             text-align: center;
+            position: relative;
+            z-index: 2; /* ليكون فوق طبقة التظليل */
         }
 
         @keyframes pulse-red {
@@ -77,19 +64,21 @@
             display: flex;
             flex-direction: column;
             gap: 25px; /* المسافة بين الأزرار */
-            background: rgba(0, 0, 0, 0.7); /* خلفية شبه شفافة للأزرار */
+            background: rgba(0, 0, 0, 0.8); /* خلفية شبه شفافة للأزرار */
             padding: 40px 60px;
             border-radius: 15px;
             box-shadow: 0 0 30px rgba(0, 255, 65, 0.3), 0 0 50px rgba(255, 0, 0, 0.2);
             border: 2px solid #00ff41; /* إطار أخضر */
+            position: relative;
+            z-index: 2; /* ليكون فوق طبقة التظليل */
         }
 
-        /* تصميم الأزرار الفردية */
-        .hacker-button {
+        /* تصميم الأزرار "الصناديق الفولاذية" مع تأثير 3D */
+        .steel-button {
             width: 350px;
             height: 70px;
-            background: #1a1a1a;
-            color: #00ff41;
+            background: linear-gradient(145deg, #333, #111); /* تدرج ليعطي عمق */
+            color: #e0e0e0; /* لون نص افتراضي */
             border: 2px solid;
             border-image-slice: 1;
             cursor: pointer;
@@ -98,7 +87,9 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             transition: all 0.3s ease-in-out;
-            box-shadow: 0 0 15px rgba(0, 255, 65, 0.2);
+            box-shadow: 
+                inset 0 0 10px rgba(0, 255, 65, 0.1), /* ظل داخلي */
+                0 5px 15px rgba(0, 0, 0, 0.5); /* ظل خارجي للعمق */
             position: relative;
             overflow: hidden;
             outline: none;
@@ -106,61 +97,70 @@
             align-items: center;
             justify-content: center;
             padding: 0 20px;
+            border-radius: 8px; /* حواف مستديرة قليلاً */
+            transform-style: preserve-3d; /* لجعل الأطفال ثلاثي الأبعاد */
+            perspective: 1000px;
         }
 
-        /* تأثيرات الوهج لكل زر */
-        .hacker-button.green {
+        /* تأثيرات الإضاءة والوهج لكل زر */
+        .steel-button.green {
             border-image-source: linear-gradient(to right, #00ff41, #00992a);
-            box-shadow: 0 0 15px rgba(0, 255, 65, 0.5);
             color: #00ff41;
+            text-shadow: 0 0 5px #00ff41;
         }
-        .hacker-button.red {
+        .steel-button.red {
             border-image-source: linear-gradient(to right, #ff0000, #cc0000);
-            box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
             color: #ff0000;
+            text-shadow: 0 0 5px #ff0000;
         }
-        .hacker-button.yellow {
+        .steel-button.yellow {
             border-image-source: linear-gradient(to right, #ffff00, #cccc00);
-            box-shadow: 0 0 15px rgba(255, 255, 0, 0.5);
             color: #ffff00;
+            text-shadow: 0 0 5px #ffff00;
         }
 
         /* تأثير ال Hover على الأزرار */
-        .hacker-button:hover {
-            transform: scale(1.05);
+        .steel-button:hover {
+            transform: translateY(-5px) scale(1.02); /* رفع وتكبير خفيف */
             filter: brightness(1.2);
             letter-spacing: 3px;
+            box-shadow: 
+                inset 0 0 15px rgba(0, 255, 65, 0.2),
+                0 10px 25px rgba(0, 0, 0, 0.7); /* ظل أعمق */
         }
 
-        .hacker-button.green:hover {
-            background: rgba(0, 255, 65, 0.1);
-            box-shadow: 0 0 30px #00ff41;
-        }
-        .hacker-button.red:hover {
-            background: rgba(255, 0, 0, 0.1);
-            box-shadow: 0 0 30px #ff0000;
-        }
-        .hacker-button.yellow:hover {
-            background: rgba(255, 255, 0, 0.1);
-            box-shadow: 0 0 30px #ffff00;
+        .steel-button.green:hover { background: linear-gradient(145deg, #444, #222); box-shadow: 0 0 30px #00ff41; }
+        .steel-button.red:hover { background: linear-gradient(145deg, #444, #222); box-shadow: 0 0 30px #ff0000; }
+        .steel-button.yellow:hover { background: linear-gradient(145deg, #444, #222); box-shadow: 0 0 30px #ffff00; }
+
+        /* تأثير الضغط (Active) */
+        .steel-button:active {
+            transform: translateY(2px) scale(0.98); /* ضغط للداخل */
+            box-shadow: 
+                inset 0 0 20px rgba(0, 255, 65, 0.3),
+                0 2px 5px rgba(0, 0, 0, 0.3); /* ظل أقل بروزا */
         }
 
-        /* الخطوط المتوهجة في الأطراف (مثل في صورتك) */
-        .hacker-button::before, .hacker-button::after {
-            content: '';
+        /* الخطوط المتوهجة في الأطراف (مثل في صورتك) - سأستخدمها كطبقة علوية للزر */
+        .steel-button .glow-border {
             position: absolute;
-            width: 10px;
-            height: 10px;
-            background: currentColor; /* تأخذ لون الزر */
-            z-index: 1;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 2px solid transparent;
+            border-image-slice: 1;
+            box-shadow: 0 0 15px currentColor;
+            opacity: 0.7;
+            transition: all 0.3s ease-in-out;
+            pointer-events: none; /* لتمرير أحداث الماوس إلى الزر الأساسي */
         }
-        .hacker-button::before { top: 0; left: 0; }
-        .hacker-button::after { bottom: 0; right: 0; }
 
-        .hacker-button span {
-            position: relative;
-            z-index: 2; /* لجعل النص فوق الألوان الخلفية */
-        }
+        .steel-button.green .glow-border { border-image-source: linear-gradient(to right, #00ff41, #00992a); }
+        .steel-button.red .glow-border { border-image-source: linear-gradient(to right, #ff0000, #cc0000); }
+        .steel-button.yellow .glow-border { border-image-source: linear-gradient(to right, #ffff00, #cccc00); }
+
+        .steel-button:hover .glow-border { opacity: 1; box-shadow: 0 0 30px currentColor; }
 
         /* تأثير الاهتزاز عند الضغط */
         @keyframes shake {
@@ -181,22 +181,30 @@
             font-size: 0.9em;
             text-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
             opacity: 0.7;
+            z-index: 2;
         }
     </style>
 </head>
 <body>
 
-    <div class="matrix-background" id="matrixBackground"></div>
-
-    <h1 class="header-title">الجلاد الجزائري</h1>
+    <h1 class="header-title">القيادة التكتيكية</h1>
 
     <div class="buttons-container">
-        <button class="hacker-button green" onclick="activateButton(this, 'gunshot')"><span>بدء الهجوم</span></button>
-        <button class="hacker-button red" onclick="activateButton(this, 'alert')"><span>اختراق النظام</span></button>
-        <button class="hacker-button yellow" onclick="activateButton(this, 'explosion')"><span>القضاء على الهدف</span></button>
+        <button class="steel-button green" onclick="activateButton(this, 'gunshot')">
+            <span class="glow-border"></span>
+            <span>بدء الهجوم</span>
+        </button>
+        <button class="steel-button red" onclick="activateButton(this, 'alert')">
+            <span class="glow-border"></span>
+            <span>اختراق الهدف</span>
+        </button>
+        <button class="steel-button yellow" onclick="activateButton(this, 'explosion')">
+            <span class="glow-border"></span>
+            <span>تدمير كلي</span>
+        </button>
     </div>
 
-    <div class="status-message">تأمين الاتصال... جاري التحضير للعملية.</div>
+    <div class="status-message">تأمين الاتصال... انتظار الأوامر.</div>
 
     <audio id="gunshotSound">
         <source src="https://www.soundjay.com/military/gun-shot-2.mp3" type="audio/mpeg">
@@ -209,7 +217,6 @@
     </audio>
 
     <script>
-        // دالة تشغيل الأصوات وتأثيرات الأزرار
         function activateButton(button, soundType) {
             let sound;
             if (soundType === 'gunshot') {
@@ -221,61 +228,32 @@
             }
 
             if (sound) {
-                sound.currentTime = 0; // لإعادة الصوت من البداية عند كل ضغطة
+                sound.currentTime = 0;
                 sound.play();
             }
 
-            // إضافة تأثير اهتزاز خفيف للزر نفسه وللشاشة
             button.classList.add('shaking');
             document.body.classList.add('shaking');
             setTimeout(() => {
                 button.classList.remove('shaking');
                 document.body.classList.remove('shaking');
-            }, 300); // إزالة الاهتزاز بعد 0.3 ثانية
+            }, 300);
 
-            // تغيير رسالة الحالة
             const statusMessage = document.querySelector('.status-message');
             if (soundType === 'gunshot') {
-                statusMessage.textContent = "بدء الهجوم... إطلاق نار مكثف!";
+                statusMessage.textContent = "العملية بدأت: إطلاق نار مكثف!";
                 statusMessage.style.color = '#00ff41';
                 statusMessage.style.textShadow = '0 0 8px #00ff41';
             } else if (soundType === 'alert') {
-                statusMessage.textContent = "اختراق النظام... تم الوصول إلى الخوادم!";
+                statusMessage.textContent = "الاختراق مؤكد: الوصول إلى الشبكة المركزية!";
                 statusMessage.style.color = '#ff0000';
                 statusMessage.style.textShadow = '0 0 8px #ff0000';
             } else if (soundType === 'explosion') {
-                statusMessage.textContent = "القضاء على الهدف... تم المسح الكلي!";
+                statusMessage.textContent = "تم التدمير: لا يوجد ناجون!";
                 statusMessage.style.color = '#ffff00';
                 statusMessage.style.textShadow = '0 0 8px #ffff00';
             }
         }
-
-        // JavaScript لتوليد تأثير الماتريكس
-        document.addEventListener('DOMContentLoaded', () => {
-            const matrixBackground = document.getElementById('matrixBackground');
-            const columnsCount = Math.floor(window.innerWidth / 15); // عدد الأعمدة بناءً على عرض الشاشة
-
-            const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%^&*()-=_+[]{}|;:,.<>?';
-
-            for (let i = 0; i < columnsCount; i++) {
-                const column = document.createElement('div');
-                column.classList.add('matrix-column');
-                column.style.left = `${i * 15}px`;
-                column.style.animationDelay = `${Math.random() * 5}s`; // تأخير عشوائي
-                column.style.height = `${window.innerHeight + 200}px`; // ارتفاع أطول من الشاشة
-
-                let columnText = '';
-                const textLength = Math.floor(Math.random() * 50) + 20; // طول عشوائي للعمود
-                for (let j = 0; j < textLength; j++) {
-                    columnText += chars.charAt(Math.floor(Math.random() * chars.length)) + '\n';
-                }
-                column.textContent = columnText;
-                matrixBackground.appendChild(column);
-
-                // تعيين مدة الحركة عشوائياً
-                column.style.animationDuration = `${Math.random() * 10 + 5}s`; // بين 5 و 15 ثانية
-            }
-        });
     </script>
 
 </body>
