@@ -3,44 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ترسانة الجلاد الجزائري v8.0</title>
+    <title>ترسانة الجلاد الجزائري v9.0</title>
     <style>
-        :root { --green: #00ff00; --red: #ff0000; --gold: #ffcc00; }
+        :root { --green: #00ff00; --red: #ff0000; --gold: #ffcc00; --shadow: rgba(0, 255, 0, 0.5); }
         
         body, html { 
             margin: 0; padding: 0; width: 100%; height: 100%; 
-            background: #000; color: #fff; font-family: 'Arial', sans-serif; 
+            background: #000; color: #fff; font-family: 'Cairo', sans-serif; 
             overflow: hidden; 
         }
 
-        /* حواف مضيئة متغيرة الألوان */
+        /* الحواف المضيئة المتفاعلة */
         .border-glow {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             border: 6px solid var(--green); box-sizing: border-box;
-            animation: borderFlash 0.5s infinite alternate; z-index: 999; pointer-events: none;
+            animation: borderFlash 0.5s infinite alternate; z-index: 9999; pointer-events: none;
         }
 
-        /* خلفية الهكر الجزائري */
+        /* خلفية الهكر الجزائري في الواجهة الأولى */
         .hacker-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: url('https://img.freepik.com/premium-photo/hacker-hoodie-mask-dark-background_931878-107055.jpg') no-repeat center;
-            background-size: cover; filter: brightness(40%) contrast(120%); z-index: -1;
+            background: url('https://w0.peakpx.com/wallpaper/146/552/HD-wallpaper-hacker-dark-anonymous.jpg') no-repeat center;
+            background-size: cover; filter: brightness(30%) contrast(150%); z-index: -1;
         }
 
-        /* الهيدر المضيء */
-        .header {
-            padding: 15px; background: rgba(0,0,0,0.8); border-bottom: 2px solid var(--red);
-            box-shadow: 0 0 15px var(--red);
+        /* تصميم غرفة العمليات */
+        .war-room {
+            height: 100vh; display: flex; flex-direction: column; align-items: center;
+            padding-top: 20px; position: relative; z-index: 10;
         }
-        .main-title {
-            font-size: 20px; font-weight: bold; color: var(--green);
-            text-shadow: 0 0 10px var(--green); animation: pulse 1s infinite;
+
+        .header-title {
+            color: var(--green); text-shadow: 0 0 15px var(--green);
+            font-size: 22px; font-weight: bold; animation: pulse 1s infinite;
         }
+
+        /* العدادات والرتب - تصميم عسكري */
+        .stats-panel {
+            display: flex; gap: 10px; margin: 15px 0; width: 90%;
+        }
+        .stat-item {
+            flex: 1; background: rgba(0,0,0,0.8); border: 1px solid var(--gold);
+            padding: 10px; border-radius: 5px; box-shadow: 0 0 10px var(--gold);
+        }
+        .stat-label { font-size: 12px; color: #aaa; display: block; }
+        .stat-value { font-size: 18px; color: var(--gold); font-weight: bold; }
 
         /* الرادار */
         .radar {
-            width: 80px; height: 80px; border: 2px solid var(--green);
-            border-radius: 50%; margin: 10px auto; position: relative;
+            width: 100px; height: 100px; border: 2px solid var(--green);
+            border-radius: 50%; position: relative; margin: 10px 0;
         }
         .radar-line {
             width: 50%; height: 2px; background: var(--green);
@@ -48,47 +60,60 @@
             animation: rotate 2s linear infinite;
         }
 
-        /* إحصائيات الجندي */
-        .stats { display: flex; justify-content: space-around; padding: 10px; background: rgba(0,0,0,0.6); border: 1px solid var(--gold); margin: 5px; }
-
-        /* منطقة الهجوم الوسطى */
-        .attack-area {
-            height: 50vh; display: flex; flex-direction: column; 
-            justify-content: center; align-items: center; gap: 20px;
-        }
-
-        .target-box { 
-            background: rgba(255,0,0,0.1); border: 1px dashed var(--red);
-            padding: 10px; width: 85%; font-size: 11px; color: #fff;
+        /* منطقة الهدف */
+        .target-display {
+            background: rgba(255,0,0,0.15); border: 2px dashed var(--red);
+            padding: 15px; width: 85%; margin: 15px 0; font-size: 12px;
+            color: #fff; text-align: center; border-radius: 10px;
         }
 
         /* زر المدفع الأوسط */
-        .cannon-btn {
-            background: radial-gradient(circle, var(--red), #500);
+        .cannon-launch-btn {
+            background: radial-gradient(circle, var(--red), #600);
             color: #fff; font-size: 22px; font-weight: bold;
-            padding: 20px 40px; border: 4px solid #fff; border-radius: 15px;
-            box-shadow: 0 0 30px var(--red); cursor: pointer;
+            padding: 25px 45px; border: 4px solid #fff; border-radius: 20px;
+            box-shadow: 0 0 40px var(--red); cursor: pointer;
+            margin-top: 20px;
         }
 
-        /* النافذة المنبثقة المطورة */
+        /* النافذة المنبثقة (الواجهة الثانية) */
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: url('https://w0.peakpx.com/wallpaper/445/266/HD-wallpaper-anonymous-black-hacker.jpg') no-repeat center;
-            background-size: cover; z-index: 2000; flex-direction: column; justify-content: center; align-items: center;
+            background: url('https://wallpaperaccess.com/full/1598211.jpg') no-repeat center;
+            background-size: cover; z-index: 10000; justify-content: center; align-items: center;
         }
-        .modal-overlay { background: rgba(0,0,0,0.85); width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .modal-overlay { 
+            background: rgba(0,0,0,0.9); width: 100%; height: 100%; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+        }
 
-        .btn-action { width: 80%; padding: 18px; margin: 10px; border: none; font-weight: bold; border-radius: 10px; font-size: 18px; }
+        .btn-panel {
+            width: 85%; background: rgba(255,255,255,0.05); padding: 20px;
+            border: 2px solid var(--green); border-radius: 15px;
+        }
 
-        /* أنيميشن الصاروخ */
-        #rocket { position: absolute; bottom: 10%; left: 50%; font-size: 60px; display: none; transform: translateX(-50%); z-index: 3000; }
+        .btn-gold { background: var(--gold); color: #000; padding: 20px; width: 100%; border: none; font-weight: bold; font-size: 18px; border-radius: 10px; margin-bottom: 15px; cursor: pointer; }
+        .btn-red { background: var(--red); color: #fff; padding: 20px; width: 100%; border: none; font-weight: bold; font-size: 18px; border-radius: 10px; cursor: pointer; box-shadow: 0 0 20px var(--red); }
 
+        /* الصاروخ */
+        #rocket { position: fixed; bottom: 50px; left: 50%; font-size: 60px; display: none; transform: translateX(-50%); z-index: 11000; }
+
+        /* الأنيميشن */
         @keyframes borderFlash { 0% { border-color: var(--green); } 100% { border-color: var(--red); } }
         @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes launch { 0% { bottom: 10%; } 100% { bottom: 100%; opacity: 0; } }
+        @keyframes launch { 0% { bottom: 50px; transform: translateX(-50%) scale(1); } 100% { bottom: 100%; transform: translateX(-50%) scale(3); opacity: 0; } }
+        
+        /* رسالة النجاح النهائية */
+        #victoryBox {
+            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 80%; background: #000; border: 4px solid var(--green); padding: 30px;
+            z-index: 12000; text-align: center; box-shadow: 0 0 50px var(--green);
+            animation: flashSuccess 0.3s infinite;
+        }
+        @keyframes flashSuccess { 0% { border-color: var(--green); } 50% { border-color: var(--red); } 100% { border-color: var(--green); } }
     </style>
 </head>
-<body onclick="playAnthem()">
+<body onclick="startAmbiance()">
 
     <div class="border-glow"></div>
     <div class="hacker-bg"></div>
@@ -97,76 +122,100 @@
     <audio id="snd-launch" src="https://www.soundjay.com/mechanical/sounds/rocket-launch-01.mp3"></audio>
     <audio id="snd-boom" src="https://www.soundjay.com/mechanical/sounds/explosion-01.mp3"></audio>
 
-    <div class="header">
-        <div class="main-title">🇩🇿 مَنْظُومَةُ جَيْشِ التَّبْلِيغِ الْجَزَائِرِيِّ 🇩🇿</div>
-        <div style="color:var(--gold); font-size: 14px;">بِقِيَادَةِ الزَّعِيمِ: الْجَلادِ الْجَزَائِرِيِّ</div>
+    <div class="war-room">
+        <div class="header-title">🇩🇿 منظومة جيش التبليغ الجزائري 🇩🇿</div>
+        <div style="color:var(--gold); font-size: 14px;">بقيادة الزعيم: الجلاد الجزائري 🦅</div>
+
         <div class="radar"><div class="radar-line"></div></div>
-    </div>
 
-    <div class="stats">
-        <div>الرتبة: <span id="rank" style="color:var(--gold)">جندي</span></div>
-        <div>القصفات: <span id="count" style="color:var(--gold)">0</span></div>
-    </div>
-
-    <div class="attack-area">
-        <div class="target-box" id="targetDisplay">جاري رصد الهدف...</div>
-        <div style="color:var(--gold); font-size: 13px; text-align: center; padding: 0 20px;">
-            "أصبعك هو زينتك.. وهاتفك هو سلاحك"<br>
-            👊 زلزلوا عروشهم بالبلاغات! 👊
+        <div class="stats-panel">
+            <div class="stat-item">
+                <span class="stat-label">رتبة الجندي</span>
+                <span id="rankText" class="stat-value">جندي</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">إجمالي القصف</span>
+                <span id="strikeText" class="stat-value">0</span>
+            </div>
         </div>
-        <button class="cannon-btn" onclick="openPanel()">🚀 ابْدَأْ بِضَرْبِ الْهَدَفِ</button>
+
+        <div class="target-display" id="targetDisplay">جاري رصد إحداثيات الهدف...</div>
+
+        <div style="color:var(--gold); font-size: 13px; font-style: italic; margin: 10px;">
+            "أصبعك هو زينتك.. وهاتفك هو سلاحك"<br>
+            👊 اضربوا ولا تبالوا.. النصر لنا 👊
+        </div>
+
+        <button class="cannon-launch-btn" onclick="openControlCenter()">🚀 ابدأ الهجوم الآن</button>
+
+        <div style="margin-top: 20px; color: #555; font-size: 10px; width: 80%;">
+            نظام الذكاء الاصطناعي مفعّل.. جاري كسر تشفير حسابات التيك توك..
+        </div>
     </div>
 
     <div id="modal" class="modal">
         <div class="modal-overlay">
-            <h2 style="color:var(--green); text-shadow: 0 0 10px var(--green);">🛠️ غُرْفَةُ التَّحَكُّمِ الْعُلْيَا</h2>
-            <div style="background:rgba(0,0,0,0.8); padding:15px; border:1px solid var(--gold); width:80%; font-size:12px; margin-bottom:15px;">
-                <span style="color:var(--green)">[AI-SCANNER]:</span> جاري توليد بلاغ مشفر يتجاوز 500 حرف لكسر حماية التيك توك...
-            </div>
+            <h2 style="color:var(--green); margin-bottom: 20px;">🛡️ غرفة العمليات العظمى</h2>
             
-            <button class="btn-action" style="background:var(--gold); color:#000;" onclick="genAndCopy()">⚡ تَوْلِيدُ وَنَسْخُ الْبَلَاغِ</button>
-            <button class="btn-action" style="background:var(--red); color:#fff;" onclick="fireMissile()">🔥 ابْدَأِ الْهُجُومَ الآنَ</button>
-            <button onclick="closePanel()" style="background:none; border:none; color:#777; margin-top:10px;">إغلاق</button>
+            <div class="btn-panel">
+                <p style="font-size: 12px; color: #fff; text-align: right; margin-bottom: 10px;">
+                    1️⃣ ولد البلاغ الرسمي المنسوخ.<br>
+                    2️⃣ اضغط هجوم لفتح الجيميل ولصق البلاغ.
+                </p>
+                
+                <button class="btn-gold" onclick="generateAndCopy()">⚡ توليد ونسخ البلاغ الرسمي</button>
+                <button class="btn-red" onclick="finalMissileStrike()">🔥 ابدأ الهجوم الشامل الآن</button>
+                <button onclick="closeModal()" style="background:none; border:none; color:#777; margin-top: 15px; cursor:pointer;">إلغاء المهمة</button>
+            </div>
         </div>
     </div>
 
     <div id="rocket">🚀</div>
 
+    <div id="victoryBox">
+        <h1 style="color: #fff;">🎯 تم قصف الهدف بنجاح!</h1>
+        <p style="color: var(--gold);">بوركت يا بطل الجزائر.. شكراً لوفائك</p>
+        <hr>
+        <h2 style="color: #fff;">🇩🇿 تحيا الجزائر 🇩🇿</h2>
+        <p style="font-size: 12px; color: var(--green);">المجد والخلود لشهدائنا الأبرار</p>
+        <button onclick="document.getElementById('victoryBox').style.display='none'" style="padding: 10px 20px; margin-top: 10px;">موافق</button>
+    </div>
+
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        const target = urlParams.get('target') || "No Target Found";
+        const target = urlParams.get('target') || "No Link Detected";
         document.getElementById('targetDisplay').innerText = target;
 
-        let strikes = localStorage.getItem('dz_master_strikes') ? parseInt(localStorage.getItem('dz_master_strikes')) : 0;
-        
+        let strikes = localStorage.getItem('hani_strikes_v9') ? parseInt(localStorage.getItem('hani_strikes_v9')) : 0;
+
         function updateStats() {
-            document.getElementById('count').innerText = strikes;
-            let r = "جندي الصاعقة";
-            if(strikes >= 100) r = "عقيد الجلاد";
-            if(strikes >= 200) r = "جنرال الجيش";
-            document.getElementById('rank').innerText = r;
+            document.getElementById('strikeText').innerText = strikes;
+            let rank = "جندي متطوع";
+            if(strikes >= 100) rank = "قناص النخبة";
+            if(strikes >= 200) rank = "عقيد الصاعقة";
+            if(strikes >= 500) rank = "جنرال الجيش";
+            document.getElementById('rankText').innerText = rank;
         }
         updateStats();
 
-        function playAnthem() { document.getElementById('anthem').play(); }
+        function startAmbiance() { document.getElementById('anthem').play(); }
+        function openControlCenter() { document.getElementById('modal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
-        function openPanel() { document.getElementById('modal').style.display = 'flex'; }
-        function closePanel() { document.getElementById('modal').style.display = 'none'; }
-
-        function genAndCopy() {
-            let report = "Official Violation Report for Link: " + target + ". ";
-            const sentences = [
-                "This account is systematically spreading harmful content that violates community safety protocols. ",
-                "We demand an immediate investigation into this profile for repeated harassment and illegal activities. ",
-                "The content provided by this user poses a severe risk to the digital environment. ",
-                "Multiple reports have been filed against this entity for breaching terms of service and security standards. "
+        function generateAndCopy() {
+            let report = "SYSTEM-REPORT-DZ: Target " + target + " has been flagged for systematic violation of community standards. ";
+            const data = [
+                "This account is distributing harmful misinformation and cyber-harassment content. ",
+                "We request an immediate permanent ban on this profile to maintain platform safety. ",
+                "Breach of service terms detected under international safety protocols. ",
+                "Evidence of harassment and community guideline violations has been collected. "
             ];
-            while(report.length < 520) { report += sentences[Math.floor(Math.random()*sentences.length)]; }
+            while(report.length < 530) { report += data[Math.floor(Math.random()*data.length)]; }
             navigator.clipboard.writeText(report);
-            alert("✅ تم توليد بلاغ ذكي (500+ حرف) ونسخه آلياً!");
+            alert("✅ تم توليد بلاغ (500+ حرف) ونسخه بنجاح!");
         }
 
-        function fireMissile() {
+        function finalMissileStrike() {
             const rocket = document.getElementById('rocket');
             document.getElementById('snd-launch').play();
             rocket.style.display = 'block';
@@ -175,14 +224,22 @@
             setTimeout(() => {
                 document.getElementById('snd-boom').play();
                 rocket.style.display = 'none';
-                strikes++;
-                localStorage.setItem('dz_master_strikes', strikes);
-                updateStats();
                 
-                alert("🎯 تَمَّ قَصْفُ الْهَدَفِ بِنَجَاح!\nشُكراً لَكَ يَا بَطَلُ.. تَحْيَا الْجَزَائِرُ\nالْمَجْدُ وَالْخُلُودُ لِشُهَدَائِنَا الأَبْرَارِ");
+                // تحديث البيانات
+                strikes++;
+                localStorage.setItem('hani_strikes_v9', strikes);
+                updateStats();
 
+                // فتح الجيميل
                 const emails = "legal@tiktok.com,feedback@tiktok.com,community@tiktok.com";
-                window.location.href = `mailto:${emails}?subject=Emergency Violation Report&body=الرجاء لصق البلاغ المنسوخ هنا للهدف: ${target}`;
+                window.location.href = `mailto:${emails}?subject=Urgent Violation Report&body=الرجاء لصق البلاغ المنسوخ هنا للهدف: ${target}`;
+
+                // إظهار رسالة النجاح بتأخير (تظهر عندما يعود الجندي للصفحة)
+                setTimeout(() => {
+                    closeModal();
+                    document.getElementById('victoryBox').style.display = 'block';
+                }, 4000);
+
             }, 1200);
         }
     </script>
