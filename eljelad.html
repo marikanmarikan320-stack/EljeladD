@@ -3,179 +3,213 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TERMINAL v20.0 | ترسانة الجلاد</title>
+    <title>جيش التبليغ الجزائري - غرفة العمليات</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Cairo:wght@700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Orbitron:wght@400;900&display=swap');
 
         :root {
-            --matrix-green: #00ff41;
-            --combat-red: #ff003c;
-            --deep-space: #010b13;
-            --electric-blue: #00d2ff;
+            --army-green: #1a2f1a;
+            --neon-red: #ff003c;
+            --gold-leaf: #d4af37;
+            --hacker-green: #00ff41;
         }
 
         body, html {
-            margin: 0; padding: 0; width: 100%; height: 100%;
-            background-color: var(--deep-space);
-            color: var(--matrix-green);
-            font-family: 'Share Tech Mono', 'Cairo', sans-serif;
+            margin: 0; padding: 0; height: 100%; width: 100%;
+            background: radial-gradient(circle, #050a05, #000);
+            color: #fff; font-family: 'Orbitron', sans-serif;
             overflow: hidden;
-            background-image: linear-gradient(0deg, rgba(0,0,0,0.9), transparent), 
-                              url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
         }
 
-        /* الإطار العسكري المضيء */
-        .hud-frame {
+        /* خلفية مصفوفة حربية */
+        .war-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            border: 2px solid rgba(0, 255, 65, 0.2); pointer-events: none;
-            box-shadow: inset 0 0 50px rgba(0,0,0,1); z-index: 100;
+            background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+            opacity: 0.2; z-index: -1;
         }
 
-        /* الرؤوس والقوائم */
-        .header-panel {
-            background: rgba(0, 255, 65, 0.05); border-bottom: 2px solid var(--matrix-green);
-            padding: 10px 20px; display: flex; justify-content: space-between; align-items: center;
+        .container {
+            display: flex; flex-direction: column; height: 100vh; padding: 10px; box-sizing: border-box;
         }
 
-        .commander-id { color: var(--electric-blue); font-size: 14px; text-shadow: 0 0 5px var(--electric-blue); }
-
-        /* الشاشات الجانبية */
-        .main-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; height: 80vh; }
-
-        .monitor {
-            border: 1px solid rgba(0, 255, 65, 0.3); background: rgba(0,0,0,0.7);
-            padding: 10px; position: relative; overflow: hidden;
+        /* الترويسة المزخرفة */
+        .header-battle {
+            text-align: center; border: 2px solid var(--gold-leaf);
+            background: rgba(26, 47, 26, 0.8); padding: 10px;
+            box-shadow: 0 0 15px var(--gold-leaf); border-radius: 5px;
         }
 
-        .radar {
-            width: 100px; height: 100px; border: 1px solid var(--matrix-green);
-            border-radius: 50%; margin: 10px auto; position: relative;
-        }
-        .radar::after {
-            content: ''; position: absolute; width: 50%; height: 2px; background: var(--matrix-green);
-            top: 50%; left: 50%; transform-origin: left; animation: scan 4s linear infinite;
+        .header-battle h1 {
+            font-family: 'Aref Ruqaa', serif; color: var(--gold-leaf);
+            margin: 0; font-size: 22px; text-shadow: 2px 2px #000;
         }
 
-        /* الأزرار العسكرية */
-        .btn-arsenal {
-            width: 100%; padding: 15px; margin: 5px 0; border: 1px solid var(--matrix-green);
-            background: transparent; color: var(--matrix-green); font-weight: bold;
-            cursor: pointer; transition: 0.3s; clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%);
-        }
-        .btn-arsenal:hover { background: rgba(0, 255, 65, 0.2); }
-        .btn-strike { background: var(--combat-red); color: #fff; border: none; font-size: 18px; }
+        .commander-name { font-size: 14px; color: #fff; letter-spacing: 1px; }
 
-        .log-screen {
-            height: 100px; background: #000; font-size: 10px; padding: 5px;
-            overflow-y: auto; border: 1px solid #111; color: #0f0; margin-top: 10px;
+        /* إحصائيات الجندي */
+        .soldier-stats {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0;
+        }
+        .stat-box {
+            background: rgba(0,0,0,0.6); border: 1px solid var(--hacker-green);
+            padding: 5px; text-align: center; font-size: 12px;
         }
 
-        @keyframes scan { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        /* لوحة التحكم الرئيسية */
+        .control-panel {
+            flex-grow: 1; display: grid; grid-template-columns: 1fr; gap: 10px;
+        }
 
-        /* تعليمات الجندي */
-        .orders { font-size: 11px; background: rgba(255, 204, 0, 0.1); border: 1px dashed #ffcc00; padding: 8px; margin: 10px 0; color: #ffcc00; }
+        .btn-war {
+            position: relative; border: none; color: #fff; font-weight: bold;
+            padding: 15px; cursor: pointer; overflow: hidden;
+            font-family: 'Cairo', sans-serif; transition: 0.3s;
+            clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%);
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+
+        /* ألوان الأزرار */
+        .btn-gen { background: linear-gradient(90deg, #111, #333); border: 1px solid var(--hacker-green); color: var(--hacker-green); }
+        .btn-gmail { background: linear-gradient(90deg, #d44638, #b23121); }
+        .btn-form { background: linear-gradient(90deg, #1f4068, #162447); }
+        .btn-direct { background: linear-gradient(90deg, #000, #444); border-left: 5px solid var(--neon-red); }
+
+        .btn-war:active { transform: scale(0.98); filter: brightness(1.3); }
+
+        /* شاشة الرادار والبيانات */
+        .display-unit {
+            background: #000; border: 1px solid #222; height: 80px;
+            padding: 5px; font-family: monospace; font-size: 10px; color: var(--hacker-green);
+            overflow-y: auto; margin-top: 5px;
+        }
+
+        /* الرادار الدوار */
+        .radar-mini {
+            width: 40px; height: 40px; border: 1px solid var(--hacker-green);
+            border-radius: 50%; position: absolute; left: 10px; top: 10px;
+        }
+        .radar-sweep {
+            width: 100%; height: 100%; background: conic-gradient(from 0deg, transparent, var(--hacker-green));
+            border-radius: 50%; opacity: 0.3; animation: rotate 2s linear infinite;
+        }
+
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     </style>
 </head>
-<body onclick="playSystemSound()">
+<body onclick="playBattleSound()">
 
-<div class="hud-frame"></div>
+    <div class="war-overlay"></div>
 
-<div class="header-panel">
-    <div>
-        <div class="commander-id">COMMANDER: الْجَلادِ الْجَزَائِرِيِّ 🦅</div>
-        <div style="font-size: 10px; color: #fff;">PLATFORM: AL-DJALLAD v20.0</div>
-    </div>
-    <div style="text-align: left;">
-        <div id="status">STATUS: ARMED</div>
-        <div id="timer" style="color: var(--combat-red);">00:00:00</div>
-    </div>
-</div>
-
-<div class="main-layout">
-    <div class="monitor">
-        <div class="radar"></div>
-        <div class="orders">
-            🫡 <strong>أَوَامِرُ الْقِيَادَةِ:</strong><br>
-            1. اضغط "توليد البلاغ الذكي" أولاً للنسخ.<br>
-            2. استخدم "إرسال للدعم" لفتح الاستمارة تلقائياً.<br>
-            3. "الجزائر أمانة في أعناقنا الرقمية".
+    <div class="container">
+        <div class="header-battle">
+            <h1>🇩🇿 مَنْظُومَةُ جَيْشِ التَّبْلِيغِ الْجَزَائِرِيِّ 🇩🇿</h1>
+            <div class="commander-name">بِقِيَادَةِ: الْجَلادِ الْجَزَائِرِيِّ 🦅</div>
         </div>
-        <div class="log-screen" id="log-console">> جاري تهيئة الأنظمة السيبرانية...</div>
+
+        <div class="soldier-stats">
+            <div class="stat-box">الرتبة: <span id="rank" style="color:var(--gold-leaf)">جندي صاعقة</span></div>
+            <div class="stat-box">العمليات: <span id="count" style="color:var(--neon-red)">0</span></div>
+        </div>
+
+        <div class="display-unit" id="console">
+            > جاري الاتصال بالخوادم... نَجَحَ الاتصال.<br>
+            > مَرْحَبًا بِكَ فِي غُرْفَةِ الْعَمَلِيَّاتِ.
+        </div>
+
+        <div class="control-panel">
+            <button class="btn-war btn-gen" onclick="generateAmmo()">
+                <span>🧬</span> تَوْلِيدُ الْبَلَاغِ الرَّسْمِيِّ (AI)
+            </button>
+            
+            <button class="btn-war btn-gmail" onclick="launchGmail()">
+                <span>📧</span> قَصْفُ عَبْرَ الْجِيمِيلِ
+            </button>
+            
+            <button class="btn-war btn-form" onclick="openOfficialForm()">
+                <span>📝</span> فَتْحُ اسْتِمَارَةِ الشَّكْوَى
+            </button>
+            
+            <button class="btn-war btn-direct" onclick="directAssault()">
+                <span>🎯</span> اشْتِبَاكٌ مُبَاشِرٌ (حساب الهدف)
+            </button>
+        </div>
+
+        <div style="text-align:center; font-size:9px; color:#555; margin-top:5px;">
+            تَحْيَا الْجَزَائِر 🇩🇿 الْمَجْدُ وَالْخُلُودُ لِشُهَدَائِنَا الأَبْرَار
+        </div>
     </div>
 
-    <div class="monitor">
-        <h3 style="font-size: 12px; text-align: center; border-bottom: 1px solid;">تَرْسَانَةُ الْأَسْلِحَةِ</h3>
-        <button class="btn-arsenal" onclick="generateReportAI()">🧬 تَوْلِيدُ بَلَاغِ الذَّكَاءِ (AI)</button>
-        <button class="btn-arsenal" style="color:var(--electric-blue); border-color:var(--electric-blue);" onclick="openSupportCenter()">📩 إِرْسَالُ عَبْرَ الدَّعْمِ الْفَنِّيِّ</button>
-        <button class="btn-arsenal btn-strike" onclick="launchEmailStrike()">🚀 إِطْلاقُ الْقَصْفِ الشَّامِلِ</button>
-    </div>
-</div>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const target = urlParams.get('target') || "ACCOUNT_LINK_MISSING";
+        let strikes = localStorage.getItem('dz_strikes') || 0;
+        let ammoReady = false;
+        let currentReport = "";
 
-<script>
-    const target = new URLSearchParams(window.location.search).get('target') || "ACCOUNT_UNKNOWN";
-    let lastReport = "";
+        function updateUI() {
+            document.getElementById('count').innerText = strikes;
+            if(strikes > 50) document.getElementById('rank').innerText = "قائد فصيل";
+            if(strikes > 150) document.getElementById('rank').innerText = "جنرال الحرب";
+        }
+        updateUI();
 
-    function log(msg) {
-        const con = document.getElementById('log-console');
-        con.innerHTML += `<br>> ${msg}`;
-        con.scrollTop = con.scrollHeight;
-    }
-
-    // محرك البلاغات الذكي المطور (لا يكرر نفسه أبداً)
-    function generateReportAI() {
-        if (navigator.vibrate) navigator.vibrate(50);
-        
-        const intros = ["Formal Notice: ", "Security Alert: ", "Critical Report: ", "Legal Violation: "];
-        const cores = [
-            `The account [${target}] is broadcasting live content that incites violent extremism and hatred. `,
-            `Persistent community guideline violations detected on [${target}] related to harassment and bullying. `,
-            `Account [${target}] is used to organize illegal activities and distribute prohibited materials. `
-        ];
-        const technicals = [
-            "Technical logs confirm high-risk behavior patterns. ",
-            "Our automated monitoring has flagged this entity for multiple safety breaches. ",
-            "This profile violates TikTok’s Terms of Service regarding user safety and global security. "
-        ];
-        const codes = ["DZ-ID-" + Math.random().toString(36).substr(2, 6).toUpperCase(), "SIGMA-9-" + Date.now()];
-
-        lastReport = intros[Math.floor(Math.random()*intros.length)] + 
-                     cores[Math.floor(Math.random()*cores.length)] + 
-                     technicals[Math.floor(Math.random()*technicals.length)] + 
-                     " Reference: " + codes[Math.floor(Math.random()*codes.length)];
-
-        while(lastReport.length < 530) {
-            lastReport += " Immediate removal and IP banning of this account is requested to maintain a safe environment for all users on the platform.";
+        function log(msg) {
+            const c = document.getElementById('console');
+            c.innerHTML += `<br>> ${msg}`;
+            c.scrollTop = c.scrollHeight;
         }
 
-        navigator.clipboard.writeText(lastReport);
-        log("تَمَّ تَوَلِيدُ بَلَاغٍ فَرِيدٍ بِنَجَاحٍ.");
-        alert("✅ تَمَّ نَسْخُ الْبَلَاغِ الْقَانُونِيِّ!");
-    }
+        // المحرك الذكي v21
+        function generateAmmo() {
+            if (navigator.vibrate) navigator.vibrate(100);
+            const patterns = [
+                `Serious Violation: The entity [${target}] is disseminating extremist propaganda and inciting public disorder. This behavior contravenes TikTok Community Guidelines Section 4. Reference Code: DZ-${Math.floor(Math.random()*10000)}.`,
+                `Urgent Safety Report: Account [${target}] is engaged in systematic harassment and the promotion of hate speech against protected groups. Immediate suspension is requested for community safety.`,
+                `Legal Escalation: We have documented repeated instances of violent incitement and criminal conduct on profile [${target}]. This account poses a high risk to platform integrity.`
+            ];
+            
+            currentReport = patterns[Math.floor(Math.random()*patterns.length)];
+            while(currentReport.length < 550) {
+                currentReport += " Safety of our digital borders is non-negotiable. This user consistently bypasses safety filters to spread harmful and toxic content. Final warning for review.";
+            }
 
-    function openSupportCenter() {
-        if(!lastReport) {
-            alert("⚠️ عذراً أيها الجندي، يجب توليد البلاغ أولاً!");
-            return;
+            navigator.clipboard.writeText(currentReport);
+            ammoReady = true;
+            log("تَمَّ شَحْنُ الذَّخِيرَةِ (الْبَلَاغُ نُسِخَ).");
+            alert("🎯 تَمَّ تَوَلِيدُ وَنَسْخُ الْبَلَاغِ بِنَجَاحٍ!");
         }
-        log("جاري توجيه البيانات لمركز دعم تيك توك...");
-        // فتح مركز المساعدة مع محاولة تمرير البيانات عبر URL (تيك توك يرفض التعبئة التلقائية المباشرة لكننا نوجه الجندي لأسرع طريق)
-        const supportUrl = "https://www.tiktok.com/legal/report/feedback";
-        window.open(supportUrl, "_blank");
-        alert("🫡 سيدي القائد، سيتم فتح مركز الدعم. قم بلصق البلاغ في خانة 'التفاصيل' ورابط الحساب في 'الرابط'.");
-    }
 
-    function launchEmailStrike() {
-        if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
-        log("إطلاق الصواريخ الإلكترونية...");
-        const subject = encodeURIComponent(`Critical Policy Violation - Account: ${target}`);
-        const body = encodeURIComponent(lastReport || `Report against account: ${target}`);
-        window.location.href = `mailto:legal@tiktok.com,community@tiktok.com?subject=${subject}&body=${body}`;
-    }
+        function launchGmail() {
+            if(!ammoReady) { alert("⚠️ جَهِّزْ الذَّخِيرَةَ أَوَّلاً (الزِّرُّ الأَوَّلُ)!"); return; }
+            log("جاري فَتْحُ مَجَالِ الْقَصْفِ الْجَوِيِّ...");
+            const sub = encodeURIComponent("Policy Violation Report: " + target);
+            window.location.href = `mailto:legal@tiktok.com,community@tiktok.com?subject=${sub}&body=${encodeURIComponent(currentReport)}`;
+            recordStrike();
+        }
 
-    setInterval(() => {
-        const d = new Date();
-        document.getElementById('timer').innerText = d.toLocaleTimeString();
-    }, 1000);
-</script>
+        function openOfficialForm() {
+            log("جاري فَتْحُ مَكْتَبِ التَّحْقِيقِ الرَّسْمِيِّ...");
+            window.open("https://www.tiktok.com/legal/report/feedback", "_blank");
+        }
+
+        function directAssault() {
+            log("الاشْتِبَاكُ الْمُبَاشِرُ مَعَ الْهَدَفِ...");
+            if(target.startsWith("http")) {
+                window.open(target, "_blank");
+            } else {
+                alert("رابط الهدف غير صالح للاقتحام.");
+            }
+        }
+
+        function recordStrike() {
+            strikes++;
+            localStorage.setItem('dz_strikes', strikes);
+            updateUI();
+        }
+
+        function playBattleSound() {
+            // يمكن إضافة صوت رصاص أو تنبيه هنا
+        }
+    </script>
 </body>
 </html>
