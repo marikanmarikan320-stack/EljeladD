@@ -3,184 +3,182 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ترسانة جيش التبليغ الجزائري | بقيادة الجلاد</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+    <title>منظومة جيش التبليغ الجزائري | S26 Ultra Edition</title>
     <style>
         :root { 
-            --neon-green: #00ff41; 
-            --war-red: #ff0000; 
+            --samsung-glow: #ff0000; 
+            --neon-green: #00ff41;
             --gold: #ffcc00;
-            --bg-black: #050505;
         }
-        
+
         body {
-            background: var(--bg-black); color: var(--neon-green); 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0; overflow: hidden; height: 100vh;
+            background-color: #000;
+            background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                              url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1350&q=80'); /* خلفية هكر تقنية */
+            background-size: cover;
+            background-position: center;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            overflow: hidden;
+            height: 100vh;
+            border-left: 5px solid var(--samsung-glow);
+            border-right: 5px solid var(--samsung-glow);
+            animation: edgePulse 2s infinite;
         }
 
-        /* تأثير الرادار الخلفي */
-        #radar {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 80vh; height: 80vh; border: 1px solid rgba(0, 255, 65, 0.1);
-            border-radius: 50%; z-index: -1;
+        /* نبض حواف الهاتف الجانبية */
+        @keyframes edgePulse {
+            0% { border-color: #500; box-shadow: inset 0 0 20px #f00; }
+            50% { border-color: #f00; box-shadow: inset 0 0 40px #f00; }
+            100% { border-color: #500; box-shadow: inset 0 0 20px #f00; }
         }
-        #radar::after {
-            content: ""; position: absolute; inset: 0;
-            background: conic-gradient(from 0deg, rgba(0, 255, 65, 0.2), transparent);
-            border-radius: 50%; animation: scan 4s linear infinite;
-        }
-        @keyframes scan { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        /* الشاشة الافتتاحية */
         #audio-unlocker {
             position: fixed; inset: 0; background: #000; z-index: 9999;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            border: 4px solid var(--neon-green);
         }
 
-        .header-panel {
-            text-align: center; padding: 20px; background: rgba(0, 20, 0, 0.9);
-            border-bottom: 2px solid var(--neon-green); box-shadow: 0 0 20px var(--neon-green);
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(0,0,0,0.8);
+            border-bottom: 1px solid var(--samsung-glow);
         }
 
-        .main-title { font-size: 1.6rem; font-weight: 900; margin: 0; color: #fff; text-shadow: 0 0 10px var(--neon-green); }
-        .sub-title { font-size: 1rem; color: var(--war-red); font-weight: bold; margin-top: 5px; }
+        .main-title { font-size: 1.8rem; font-weight: 900; color: #fff; text-shadow: 0 0 15px #f00; margin: 0; }
+        .sub-title { color: var(--neon-green); font-size: 0.9rem; margin-top: 10px; letter-spacing: 2px; }
 
-        /* منطقة الأزرار العسكرية */
-        .war-zone {
-            padding: 20px; display: flex; flex-direction: column; gap: 15px;
-            max-width: 450px; margin: 20px auto;
+        .app-container {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 450px;
+            margin: auto;
         }
 
-        .war-btn {
-            background: rgba(0, 40, 0, 0.8); border: 2px solid var(--neon-green);
-            color: #fff; padding: 20px; border-radius: 5px; cursor: pointer;
-            display: flex; align-items: center; position: relative;
-            transition: 0.3s; clip-path: polygon(5% 0, 100% 0, 100% 70%, 95% 100%, 0 100%, 0% 30%);
+        /* تصميم أزرار سامسونج ألترا المنطفئة */
+        .samsung-btn {
+            background: rgba(20, 20, 20, 0.9);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            color: #fff;
+            padding: 25px;
+            border-radius: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+            animation: btnBlink 4s infinite;
         }
 
-        .war-btn:active { transform: scale(0.95); background: var(--neon-green); color: #000; }
-        .btn-icon { font-size: 1.8rem; margin-left: 15px; }
-        .btn-text h3 { margin: 0; font-size: 1.1rem; }
-        .btn-text p { margin: 0; font-size: 0.7rem; color: var(--neon-green); opacity: 0.7; }
-
-        /* لوحات العمليات */
-        .op-panel {
-            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95);
-            z-index: 5000; padding: 20px; text-align: center; overflow-y: auto;
+        @keyframes btnBlink {
+            0%, 100% { border-color: rgba(255,0,0,0.2); box-shadow: none; }
+            50% { border-color: #f00; box-shadow: 0 0 15px #f00; }
         }
-        .op-panel.active { display: block; }
 
-        .instruction-box {
-            background: rgba(0, 255, 65, 0.05); border: 1px dashed var(--neon-green);
-            padding: 15px; margin: 15px 0; text-align: right; font-size: 0.9rem; line-height: 1.6;
+        .samsung-btn:active { transform: scale(0.95); background: #f00; color: #000; }
+
+        .btn-icon { font-size: 2rem; margin-left: 20px; }
+
+        /* شاشة العمليات */
+        .op-screen {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98);
+            z-index: 5000; padding: 30px 20px; text-align: center;
         }
+        .op-screen.active { display: block; animation: slideUp 0.4s ease-out; }
+
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
         textarea {
-            width: 100%; height: 220px; background: #000; color: var(--gold);
-            border: 1px solid var(--gold); border-radius: 5px; padding: 10px;
-            font-family: monospace; font-size: 11px; margin-bottom: 15px;
+            width: 100%; height: 250px; background: #050505; color: var(--gold);
+            border: 1px solid #333; border-radius: 15px; padding: 15px;
+            font-family: monospace; font-size: 12px; margin-bottom: 20px;
         }
 
-        .execute-btn {
-            background: var(--war-red); color: white; border: none; width: 100%;
-            padding: 15px; font-weight: bold; font-size: 1.2rem; cursor: pointer;
-            box-shadow: 0 0 15px var(--war-red);
+        .action-btn {
+            background: #f00; color: #fff; border: none; padding: 20px;
+            width: 100%; border-radius: 50px; font-weight: 900; font-size: 1.3rem;
         }
 
-        /* رسائل تحفيزية */
-        .motivation {
-            color: #fff; font-size: 0.8rem; font-style: italic; margin-top: 20px;
-            border-right: 3px solid var(--war-red); padding-right: 10px;
-        }
-
+        .blood-text { color: #ff0000; font-style: italic; font-size: 0.8rem; margin-top: 30px; display: block; }
     </style>
 </head>
 <body>
 
 <div id="audio-unlocker">
-    <div style="font-size: 5rem;">🦅</div>
-    <h2 style="color: var(--neon-green);">دخول غرفة العمليات</h2>
-    <button onclick="activateSystem()" style="padding: 15px 40px; background: var(--neon-green); border: none; font-weight: bold; cursor: pointer;">تـأكيد الـهوية 🇩🇿</button>
+    <div style="font-size: 5rem; color: red; filter: drop-shadow(0 0 20px red);">💀</div>
+    <h2 style="margin: 20px 0;">IDENTITY VERIFICATION: COMMANDER</h2>
+    <button onclick="activateSystem()" style="padding: 20px 50px; border-radius: 50px; background: red; color: white; border: none; font-weight: bold; cursor: pointer;">تـفعيل الـسلاح 🇩🇿</button>
 </div>
 
-<div id="radar"></div>
-
-<div class="header-panel">
+<div class="header">
     <h1 class="main-title">منظومة جيش التبليغ الجزائري</h1>
     <div class="sub-title">تـحت قـيادة الـجلاد الـجزائري</div>
 </div>
 
-<div class="war-zone">
-    <div class="war-btn" onclick="openOps('p1')">
-        <div class="btn-icon">🛡️</div>
-        <div class="btn-text">
-            <h3>بـلاغ رسـمي (اسـتمارة)</h3>
-            <p>القصف عبر البوابة القانونية الدولية</p>
-        </div>
+<div class="app-container">
+    <div class="samsung-btn" onclick="openOps('p1')">
+        <span class="btn-icon">🛡️</span>
+        <span>بـلاغ رسـمي (اسـتمارة)</span>
     </div>
 
-    <div class="war-btn" style="border-color: var(--war-red);" onclick="openOps('p2')">
-        <div class="btn-icon">💥</div>
-        <div class="btn-text">
-            <h3>هـجوم مـباشر (تطبيق)</h3>
-            <p>اقتحام ميداني سريع لتعطيل الحساب</p>
-        </div>
+    <div class="samsung-btn" style="animation-delay: 1s;" onclick="openOps('p2')">
+        <span class="btn-icon">💥</span>
+        <span>هـجوم مـباشر (تطبيق)</span>
     </div>
 
-    <div class="war-btn" style="border-color: var(--gold);" onclick="openOps('p3')">
-        <div class="btn-icon">📧</div>
-        <div class="btn-text">
-            <h3>قـصف الـجيميل (قنابل)</h3>
-            <p>توليد ملايين البلاغات المشفرة</p>
-        </div>
+    <div class="samsung-btn" style="animation-delay: 2s; border-color: var(--gold);" onclick="openOps('p3')">
+        <span class="btn-icon">📧</span>
+        <span>قـصف الـجيميل (قنابل)</span>
     </div>
 
-    <div class="motivation">
-        "يا جنود الجلاد.. أصابعكم هي الزناد، وهواتفكم هي السلاح. لا تتوقفوا حتى يسقط الهدف!"
-    </div>
+    <span class="blood-text">"أصابعكم تقطر دماءً إلكترونية.. لا ترحموا الخونة"</span>
 </div>
 
-<div class="op-panel" id="p1">
-    <h2 style="color: var(--neon-green);">[ غـرفة الـقصف الـقانوني ]</h2>
-    <div class="instruction-box">
-        1. اضغط "إطلاق" لفتح البوابة.<br>
-        2. اختر نوع المخالفة (حساب) ثم (آخر).<br>
-        3. الصق رابط الهدف وأكد الضربة.
-    </div>
-    <button class="execute-btn" onclick="executeStrike('https://www.tiktok.com/legal/report/feedback')">إطـلاق الـقذيفة 🚀</button>
-    <button onclick="closeOps()" style="background:none; border:none; color:red; margin-top:20px;">تراجع للترسانة</button>
+<div class="op-screen" id="p1">
+    <h2 style="color: red;">[ غـرفة الـقصف الـرسمي ]</h2>
+    <button class="action-btn" onclick="executeStrike('https://www.tiktok.com/legal/report/feedback')">إطـلاق الـقذيفة 🚀</button>
+    <button onclick="closeOps()" style="background:none; border:none; color:#555; margin-top:40px;">تراجع للترسانة</button>
 </div>
 
-<div class="op-panel" id="p2">
-    <h2 style="color: var(--war-red);">[ غـرفة الاقـتحام الـميداني ]</h2>
-    <div class="instruction-box">
-        أيها الجندي، سيفتح التطبيق الآن على جبهة العدو. نفذ 100 ضربة تبليغ متتالية لضمان سقوط الحساب فوراً.
-    </div>
-    <button class="execute-btn" id="direct-btn" style="background: var(--war-red);">بـدء الاقـتحام الـشامل 🧨</button>
-    <button onclick="closeOps()" style="background:none; border:none; color:red; margin-top:20px;">تراجع للترسانة</button>
+<div class="op-screen" id="p2">
+    <h2 style="color: red;">[ الاقـتحام الـميداني ]</h2>
+    <button class="action-btn" id="direct-btn">بـدء الـمجزرة 🧨</button>
+    <button onclick="closeOps()" style="background:none; border:none; color:#555; margin-top:40px;">تراجع للترسانة</button>
 </div>
 
-<div class="op-panel" id="p3">
-    <h2 style="color: var(--gold);">[ تـوليد الـقنابل الـذكية ]</h2>
-    <div class="instruction-box" style="border-color: var(--gold); font-size: 0.8rem;">
-        هذه الخوارزمية تولد نصوصاً فريدة في كل مرة لخداع أنظمة المراجعة. اضغط "توليد" ثم "قصف".
-    </div>
-    <textarea id="mail-content" readonly placeholder="جاري تجهيز القنبلة..."></textarea>
-    <button class="execute-btn" style="background: var(--gold); color: #000; margin-bottom: 10px;" onclick="generateSmartBomber()">🔄 تـوليد بـلاغ جـديد</button>
-    <button class="execute-btn" style="background: #fff; color: #000;" onclick="launchEmail()">🚀 قـصف الـجيميل الآن</button>
-    <button onclick="closeOps()" style="background:none; border:none; color:red; margin-top:20px;">تراجع للترسانة</button>
+<div class="op-screen" id="p3">
+    <h2 style="color: var(--gold);">[ مـعمل الـقنابل الـذكية ]</h2>
+    <textarea id="mail-content" readonly></textarea>
+    <button class="action-btn" style="background: var(--gold); color: #000; margin-bottom: 10px;" onclick="generateSmartBomber()">🔄 تـوليد شـفرة الـموت</button>
+    <button class="action-btn" style="background: #fff; color: #000;" onclick="launchEmail()">🚀 قـصف الـجيميل</button>
+    <button onclick="closeOps()" style="background:none; border:none; color:#555; margin-top:20px;">إغلاق</button>
 </div>
 
 <script>
-    // نظام الأصوات القتالية
-    const tapSnd = new Howl({ src: ['https://www.soundjay.com/buttons/button-16.mp3'], volume: 0.4 });
-    const loadSnd = new Howl({ src: ['https://www.soundjay.com/mechanical/gun-cocking-01.mp3'], volume: 0.6 });
-    const boomSnd = new Howl({ src: ['https://www.soundjay.com/mechanical/gun-shot-01.mp3'], volume: 0.8 });
+    // نظام الصوت المتقدم - Web Audio API لضمان العمل القوي
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playSound(freq, type, duration) {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+    }
 
     function activateSystem() {
-        loadSnd.play();
+        audioCtx.resume();
+        playSound(100, 'square', 0.5); // صوت تشغيل ثقيل
         document.getElementById('audio-unlocker').style.display = 'none';
         startSystem();
     }
@@ -197,24 +195,23 @@
     }
 
     function openOps(id) {
-        tapSnd.play();
+        playSound(400, 'sawtooth', 0.1);
         document.getElementById(id).classList.add('active');
         if(id === 'p3') generateSmartBomber();
     }
 
     function closeOps() {
-        document.querySelectorAll('.op-panel').forEach(r => r.classList.remove('active'));
+        document.querySelectorAll('.op-screen').forEach(r => r.classList.remove('active'));
     }
 
     function executeStrike(url) {
-        boomSnd.play();
-        if (navigator.vibrate) navigator.vibrate([100, 50, 300]);
-        setTimeout(() => { window.location.href = url; }, 800);
+        playSound(50, 'sine', 1); // صوت انفجار عميق
+        setTimeout(() => { window.location.href = url; }, 500);
     }
 
-    // --- الخوارزمية الأصلية لتوليد ملايين البلاغات ---
+    // --- خوارزمية التوليد المليونية (بدون تغيير) ---
     function generateSmartBomber() {
-        tapSnd.play();
+        playSound(800, 'sine', 0.05);
         const intros = [
             "Dear TikTok Safety and Legal Support Team, I am writing to you today to express my deep concern regarding a severe breach of community standards.",
             "To the Professional Moderation Staff at TikTok, this is an official urgent report concerning a high-risk account that is currently operating on your platform.",
@@ -254,7 +251,7 @@
 
     function launchEmail() {
         const body = encodeURIComponent(document.getElementById('mail-content').value);
-        executeStrike(`mailto:legal@tiktok.com,feedback@tiktok.com,community_safety@tiktok.com?subject=URGENT_SAFETY_REPORT&body=${body}`);
+        executeStrike(`mailto:legal@tiktok.com,feedback@tiktok.com?subject=URGENT_SAFETY_REPORT&body=${body}`);
     }
 </script>
 </body>
