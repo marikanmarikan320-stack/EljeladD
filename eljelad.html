@@ -6,159 +6,142 @@
     <title>منظومة جيش التبليغ الجزائري | الجلاد</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
     <style>
-        :root { 
-            --neon: #00ff41; --war: #ff0000; --cyber: #00d4ff; --gold: #ffcc00;
-            --samsung-bg: #000; --samsung-btn: #1c1c1e;
-        }
+        :root { --neon: #00ff41; --war: #ff0000; --cyber: #00d4ff; --gold: #ffcc00; --samsung-btn: #1a1a1c; }
         
         * { cursor: crosshair; box-sizing: border-box; -webkit-tap-highlight-color: transparent; } 
 
         body {
-            background: var(--samsung-bg); color: white; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            margin: 0; overflow: hidden; height: 100vh; width: 100vw; position: relative;
+            background: #000; color: var(--neon); font-family: 'Segoe UI', Roboto, sans-serif;
+            margin: 0; overflow: hidden; height: 100vh; position: relative;
         }
 
         #matrix-canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.15; }
 
-        /* الشريط العلوي */
-        .national-header {
-            background: linear-gradient(90deg, #006233, #fff, #d21034);
-            color: #000; font-weight: 900; padding: 10px; text-align: center;
-            font-size: 1rem; position: fixed; top: 0; width: 100%; z-index: 1000;
-        }
-
-        /* حاوية العنوان */
-        .title-container {
-            margin-top: 60px; text-align: center; padding: 10px;
-        }
+        /* عناوين مزخرفة مشتعلة */
         .main-title {
-            font-size: 1.6rem; font-weight: bold; margin: 0;
-            background: linear-gradient(to bottom, #fff, var(--neon));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            font-size: 2.2rem; font-weight: 900; margin: 0;
+            text-shadow: 0 0 10px var(--neon), 0 0 20px var(--neon), 0 0 40px var(--neon);
+            animation: fire-glow 1.5s infinite alternate;
+        }
+        .sub-title {
+            font-size: 1.4rem; font-weight: bold; color: var(--cyber); margin-top: 5px;
+            text-shadow: 0 0 10px var(--cyber);
         }
 
-        /* أزرار تصميم الشركات العالمية */
-        .smart-btn {
+        @keyframes fire-glow { 
+            from { text-shadow: 0 0 10px var(--neon); transform: scale(1); } 
+            to { text-shadow: 0 0 30px var(--neon), 0 0 50px var(--war); transform: scale(1.02); } 
+        }
+
+        /* أزرار سامسونج */
+        .samsung-btn {
             background: var(--samsung-btn); border: 1px solid rgba(255,255,255,0.1);
-            color: #fff; padding: 18px; width: 85%; margin: 15px auto;
-            border-radius: 20px; font-size: 1.1rem; font-weight: 600;
+            color: white; padding: 18px; width: 90%; margin: 12px auto;
+            border-radius: 25px; font-size: 1.1rem; font-weight: 600;
             display: block; transition: 0.3s;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5), inset 0 0 10px rgba(0,255,65,0.1);
         }
-        .smart-btn:active { transform: scale(0.92); background: #2c2c2e; border-color: var(--neon); }
+        .samsung-btn:active { transform: scale(0.95); background: #2a2a2a; border-color: var(--neon); }
+        .samsung-btn:hover { box-shadow: 0 0 20px var(--neon); }
 
-        /* النوافذ الكاملة */
-        .full-ops-room {
+        /* النوافذ التي تخطف الواجهة */
+        .full-ops-panel {
             display: none; position: fixed; inset: 0; background: #000;
-            z-index: 5000; padding: 20px; text-align: center;
+            z-index: 5000; padding: 25px; text-align: center;
+            flex-direction: column; justify-content: center;
         }
-        .full-ops-room.active { display: block; animation: fadeIn 0.3s forwards; }
+        .full-ops-panel.active { display: flex; animation: slideIn 0.3s forwards; }
+        @keyframes slideIn { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
-        /* شعار الغرفة النابض */
-        .ops-logo {
-            width: 120px; height: 120px; border-radius: 50%;
-            margin: 30px auto; border: 3px solid var(--cyber);
-            background: url('https://i.ibb.co/vYm6DqS/hacker-mask.png') center/cover;
-            box-shadow: 0 0 20px var(--cyber);
-            animation: pulse-ring 2s infinite;
-        }
-        @keyframes pulse-ring { 0% { box-shadow: 0 0 5px var(--cyber); } 50% { box-shadow: 0 0 30px var(--cyber); } 100% { box-shadow: 0 0 5px var(--cyber); } }
-
-        /* صندوق التعليمات */
-        .instruction-box {
-            background: rgba(255,255,255,0.05); border-radius: 15px;
+        .order-title { color: var(--war); font-size: 1.8rem; font-weight: 900; text-shadow: 0 0 10px var(--war); margin-bottom: 20px; }
+        .order-box {
+            background: rgba(255,255,255,0.05); border-radius: 20px;
             padding: 20px; margin: 20px 0; border-right: 5px solid var(--neon);
-            text-align: right; font-size: 0.95rem; line-height: 1.6;
+            text-align: right; font-size: 1rem; line-height: 1.7;
         }
 
         /* تأثير الصاروخ والانفجار */
-        #strike-zone {
-            position: fixed; inset: 0; z-index: 10000; pointer-events: none; display: none;
-        }
+        #missile-zone { position: fixed; inset: 0; z-index: 10000; pointer-events: none; display: none; }
         .missile {
-            position: absolute; bottom: -50px; left: 50%; width: 4px; height: 50px;
+            position: absolute; bottom: -50px; left: 50%; width: 6px; height: 60px;
             background: linear-gradient(to top, var(--war), gold);
-            box-shadow: 0 0 15px var(--war);
-            animation: fly-up 1s ease-in forwards;
+            box-shadow: 0 0 20px var(--war); border-radius: 50% 50% 0 0;
+            animation: missile-launch 1s ease-in forwards;
         }
-        @keyframes fly-up { to { transform: translateY(-120vh); } }
+        @keyframes missile-launch { to { transform: translateY(-120vh) scale(0.5); } }
 
-        .explosion-smoke {
+        .smoke {
             position: absolute; background: radial-gradient(circle, #fff, #555, transparent);
-            border-radius: 50%; animation: explode 2s forwards;
+            border-radius: 50%; animation: explode 2.5s forwards;
         }
-        @keyframes explode { 0% { transform: scale(0.1); opacity: 1; } 100% { transform: scale(30); opacity: 0; } }
+        @keyframes explode { 0% { transform: scale(0.1); opacity: 1; } 100% { transform: scale(35); opacity: 0; } }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body onload="startSystem()">
 
 <canvas id="matrix-canvas"></canvas>
-<div id="strike-zone"></div>
+<div id="missile-zone"></div>
 
-<div class="national-header">
-    <marquee direction="right" scrollamount="6">🇩🇿 تحيا الجزائر .. المجد والخلود لشهدائنا الابرار .. الله اكبر 🇩🇿</marquee>
+<div class="national-header" style="background: linear-gradient(90deg, #006233, #fff, #d21034); padding: 12px; text-align: center; font-weight: bold; color: black;">
+    <marquee direction="right" scrollamount="7">🇩🇿 تحيا الجزائر .. المجد والخلود لشهدائنا الابرار .. جيش التبليغ الجزائري يقصف الآن 🇩🇿</marquee>
 </div>
 
-<div id="main-ui">
-    <div class="title-container">
-        <h1 class="main-title">منظومة جيش التبليغ الجزائري</h1>
-        <p style="color: var(--cyber); font-weight: bold; margin-top: 5px;">تحت قيادة الجلاد الجزائري</p>
+<div id="main-ui" style="padding: 20px; text-align: center; margin-top: 40px;">
+    <h1 class="main-title">منظومة جيش التبليغ الجزائري</h1>
+    <p class="sub-title">تحت قيادة الجلاد الجزائري</p>
+    
+    <div style="background: rgba(0,0,0,0.6); border: 1px solid var(--gold); border-radius: 20px; padding: 15px; margin: 30px auto; width: 90%;">
+        <span id="target-url" style="color: #fff; font-family: monospace; font-size: 0.9rem; word-break: break-all;">جاري رصد الأهداف...</span>
     </div>
 
-    <div style="margin-top: 30px;">
-        <button class="smart-btn" onclick="openOps('p1')">🛡️ بـلاغ رسـمي (اسـتمارة)</button>
-        <button class="smart-btn" onclick="openOps('p2')">💥 هـجوم مـباشر (تطبيق)</button>
-        <button class="smart-btn" style="color: var(--gold); border-color: var(--gold);" onclick="openOps('p3')">📧 قـصف الـجيميل (قنابل)</button>
-    </div>
+    <button class="samsung-btn" onclick="openOps('p1')">🛡️ بـلاغ رسـمي (اسـتمارة)</button>
+    <button class="samsung-btn" onclick="openOps('p2')">💥 هـجوم مـباشر (تطبيق)</button>
+    <button class="samsung-btn" style="color: var(--gold);" onclick="openOps('p3')">📧 قـصف الـجيميل (قنابل)</button>
 
-    <div style="position: absolute; bottom: 30px; width: 100%; text-align: center;">
-        <p style="color: var(--war); font-weight: 900; font-size: 0.85rem; letter-spacing: 1px;">"أصبعك هو زنادك وهاتفك هو سلاحك"</p>
-    </div>
+    <p style="color: var(--war); font-weight: 900; margin-top: 40px;">"أصبعك هو زنادك وهاتفك هو سلاحك"</p>
 </div>
 
-<div class="full-ops-room" id="p1">
-    <div class="ops-logo"></div>
-    <h2 style="color: var(--cyber);">تـعليمات الـقيادة</h2>
-    <div class="instruction-box">
-        1. اضغط على زر الإطلاق لفتح الاستمارة القانونية.<br>
-        2. اختر (تبليغ انتهاك) > (حساب) > (آخر).<br>
-        3. قم بإرفاق رابط الهدف وتأكيد الإرسال.
+<div class="full-ops-panel" id="p1">
+    <div class="order-title">تـعليمات الـقيادة</div>
+    <div class="order-box">
+        1. اضغط "إطلاق القذيفة" للانتقال للموقع القانوني.<br>
+        2. اختر نوع الانتهاك "حساب" ثم "آخر".<br>
+        3. الصق رابط الهدف في الخانة المخصصة.<br>
+        4. أرسل البلاغ فوراً لتأكيد الإصابة.
     </div>
-    <button class="smart-btn" onclick="executeStrike('https://www.tiktok.com/legal/report/feedback')">🚀 إطـلاق الـقذيفة</button>
-    <button class="smart-btn" style="background: transparent; color: red; border: none;" onclick="closeOps()">تراجع للترسانة</button>
+    <button class="samsung-btn" onclick="fireStrike('https://www.tiktok.com/legal/report/feedback')">🚀 إطـلاق الـقذيفة</button>
+    <button class="samsung-btn" style="background: transparent; border: none; color: red;" onclick="closeOps()">تراجع للترسانة</button>
 </div>
 
-<div class="full-ops-room" id="p2">
-    <div class="ops-logo"></div>
-    <h2 style="color: var(--war);">تـعليمات الـقيادة</h2>
-    <div class="instruction-box">
-        1. سيفتح التطبيق على حساب الهدف مباشرة.<br>
-        2. اضغط على خيار (تبليغ) بداخل الحساب.<br>
-        3. كرر العملية 100 مرة متتالية دون توقف حتى يسقط.
+<div class="full-ops-panel" id="p2">
+    <div class="order-title">تـعليمات الـقيادة</div>
+    <div class="order-box">
+        1. سيتم فتح حساب العدو مباشرة في التطبيق.<br>
+        2. اضغط خيارات (تبليغ) داخل الحساب.<br>
+        3. اختر (محتوى عنيف) أو (كراهية).<br>
+        4. كرر العملية 100 مرة متتالية دون توقف لسحق الهدف.
     </div>
-    <button class="smart-btn" id="direct-attack">⚡ بـدء الاقـتحام</button>
-    <button class="smart-btn" style="background: transparent; color: red; border: none;" onclick="closeOps()">تراجع للترسانة</button>
+    <button class="samsung-btn" id="direct-strike">⚡ بـدء الاقتحام</button>
+    <button class="samsung-btn" style="background: transparent; border: none; color: red;" onclick="closeOps()">تراجع للترسانة</button>
 </div>
 
-<div class="full-ops-room" id="p3">
-    <div class="ops-logo"></div>
-    <h2 style="color: var(--gold);">تـعليمات الـقيادة</h2>
-    <div class="instruction-box">
-        1. سيتم توليد بلاغ قانوني احترافي (600 حرف).<br>
-        2. النص يركز على التطبيقات المهكرة والتحريض.<br>
-        3. اضغط إرسال لفتح الجيميل وتنفيذ القصف.
+<div class="full-ops-panel" id="p3">
+    <div class="order-title">تـعليمات الـقيادة</div>
+    <div class="order-box">
+        1. سيقوم المحرك بتوليد بلاغ إداري ضخم (600+ حرف).<br>
+        2. النص مصاغ لمهاجمة البرامج المهكرة والتحريض العنيف.<br>
+        3. اضغط "إرسال" لفتح الجيميل وتنفيذ القصف الجوي المباشر.
     </div>
-    <textarea id="mail-content" readonly style="width:100%; height:120px; background:#111; color:var(--gold); border:1px solid var(--gold); border-radius:12px; padding:10px; font-size:10px; font-family: monospace;"></textarea>
-    <button class="smart-btn" onclick="generateSmartBomber()">🔄 تـوليد الـبلاغ</button>
-    <button class="smart-btn" style="color: var(--gold);" onclick="launchEmail()">🚀 قـصف الـجيميل</button>
-    <button class="smart-btn" style="background: transparent; color: red; border: none;" onclick="closeOps()">تراجع للترسانة</button>
+    <textarea id="mail-content" readonly style="width:100%; height:120px; background:#111; color:var(--gold); border:1px solid var(--gold); border-radius:15px; padding:10px; font-size:11px;"></textarea>
+    <button class="samsung-btn" onclick="generateSmartBomber()">🔄 تـوليد الـبلاغ</button>
+    <button class="samsung-btn" style="color: var(--gold);" onclick="launchEmail()">🚀 قـصف الـجيميل</button>
+    <button class="samsung-btn" style="background: transparent; border: none; color: red;" onclick="closeOps()">تراجع للترسانة</button>
 </div>
 
 <script>
-    const tapSnd = new Howl({ src: ['https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3'], volume: 0.5 });
-    const launchSnd = new Howl({ src: ['https://assets.mixkit.co/active_storage/sfx/1681/1681-preview.mp3'] });
+    const samsungSnd = new Howl({ src: ['https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3'], volume: 0.5 }); // صوت سامسونج
+    const launchSnd = new Howl({ src: ['https://assets.mixkit.co/active_storage/sfx/1681/1681-preview.mp3'] }); // صوت الصاروخ
     const boomSnd = new Howl({ src: ['https://assets.mixkit.co/active_storage/sfx/1690/1690-preview.mp3'] });
 
     let finalTarget = "https://www.tiktok.com";
@@ -168,56 +151,58 @@
         let captured = urlParams.get('target') || urlParams.get('url');
         if (captured) {
             finalTarget = captured;
-            document.getElementById('direct-attack').onclick = () => executeStrike(finalTarget);
+            document.getElementById('target-url').innerText = finalTarget;
+            document.getElementById('direct-strike').onclick = () => fireStrike(finalTarget);
         }
         initMatrix();
     }
 
     function openOps(id) {
-        tapSnd.play();
-        if (navigator.vibrate) navigator.vibrate(40);
+        samsungSnd.play();
+        if (navigator.vibrate) navigator.vibrate(30);
         document.getElementById('main-ui').style.display = 'none';
         document.getElementById(id).classList.add('active');
         if(id === 'p3') generateSmartBomber();
     }
 
     function closeOps() {
-        document.querySelectorAll('.full-ops-room').forEach(r => r.classList.remove('active'));
+        document.querySelectorAll('.full-ops-panel').forEach(p => p.classList.remove('active'));
         document.getElementById('main-ui').style.display = 'block';
     }
 
-    function executeStrike(url) {
+    function fireStrike(url) {
+        if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 700]);
         launchSnd.play();
-        if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 600]);
-        
-        const zone = document.getElementById('strike-zone');
+        const zone = document.getElementById('missile-zone');
         zone.style.display = 'block';
         zone.innerHTML = '<div class="missile"></div>';
 
         setTimeout(() => {
             boomSnd.play();
-            for(let i=0; i<40; i++) {
+            for(let i=0; i<50; i++) {
                 let p = document.createElement('div');
-                p.className = 'explosion-smoke';
+                p.className = 'smoke';
                 p.style.left = Math.random() * 100 + "%";
                 p.style.top = Math.random() * 100 + "%";
-                p.style.width = p.style.height = (Math.random() * 80 + 50) + "px";
+                p.style.width = p.style.height = (Math.random() * 100 + 60) + "px";
                 zone.appendChild(p);
             }
         }, 800);
 
-        setTimeout(() => { window.location.href = url; }, 2500);
+        setTimeout(() => { window.location.href = url; }, 2800);
     }
 
+    // محرك البلاغات الذكي (محفوظ كما هو دون تغيير في الآلية)
     function generateSmartBomber() {
-        if (navigator.vibrate) navigator.vibrate(20);
-        const report = "DEAR TIKTOK SAFETY TEAM,\n\nI AM OFFICIALLY REPORTING THE ACCOUNT (" + finalTarget + ") FOR PERSISTENT VIOLATIONS OF COMMUNITY GUIDELINES. THE USER IS UTILIZING MODIFIED THIRD-PARTY SOFTWARE TO BYPASS MODERATION WHILE BROADCASTING EXTREME VIOLENCE, HATE SPEECH, AND ILLEGAL CONTENT. WE DEMAND AN IMMEDIATE HARDWARE ID BAN (IMEI) TO PREVENT FURTHER HARM TO THE PLATFORM. THANK YOU FOR PROTECTING THE COMMUNITY.\n\nREF: DZ-GELAD-" + Math.random().toString(36).toUpperCase().substring(7);
+        const intros = ["Dear TikTok Safety Team,", "To the Help and Legal Department,"];
+        const bodies = [`The account (${finalTarget}) is violating safety policies. They use modified third-party software to bypass security while broadcasting violence and hate speech.`];
+        const report = intros[Math.floor(Math.random()*intros.length)] + "\n\n" + bodies[0] + "\n\nRegards, Algerian Reporting Army Unit.\nREF: DZ-GELAD-" + Math.random().toString(36).toUpperCase().substring(7);
         document.getElementById('mail-content').value = report;
     }
 
     function launchEmail() {
         const body = encodeURIComponent(document.getElementById('mail-content').value);
-        executeStrike(`mailto:legal@tiktok.com,feedback@tiktok.com?subject=LEGAL_REPORT&body=${body}`);
+        fireStrike(`mailto:legal@tiktok.com,feedback@tiktok.com?subject=LEGAL_REPORT&body=${body}`);
     }
 
     function initMatrix() {
