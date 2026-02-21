@@ -3,141 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ترسانة الجلاد v16.0 - الذكاء الهجومي</title>
+    <title>TERMINAL | ترسانة الجلاد v17.0</title>
     <style>
-        :root { --neon-green: #00ff41; --blood-red: #ff0000; --gold: #d4af37; --dark-bg: #0a0a0a; }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--dark-bg); color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow-x: hidden; }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Cairo:wght@400;900&display=swap');
 
-        /* خلفية الدرع الحربي */
-        .war-bg {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), 
-                        url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=2070');
-            background-size: cover; z-index: -1;
+        :root {
+            --primary: #00f3ff;
+            --danger: #ff003c;
+            --warn: #ffcc00;
+            --bg-dark: #02050a;
         }
 
-        /* واجهة التحكم */
-        .terminal { border: 2px solid var(--neon-green); margin: 15px; padding: 20px; background: rgba(0,0,0,0.9); box-shadow: 0 0 20px var(--neon-green); border-radius: 10px; position: relative; }
-        .header-title { font-size: 24px; text-shadow: 0 0 10px var(--neon-green); text-align: center; color: var(--neon-green); margin-bottom: 5px; }
-        
-        /* الرادار */
-        .radar-container { width: 120px; height: 120px; margin: 10px auto; border: 2px solid var(--neon-green); border-radius: 50%; position: relative; overflow: hidden; }
-        .radar-sweep { width: 100%; height: 100%; background: conic-gradient(from 0deg, transparent, var(--neon-green)); opacity: 0.3; animation: scan 3s linear infinite; }
-        
-        /* أزرار الأوامر */
-        .cmd-btn { width: 100%; padding: 18px; margin: 10px 0; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 16px; text-transform: uppercase; }
-        .btn-ai { background: var(--neon-green); color: #000; box-shadow: 0 0 15px var(--neon-green); }
-        .btn-strike { background: var(--blood-red); color: #fff; box-shadow: 0 0 15px var(--blood-red); }
-        
-        /* الإحصائيات */
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; font-family: 'Courier New'; font-size: 13px; }
-        .stat-item { border-left: 3px solid var(--gold); padding-right: 10px; background: rgba(255,255,255,0.05); padding: 8px; }
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            background-color: var(--bg-dark);
+            color: var(--primary);
+            font-family: 'Orbitron', 'Cairo', sans-serif;
+            overflow: hidden;
+        }
 
-        @keyframes scan { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .shaking { animation: shake 0.5s infinite; }
-        @keyframes shake { 0% { transform: translate(1px, 1px); } 10% { transform: translate(-1px, -2px); } 100% { transform: translate(1px, -1px); } }
+        /* خلفية الفيديو الحربية / جزيئات متحركة */
+        #bg-canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; opacity: 0.4;
+            background: radial-gradient(circle, #001a1d 0%, #000 100%);
+        }
+
+        /* تأثير التشويش العسكري (Glitch) */
+        .glitch-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+            pointer-events: none; opacity: 0.1; z-index: 100;
+        }
+
+        /* الحاوية الرئيسية */
+        .war-container {
+            display: flex; flex-direction: column; height: 100vh; padding: 15px;
+            box-sizing: border-box; border: 2px solid rgba(0, 243, 255, 0.2);
+            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(10px);
+        }
+
+        /* الرأس - نظام الهوية */
+        .header {
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 10px; margin-bottom: 15px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .commander-title {
+            font-size: 14px; color: var(--warn); letter-spacing: 2px;
+            text-transform: uppercase; font-weight: 900;
+        }
+
+        /* الرادار الدوار النشط */
+        .radar-box {
+            position: relative; width: 140px; height: 140px;
+            border: 2px solid var(--primary); border-radius: 50%;
+            margin: 10px auto; box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+        }
+        .radar-line {
+            position: absolute; width: 50%; height: 2px; background: var(--primary);
+            top: 50%; left: 50%; transform-origin: left;
+            animation: rotate 3s linear infinite; box-shadow: 0 0 10px var(--primary);
+        }
+
+        /* شاشة البيانات (Console) */
+        .console {
+            flex-grow: 1; background: rgba(0, 20, 30, 0.8);
+            border: 1px solid var(--primary); padding: 10px;
+            font-family: 'Courier New', monospace; font-size: 11px;
+            overflow-y: auto; color: #00ff41; border-radius: 5px;
+        }
+
+        /* أزرار التشغيل العالمية */
+        .btn-group { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
+
+        .strike-btn {
+            background: linear-gradient(45deg, #800000, #ff003c);
+            color: white; border: none; padding: 20px;
+            font-weight: 900; font-size: 18px; cursor: pointer;
+            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+            transition: 0.3s; text-shadow: 0 0 10px #000;
+        }
+
+        .ai-gen-btn {
+            background: transparent; border: 1px solid var(--primary);
+            color: var(--primary); padding: 15px; font-weight: bold;
+            text-transform: uppercase; cursor: pointer;
+        }
+
+        .strike-btn:active { transform: scale(0.95); filter: brightness(1.5); }
+
+        /* الأنيميشن */
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .flicker { animation: flicker 0.1s infinite; }
+        @keyframes flicker { 0% { opacity: 0.8; } 50% { opacity: 1; } 100% { opacity: 0.9; } }
+
     </style>
 </head>
-<body onclick="playAnthem()">
+<body onload="initSystem()">
 
-    <div class="war-bg"></div>
-    <audio id="anthem" src="https://upload.wikimedia.org/wikipedia/commons/2/25/Kassaman.ogg" loop></audio>
+    <div id="bg-canvas"></div>
+    <div class="glitch-overlay"></div>
 
-    <div class="terminal">
-        <div class="header-title">🇩🇿 مَنْظُومَةُ الْجَلادِ الْجَزَائِرِيِّ v16.0 🇩🇿</div>
-        <div style="text-align:center; color: var(--gold); font-size: 12px; letter-spacing: 2px;">TACTICAL AI REPORTING SYSTEM</div>
-
-        <div class="radar-container"><div class="radar-sweep"></div></div>
-
-        <div class="stat-grid">
-            <div class="stat-item">الحالة: <span style="color:var(--neon-green)">نَشِطْ</span></div>
-            <div class="stat-item">الرتبة: <span id="rank" style="color:var(--gold)">قائد الترسانة</span></div>
-            <div class="stat-item">الهدف: <span id="targetName" style="color:var(--blood-red)">جاري الرصد...</span></div>
-            <div class="stat-item">العمليات: <span id="opsCount">0</span></div>
+    <div class="war-container">
+        <div class="header">
+            <div>
+                <div class="commander-title">قِيَادَةُ: الْجَلادِ الْجَزَائِرِيِّ 🦅</div>
+                <div style="font-size:10px;">VERSION 17.0 - QUANTUM STRIKE</div>
+            </div>
+            <div style="text-align: left;">
+                <span id="clock" style="color: var(--primary);">00:00:00</span><br>
+                <span style="color: var(--danger); font-size: 10px;">SECURE LINE</span>
+            </div>
         </div>
 
-        <div id="log" style="height: 60px; background: #000; font-size: 10px; color: #0f0; padding: 5px; overflow-y: hidden; border: 1px solid #333; margin-bottom: 10px;">
-            > جاري تحميل مصفوفات الذكاء الاصطناعي...<br>
-            > تم تفعيل بروتوكول "الجلاد" بنجاح.
+        <div style="text-align: center; margin-bottom: 10px;">
+            <h1 style="margin:0; font-size: 20px; color: #fff; text-shadow: 0 0 15px var(--primary);">🇩🇿 مَنْظُومَةُ جَيْشِ التَّبْلِيغِ الْجَزَائِرِيِّ 🇩🇿</h1>
         </div>
 
-        <button class="cmd-btn btn-ai" onclick="generateSmartReport()">⚡ تَوْلِيدُ بَلَاغِ الِاخْتِرَاقِ (AI)</button>
-        <button class="cmd-btn btn-strike" onclick="executeStrike()">🔥 إِطْلاقُ الْقَصْفِ النِّهَائِيِّ</button>
-        
-        <p style="text-align:center; font-size:10px; color:#555;">لا تراجع.. لا استسلام.. العدالة السيبرانية تبدأ الآن</p>
+        <div class="radar-box">
+            <div class="radar-line"></div>
+            <div style="position:absolute; top:45%; left:40%; color:red; font-size:8px;" class="flicker">TARGET LOCKED</div>
+        </div>
+
+        <div class="console" id="console">
+            > جاري استدعاء البروتوكولات العسكرية...<br>
+            > تم تحديد الهدف: <span id="targetID" style="color:white"></span><br>
+            > الحالة: جاهز للقصف الشامل.
+        </div>
+
+        <div class="btn-group">
+            <button class="ai-gen-btn" onclick="generateSuperAI()">🧬 تَوْلِيدُ بَلَاغِ الذَّكَاءِ الْخَارِقِ</button>
+            <button class="strike-btn" onclick="launchStrike()">💥 إِطْلاقُ صَوَارِيخِ الْقَصْفِ</button>
+        </div>
+
+        <div style="margin-top: 10px; display: flex; justify-content: space-around; font-size: 10px;">
+            <div>SENSORS: <span style="color:#0f0">ONLINE</span></div>
+            <div>ENCRYPTION: <span style="color:#0f0">AES-256</span></div>
+            <div>THREAT LEVEL: <span style="color:red">MAXIMUM</span></div>
+        </div>
     </div>
+
+    <audio id="snd_btn" src="https://www.soundjay.com/buttons/sounds/button-19.mp3"></audio>
+    <audio id="snd_alarm" src="https://www.soundjay.com/mechanical/sounds/alarm-clock-01.mp3"></audio>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        const target = urlParams.get('target') || "Unknown_Entity";
-        document.getElementById('targetName').innerText = target;
+        const target = urlParams.get('target') || "NULL_OBJECT";
+        document.getElementById('targetID').innerText = target;
 
-        function playAnthem() { document.getElementById('anthem').play().catch(()=>{}); }
+        function initSystem() {
+            setInterval(() => {
+                const now = new Date();
+                document.getElementById('clock').innerText = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+            }, 1000);
+            addToConsole(">> تم تفعيل نظام التشفير الجزائري المتطور.");
+        }
 
-        // مصفوفات المحرك الذكي - آلاف الاحتمالات
-        const subjects = [
-            "Emergency Report: Serious safety violations detected on profile " + target,
-            "Legal Escalation: Systematic breach of community guidelines by " + target,
-            "Urgent Removal Request: High-risk activity recorded on " + target,
-            "Safety Alert: Violent extremism and hate speech documented on " + target
-        ];
+        function addToConsole(text) {
+            const con = document.getElementById('console');
+            con.innerHTML += `<br>> ${text}`;
+            con.scrollTop = con.scrollHeight;
+        }
 
-        const structures = {
-            intro: [
-                "I am formally reporting the account linked as " + target + " for severe and persistent violations of the TikTok Global Community Standards. ",
-                "This official communication serves as a technical flag against " + target + " due to high-risk behavioral patterns. ",
-                "Our monitoring of the user " + target + " has revealed critical non-compliance with platform safety protocols. "
-            ],
-            violation: [
-                "The content provided by this user promotes violent extremism, terrorist ideologies, and systematic hate speech against specific groups. ",
-                "We have documented repeated instances of cyber-bullying, severe verbal abuse, and the incitement of physical violence during live broadcasts. ",
-                "The account is being used to coordinate organized harassment and distribute prohibited materials that jeopardize community safety. "
-            ],
-            technical: [
-                "Technical analysis indicates that this account bypasses standard filters to spread hate speech and extremist propaganda. ",
-                "The frequency of these violations suggests a deliberate attempt to undermine TikTok's safety environment. ",
-                "Multiple reports have been synthesized to confirm that this profile serves as a hub for toxic and illegal interactions. "
-            ],
-            closing: [
-                "We demand the immediate and permanent suspension of this account to prevent further harm. ",
-                "Failure to act on this report will be seen as a neglect of community safety duties. Termination is the only solution. ",
-                "This account must be banned permanently and its IP address blacklisted from creating new profiles. "
-            ],
-            codes: ["DZ-PRO-", "SIGMA-", "EL-DJALLAD-", "TX-"]
-        };
-
-        function generateSmartReport() {
-            let report = "";
-            report += structures.intro[Math.floor(Math.random() * structures.intro.length)];
-            report += structures.violation[Math.floor(Math.random() * structures.violation.length)];
-            report += structures.technical[Math.floor(Math.random() * structures.technical.length)];
-            report += structures.closing[Math.floor(Math.random() * structures.closing.length)];
+        function generateSuperAI() {
+            document.getElementById('snd_btn').play();
+            const patterns = [
+                `URGENT LEGAL NOTICE: The account [${target}] is engaged in severe violations of international digital safety standards. It promotes violent extremism and unmodulated hate speech. This is a formal request for immediate termination. Ref: DZ-${Math.floor(Math.random()*9999)}`,
+                `SÉCURITÉ NATIONALE: Ce compte [${target}] propage des contenus haineux et incite à la violence extrémiste. Violation directe des conditions de service TikTok. Action immédiate requise.`,
+                `CRITICAL THREAT: Systematic harassment and cyber-terrorism detected from source [${target}]. We have logged multiple instances of policy breach. Termination is non-negotiable for platform safety.`
+            ];
             
-            // إضافة كود فريد لكسر التكرار
-            let uniqueID = structures.codes[Math.floor(Math.random() * structures.codes.length)] + Math.random().toString(36).substr(2, 9).toUpperCase();
-            report += " [ReferenceID: " + uniqueID + " - " + new Date().toISOString() + "]";
-
-            // التأكد من تجاوز 500 حرف
-            while(report.length < 550) {
-                report += " The severity of this breach requires immediate intervention by the TikTok legal and safety team. Security protocols must be enforced.";
+            let finalReport = patterns[Math.floor(Math.random()*patterns.length)];
+            while(finalReport.length < 580) {
+                finalReport += " TikTok safety infrastructure must act now to mitigate this high-risk entity. Violent conduct and illegal incitement are strictly documented in this profile's history.";
             }
 
-            navigator.clipboard.writeText(report);
-            updateLog("> تم توليد بلاغ فريد (" + report.length + " حرف) بنجاح.");
-            alert("🎯 تم توليد البلاغ الذكي بنجاح! تم النسخ إلى الحافظة.");
+            navigator.clipboard.writeText(finalReport);
+            addToConsole(">> تَمَّ تَوَلِيدُ شِفْرَةِ الْبَلَاغِ وَنَسْخُهَا عَالَمِيًّا.");
+            alert("✅ تَمَّ نَسْخُ بَلَاغِ الصَّدْمَةِ (AI)");
         }
 
-        function updateLog(msg) {
-            const log = document.getElementById('log');
-            log.innerHTML = msg + "<br>" + log.innerHTML;
-        }
-
-        function executeStrike() {
-            updateLog("> جاري تحضير الصواريخ السيبرانية...");
-            const sub = subjects[Math.floor(Math.random() * subjects.length)];
+        function launchStrike() {
+            document.getElementById('snd_alarm').play();
+            addToConsole(">> جَارِي تَوْجِيهِ الضَّرْبَةِ لِلْمَكَاتِبِ الْقَانُونِيَّةِ...");
+            
             setTimeout(() => {
-                window.location.href = `mailto:legal@tiktok.com,feedback@tiktok.com,community@tiktok.com?subject=${encodeURIComponent(sub)}&body=REPORT_DATA`;
-            }, 1000);
+                const mailSubject = encodeURIComponent(`VIOLATION REPORT: High Threat Level - ID ${Math.random().toString(36).substr(2, 5)}`);
+                const mailBody = encodeURIComponent(`The following account is under investigation for violent extremism: ${target}`);
+                window.location.href = `mailto:legal@tiktok.com,community@tiktok.com?subject=${mailSubject}&body=${mailBody}`;
+            }, 1500);
         }
     </script>
 </body>
