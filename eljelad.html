@@ -3,150 +3,204 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منظومة جيش التبليغ الجزائري | بقيادة الجلاد</title>
+    <title>ترسانة جيش التبليغ الجزائري | بقيادة الجلاد</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
     <style>
-        :root { --neon: #00ff41; --war: #ff0000; --cyber: #00d4ff; --gold: #ffcc00; --blood: #8a0303; }
-        * { cursor: crosshair; box-sizing: border-box; }
-        body {
-            background: #000; color: var(--neon); font-family: 'Courier New', monospace;
-            margin: 0; overflow-x: hidden; position: relative;
-        }
-        #matrix-canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.15; }
-
-        /* نافذة البدء */
-        #audio-unlocker {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 20000; display: flex;
-            flex-direction: column; justify-content: center; align-items: center;
+        :root { 
+            --samsung-bg: #000000;
+            --samsung-btn: #1a1a1a;
+            --neon-green: #00ff41;
+            --cyber-blue: #00d4ff;
+            --war-red: #ff3e3e;
+            --gold: #ffcc00;
         }
 
-        .national-header {
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            background: var(--samsung-bg); color: white;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        /* خلفية الماتريكس الخفيفة */
+        #matrix-canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.1; }
+
+        /* شاشة تصريح الدخول */
+        #entry-lock {
+            position: fixed; inset: 0; background: black; z-index: 50000;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+
+        /* الشريط العلوي المتحرك (من اليسار لليمين) */
+        .top-marquee {
             background: linear-gradient(90deg, #006233, #fff, #d21034);
-            color: #000; font-weight: 900; padding: 15px; text-align: center;
-            font-size: 1.2rem; box-shadow: 0 0 20px #fff;
+            color: black; font-weight: bold; padding: 10px 0;
+            position: fixed; top: 0; width: 100%; z-index: 1000;
         }
 
-        .war-btn {
-            background: rgba(10, 10, 10, 0.9); border: 1px solid var(--neon);
-            color: var(--neon); padding: 18px; width: 100%; margin: 12px 0;
-            font-weight: bold; font-size: 1.1rem; text-transform: uppercase;
-            box-shadow: 0 0 10px rgba(0, 255, 65, 0.2);
-            transition: 0.3s;
+        /* عنوان المنظومة مع الصقور */
+        .header-container {
+            margin-top: 80px; text-align: center; position: relative;
         }
-        .war-btn:hover { background: var(--neon); color: #000; box-shadow: 0 0 40px var(--neon); }
-
-        /* تعليمات القيادة داخل النوافذ */
-        .order-box {
-            background: rgba(255, 0, 0, 0.1); border: 1px solid var(--war);
-            padding: 10px; margin-bottom: 15px; font-size: 0.8rem; color: #fff;
-            text-align: right; line-height: 1.5;
+        .main-title {
+            font-size: 2rem; font-weight: 900; letter-spacing: 2px;
+            text-transform: uppercase; animation: cyber-glow 2s infinite;
+        }
+        .falcon {
+            display: inline-block; font-size: 2.5rem; 
+            animation: falcon-fly 3s infinite alternate ease-in-out;
         }
 
-        .blood-text {
-            color: var(--war); font-size: 1.4rem; font-weight: bold;
-            text-align: center; margin-top: 30px;
-            text-shadow: 2px 2px 5px var(--blood);
+        @keyframes cyber-glow {
+            0%, 100% { color: var(--neon-green); text-shadow: 0 0 20px var(--neon-green); }
+            50% { color: var(--cyber-blue); text-shadow: 0 0 30px var(--cyber-blue); }
+        }
+        @keyframes falcon-fly { from { transform: translateY(-10px); } to { transform: translateY(10px); } }
+
+        /* أزرار سامسونج الاحترافية */
+        .samsung-btn {
+            background: var(--samsung-btn);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white; padding: 20px 40px; margin: 15px auto;
+            width: 85%; max-width: 400px; border-radius: 25px;
+            font-size: 1.1rem; font-weight: 500; display: block;
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px); cursor: pointer;
+        }
+        .samsung-btn:hover {
+            transform: scale(1.03); background: rgba(255,255,255,0.1);
+            border-color: var(--neon-green); box-shadow: 0 0 20px rgba(0,255,65,0.4);
         }
 
-        .panel {
-            display: none; position: fixed; top: 50%; left: 50%;
-            transform: translate(-50%, -50%); width: 95%; max-width: 500px;
-            background: rgba(0, 10, 0, 0.98); border: 2px solid var(--cyber);
-            padding: 20px; z-index: 10001; box-shadow: 0 0 100px #000;
+        /* نوافذ غرفة العمليات */
+        .ops-room {
+            display: none; position: fixed; inset: 0;
+            background: radial-gradient(circle, #0a1a0a 0%, #000 100%);
+            z-index: 2000; padding: 30px; text-align: center;
         }
-        .panel.active { display: block; }
+        .ops-room.active { display: block; animation: zoomIn 0.4s forwards; }
 
-        /* صور الأسلحة الحربية */
-        .weapon-img { width: 80px; filter: drop-shadow(0 0 10px var(--war)); margin: 10px; }
+        /* الرادار الدوار داخل الغرفة */
+        .tactical-radar {
+            width: 150px; height: 150px; border: 2px solid var(--neon-green);
+            border-radius: 50%; margin: 20px auto; position: relative;
+            background: repeating-radial-gradient(circle, transparent 0, transparent 20px, rgba(0,255,65,0.1) 21px);
+        }
+        .tactical-radar::after {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            border-top: 3px solid var(--neon-green); border-radius: 50%;
+            animation: rotate 2s linear infinite;
+        }
+
+        .order-text {
+            background: rgba(255,255,255,0.05); padding: 15px;
+            border-radius: 15px; border-right: 4px solid var(--war-red);
+            text-align: right; margin: 20px 0; font-size: 0.9rem;
+        }
+
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes zoomIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+
+        /* نص الدم */
+        .blood-footer {
+            position: absolute; bottom: 20px; width: 100%;
+            color: #ff0000; text-align: center; font-weight: bold;
+            text-shadow: 2px 2px 4px #000; font-size: 1rem;
+        }
     </style>
 </head>
 <body>
 
-<div id="audio-unlocker">
-    <h1 style="color: var(--war);">[ غـرفة الـعمليات الـحربية ]</h1>
-    <button class="war-btn" style="width: 280px;" onclick="startWarfare()">تـفعيل الـسلاح 🇩🇿</button>
+<div id="entry-lock">
+    <div class="falcon">🦅</div>
+    <button class="samsung-btn" style="border-color: var(--gold);" onclick="unlockArsenal()">
+        تـصريح دخـول الـترسانة 🇩🇿
+    </button>
+    <p style="color: gray; font-size: 0.8rem; margin-top: 10px;">انقر لتفعيل النظام الصوتي والواجهة</p>
+</div>
+
+<div class="top-marquee">
+    <marquee direction="right" scrollamount="6">🇩🇿 تحيا الجزائر .. المجد والخلود لشهدائنا الابرار .. الله اكبر 🇩🇿</marquee>
 </div>
 
 <canvas id="matrix-canvas"></canvas>
 
-<div class="national-header">
-    <marquee scrollamount="10">🇩🇿 منظومة جيش التبليغ الجزائري بقيادة الجلاد الجزائري .. أصبعك هو زنادك وهاتفك هو سلاحك .. القصف مستمر 🇩🇿</marquee>
-</div>
-
-<div style="padding: 20px; text-align: center; max-width: 600px; margin: auto;">
-    <img src="https://i.ibb.co/V9m8zYf/ak47-icon.png" class="weapon-img" alt="War">
-    <h1 style="margin: 0; font-size: 1.6rem; text-shadow: 0 0 15px var(--neon);">منظومة جيش التبليغ الجزائري</h1>
-    <p style="color: var(--cyber); font-weight: bold;">بقيادة الجلاد الجزائري</p>
-    <img src="https://i.ibb.co/mS6pM7B/radar-cyber.png" class="weapon-img" alt="Cyber">
-    
-    <div style="background: rgba(0,255,255,0.05); border-right: 5px solid var(--cyber); padding: 12px; margin: 15px 0; text-align: right;">
-        <span style="color: var(--cyber); font-size: 0.7rem;">🎯 الهدف المرصود:</span><br>
-        <span id="target-url" style="color: #fff; font-family: monospace; font-size: 0.8rem; word-break: break-all;">جاري تحديد الإحداثيات...</span>
+<div id="main-ui">
+    <div class="header-container">
+        <span class="falcon">🦅</span>
+        <div class="main-title">منظومة جيش التبليغ الجزائري</div>
+        <div style="color: var(--cyber-blue); font-weight: bold;">بـقيادة الـجلاد الـجزائري</div>
+        <span class="falcon">🦅</span>
     </div>
 
-    <button class="war-btn" onclick="openPanel('p1')">🛡️ بـلاغ رسـمي (اسـتمارة)</button>
-    <button class="war-btn" onclick="openPanel('p2')">💥 هـجوم مـباشر (تطبيق)</button>
-    <button class="war-btn" style="border-color: var(--gold); color: var(--gold);" onclick="openPanel('p3')">📧 قـصف الـجيميل (قنابل)</button>
+    <div style="margin-top: 40px;">
+        <button class="samsung-btn" onmouseover="playHover()" onclick="openOps('p1')">🛡️ بـلاغ رسـمي (اسـتمارة)</button>
+        <button class="samsung-btn" onmouseover="playHover()" onclick="openOps('p2')">💥 هـجوم مـباشر (تطبيق)</button>
+        <button class="samsung-btn" onmouseover="playHover()" style="color: var(--gold);" onclick="openOps('p3')">📧 قـصف الـجيميل (قنابل)</button>
+    </div>
 
-    <div class="blood-text">
-        اصبعك هو زنادك وهاتفك هو سلاحك<br>
-        هيا يا ابطال لنقصف الهدف
+    <div class="blood-footer">
+        اصبعك هو زنادك وهاتفك هو سلاحك.. هيا يا ابطال لنقصف الهدف
     </div>
 </div>
 
-<div class="panel" id="p1">
-    <h3 style="color: var(--cyber); text-align: center;">🛡️ غرفة البلاغ الرسمي</h3>
-    <div class="order-box">
-        📜 <b>تعليمات القيادة:</b><br>
-        1. اضغط على "إطلاق القذيفة" للانتقال لمركز المساعدة.<br>
-        2. اختر (تبليغ عن انتهاك) ثم (حساب) ثم (آخر).<br>
-        3. قم بإرفاق رابط الهدف وتأكيد الإرسال.
+<div class="ops-room" id="p1">
+    <div class="tactical-radar"></div>
+    <h2 style="color: var(--cyber-blue);">تـكتيك الـبلاغ الـرسمي</h2>
+    <div class="order-text">
+        📜 <b>أوامر القيادة:</b><br>
+        1. توجه لرابط المساعدة الرسمي.<br>
+        2. اختر نوع الانتهاك "حساب" ثم "آخر".<br>
+        3. الصق رابط الهدف واضغط إرسال القذيفة.
     </div>
-    <button class="war-btn" onclick="strike('https://www.tiktok.com/legal/report/feedback')">🚀 إطـلاق الـقذيفة</button>
-    <button onclick="closeAll()" style="color:red; background:none; border:none; width:100%;">إغلاق</button>
+    <button class="samsung-btn" onclick="strike('https://www.tiktok.com/legal/report/feedback')">🚀 إطـلاق الـقذيفة</button>
+    <button class="samsung-btn" style="background: transparent; border: none; color: red;" onclick="closeOps()">تراجع للترسانة</button>
 </div>
 
-<div class="panel" id="p2">
-    <h3 style="color: var(--war); text-align: center;">🔥 اقتحام البث المباشر</h3>
-    <div class="order-box">
-        📜 <b>تعليمات القيادة:</b><br>
-        1. سيتم فتح حساب الهدف في التطبيق مباشرة.<br>
-        2. اضغط على الثلاث نقاط (تبليغ) بداخل الحساب.<br>
-        3. كرر العملية 100 مرة متتالية دون توقف حتى يسقط الهدف.
+<div class="ops-room" id="p2">
+    <div class="tactical-radar"></div>
+    <h2 style="color: var(--war-red);">اقـتحام الـميدان الـمباشر</h2>
+    <div class="order-text">
+        📜 <b>أوامر القيادة:</b><br>
+        1. سيفتح التطبيق على جبهة العدو.<br>
+        2. اضغط خيارات ثم تبليغ.<br>
+        3. نفذ 100 تبليغ متتالي لإسقاط الحساب فوراً.
     </div>
-    <button class="war-btn" id="direct-attack-btn">⚡ بـدء الاقـتحام</button>
-    <button onclick="closeAll()" style="color:red; background:none; border:none; width:100%;">إغلاق</button>
+    <button class="samsung-btn" id="direct-attack-btn">⚡ بـدء الاقـتحام</button>
+    <button class="samsung-btn" style="background: transparent; border: none; color: red;" onclick="closeOps()">تراجع للترسانة</button>
 </div>
 
-<div class="panel" id="p3">
-    <h3 style="color: var(--gold); text-align: center;">📧 قنبلة الجيميل الذكية</h3>
-    <div class="order-box">
-        📜 <b>تعليمات القيادة:</b><br>
-        1. اضغط "توليد" لاختيار بلاغ قانوني جديد.<br>
-        2. اضغط "إرسال" لفتح البريد.<br>
-        3. سيتم إرسال بلاغ إداري (600 حرف) مباشرة لفريق الدعم.
+<div class="ops-room" id="p3">
+    <div class="tactical-radar"></div>
+    <h2 style="color: var(--gold);">تـوليد الـقنابل الـبريدية</h2>
+    <div class="order-text">
+        📜 <b>أوامر القيادة:</b><br>
+        1. ولد بلاغاً قانونياً (600 حرف).<br>
+        2. النص يهاجم استخدام البرامج المهكرة والتحريض.<br>
+        3. اضغط إرسال لفتح الجيميل والقصف.
     </div>
-    <textarea id="mail-content" readonly style="width:100%; height:120px; background:#000; color:var(--gold); border:1px solid var(--gold); font-size:10px;"></textarea>
-    <button class="war-btn" style="background: var(--gold); color: #000; border: none; padding: 10px;" onclick="generateBomber()">🔄 توليد البلاغ الرسمي</button>
-    <button class="war-btn" style="border-color: var(--gold); color: var(--gold); padding: 10px;" onclick="launchEmail()">🚀 إرسال القذيفة البريدية</button>
-    <button onclick="closeAll()" style="color:red; background:none; border:none; width:100%;">إغلاق</button>
+    <textarea id="mail-content" readonly style="width:100%; height:100px; background:rgba(0,0,0,0.5); color:var(--gold); border:1px solid var(--gold); border-radius:10px; padding:10px; font-size:10px;"></textarea>
+    <button class="samsung-btn" onclick="generateSmartBomber()">🔄 تـوليد الـبلاغ</button>
+    <button class="samsung-btn" style="color: var(--gold);" onclick="launchEmail()">🚀 قـصف الـجيميل</button>
+    <button class="samsung-btn" style="background: transparent; border: none; color: red;" onclick="closeOps()">تراجع للترسانة</button>
 </div>
 
 <script>
-    const musicSnd = new Howl({ 
-        src: ['https://www.soundboard.com/handler/DownLoadTrack.ashx?cliptitle=War+Ambient&filename=22/227184-7e5d1792-2628-4683-9b1d-c454e9955742.mp3'], 
-        loop: true, volume: 0.5 
-    });
+    // أصوات سامسونج والحرب
+    const hoverSnd = new Howl({ src: ['https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3'], volume: 0.2 });
+    const clickSnd = new Howl({ src: ['https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3'], volume: 0.5 });
+    const warMusic = new Howl({ src: ['https://www.soundboard.com/handler/DownLoadTrack.ashx?cliptitle=War+Ambient&filename=22/227184-7e5d1792-2628-4683-9b1d-c454e9955742.mp3'], loop: true, volume: 0.4 });
     const strikeSnd = new Howl({ src: ['https://assets.mixkit.co/active_storage/sfx/1690/1690-preview.mp3'] });
 
-    function startWarfare() {
-        document.getElementById('audio-unlocker').style.display = 'none';
-        musicSnd.play();
+    let finalTarget = "https://www.tiktok.com";
+
+    function unlockArsenal() {
+        document.getElementById('entry-lock').style.display = 'none';
+        warMusic.play(); // الموسيقى تبدأ فور الدخول
+        initMatrix();
         startSystem();
     }
-
-    let finalTarget = "https://www.tiktok.com";
 
     function startSystem() {
         const urlParams = new URLSearchParams(window.location.search);
@@ -156,26 +210,33 @@
             document.getElementById('target-url').innerText = finalTarget;
             document.getElementById('direct-attack-btn').onclick = () => strike(finalTarget);
         }
-        initMatrix();
     }
 
-    function openPanel(id) {
-        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    function openOps(id) {
+        clickSnd.play();
+        document.getElementById('main-ui').style.display = 'none';
+        document.querySelectorAll('.ops-room').forEach(r => r.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-        if(id === 'p3') generateBomber();
+        if(id === 'p3') generateSmartBomber();
     }
 
-    function closeAll() { document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); }
+    function closeOps() {
+        document.getElementById('main-ui').style.display = 'block';
+        document.querySelectorAll('.ops-room').forEach(r => r.classList.remove('active'));
+    }
+
+    function playHover() { hoverSnd.play(); }
 
     function strike(url) {
         strikeSnd.play();
-        setTimeout(() => { window.location.href = url; }, 1000);
+        if (navigator.vibrate) navigator.vibrate(500);
+        setTimeout(() => { window.location.href = url; }, 1200);
     }
 
-    function generateBomber() {
+    function generateSmartBomber() {
         const intros = ["Dear TikTok Legal,", "To the Support Team,"];
-        const bodies = [`The account (${finalTarget}) promotes violent extremism and uses illegal software to block reports while harassing users.`];
-        const report = intros[Math.floor(Math.random()*intros.length)] + "\n\n" + bodies[0] + "\n\nRegards, DZ Safety Unit.\nREF: " + Math.random().toString(36).substring(7).toUpperCase();
+        const bodies = [`Account (${finalTarget}) violates safety policies by using hacked apps and inciting hate.`];
+        const report = intros[Math.floor(Math.random()*intros.length)] + "\n\n" + bodies[0] + "\n\nRegards, DZ Security.\nID: " + Math.random().toString(36).substring(7).toUpperCase();
         document.getElementById('mail-content').value = report;
     }
 
