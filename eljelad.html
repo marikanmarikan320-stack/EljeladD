@@ -3,16 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>One UI 8 | جيش التبليغ الجزائري</title>
+    <title>One UI 8 | منظومة جيش التبليغ الجزائري</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
     <style>
         :root { 
-            --primary: #0355d0; 
-            --danger: #ff3b30; 
-            --success: #34c759;
-            --accent: #ffcc00;
-            --glass: rgba(255, 255, 255, 0.08);
-            --blur: blur(25px);
+            --samsung-blue: #0355d0; 
+            --edge-glow: #00ff41;
+            --war-red: #ff3b30;
+            --glass: rgba(20, 20, 20, 0.7);
         }
         
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; } 
@@ -20,203 +18,222 @@
         body {
             background: #000; 
             color: white; 
-            font-family: 'Segoe UI', Roboto, -apple-system, sans-serif;
+            font-family: 'Segoe UI', Roboto, sans-serif;
             margin: 0; overflow: hidden; height: 100vh; width: 100vw; 
-            /* خلفية الهاكر الجزائري مع تدرج One UI */
-            background-image: 
-                linear-gradient(180deg, rgba(0,0,0,0.5) 0%, #000 100%),
-                url('https://w0.peakpx.com/wallpaper/424/644/HD-wallpaper-hacker-hoodie-mask-dark-background-glitch-art.jpg');
+            background-image: linear-gradient(to top, #000 10%, rgba(0,0,0,0.4) 100%), 
+                              url('https://w0.peakpx.com/wallpaper/424/644/HD-wallpaper-hacker-hoodie-mask-dark-background-glitch-art.jpg');
             background-size: cover; background-position: center;
         }
 
-        #matrix-canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.15; }
+        /* إضاءة حواف الهاتف (Edge Lighting) */
+        .edge-lighting {
+            position: fixed; inset: 0; pointer-events: none; z-index: 9999;
+            border: 4px solid transparent;
+            border-image: conic-gradient(from 0deg, var(--edge-glow), transparent, var(--edge-glow)) 1;
+            animation: rotateGlow 4s linear infinite;
+            filter: blur(2px);
+        }
 
-        /* شاشة الترحيب الذكية */
+        @keyframes rotateGlow {
+            0% { filter: hue-rotate(0deg) blur(2px); }
+            100% { filter: hue-rotate(360deg) blur(2px); }
+        }
+
+        /* شاشة القفل */
         #audio-unlocker {
-            position: fixed; inset: 0; background: #000; z-index: 50000;
+            position: fixed; inset: 0; background: #000; z-index: 100000;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            transition: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: 0.8s cubic-bezier(0.85, 0, 0.15, 1);
         }
 
-        /* رأس الصفحة - تصميم سامسونج الكبير */
-        .one-ui-header {
-            padding: 70px 24px 30px;
-            text-align: center;
-            animation: slideDown 0.8s ease-out;
+        /* رأس الصفحة One UI 8 */
+        .header-section {
+            padding: 80px 24px 20px; text-align: center;
+            animation: slideDown 0.6s ease-out;
         }
 
-        .one-ui-header h1 {
-            font-size: 2.6rem; font-weight: 300; margin: 0; letter-spacing: -1px;
-            background: linear-gradient(to bottom, #fff, #999);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        .header-section h1 {
+            font-size: 2.2rem; font-weight: 300; margin: 0;
+            text-shadow: 0 0 15px rgba(255,255,255,0.3);
         }
 
-        .one-ui-header p {
-            color: rgba(255,255,255,0.4); font-size: 1.1rem; margin-top: 10px;
+        .header-section p {
+            color: #aaa; margin-top: 10px; font-size: 1.1rem;
         }
 
-        /* شبكة الأزرار القوية (One UI Cards) */
-        .action-list {
-            padding: 0 20px;
-            display: flex; flex-direction: column; gap: 18px;
-            max-width: 500px; margin: 0 auto;
+        /* قائمة الأزرار القوية */
+        .apps-container {
+            padding: 20px; display: flex; flex-direction: column; gap: 15px;
+            max-width: 450px; margin: 0 auto;
         }
 
-        .cyber-card {
+        .samsung-card {
             background: var(--glass);
-            backdrop-filter: var(--blur);
-            -webkit-backdrop-filter: var(--blur);
-            border-radius: 30px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 28px;
             padding: 22px;
             display: flex; align-items: center;
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transition: 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: 0.2s;
             cursor: pointer;
         }
 
-        .cyber-card:active {
-            transform: scale(0.95);
-            background: rgba(255,255,255,0.12);
+        .samsung-card:active {
+            transform: scale(0.94);
+            background: rgba(255,255,255,0.1);
         }
 
-        .icon-shield {
-            width: 54px; height: 54px;
-            border-radius: 18px;
+        .app-icon {
+            width: 52px; height: 52px; border-radius: 16px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.6rem; margin-left: 18px;
-            flex-shrink: 0;
+            font-size: 1.5rem; margin-left: 18px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
 
-        .text-group { flex-grow: 1; text-align: right; }
-        .text-group h3 { margin: 0; font-size: 1.2rem; font-weight: 600; }
-        .text-group p { margin: 4px 0 0; font-size: 0.9rem; color: rgba(255,255,255,0.5); }
+        .card-text { flex-grow: 1; text-align: right; }
+        .card-text h3 { margin: 0; font-size: 1.15rem; font-weight: 500; }
+        .card-text p { margin: 4px 0 0; font-size: 0.85rem; color: #888; }
 
-        /* تلوين الأيقونات بقوة */
-        .blue-grad { background: linear-gradient(135deg, #0a84ff, #0040dd); box-shadow: 0 5px 15px rgba(10, 132, 255, 0.3); }
-        .red-grad { background: linear-gradient(135deg, #ff453a, #bf0000); box-shadow: 0 5px 15px rgba(255, 69, 58, 0.3); }
-        .gold-grad { background: linear-gradient(135deg, #ffd60a, #ff9f0a); box-shadow: 0 5px 15px rgba(255, 214, 10, 0.3); }
+        /* الألوان التكتيكية */
+        .blue-icon { background: linear-gradient(135deg, #0355d0, #022a6b); }
+        .red-icon { background: linear-gradient(135deg, #e91e63, #880e4f); }
+        .gold-icon { background: linear-gradient(135deg, #ffc400, #ff8f00); }
 
-        /* نوافذ التحكم العائمة */
+        /* نوافذ العمليات (Samsung Sheets) */
         .ops-sheet {
-            display: none; position: fixed; bottom: 0; left: 0; right: 0;
-            height: 82vh; background: rgba(18, 18, 20, 0.98);
-            backdrop-filter: blur(40px);
-            z-index: 5000; border-radius: 45px 45px 0 0;
-            padding: 35px 24px; text-align: center;
-            border-top: 1px solid rgba(255,255,255,0.15);
+            display: none; position: fixed; bottom: 0; left: 0; right: 0; 
+            height: 85vh; background: #121212;
+            z-index: 10001; border-radius: 35px 35px 0 0;
+            padding: 30px 20px; text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 -15px 40px rgba(0,0,0,0.8);
         }
-        .ops-sheet.active { display: block; animation: sheetReveal 0.5s cubic-bezier(0, 0, 0.1, 1); }
+        .ops-sheet.active { display: block; animation: slideUp 0.4s cubic-bezier(0, 0, 0.2, 1); }
 
-        .sheet-drag {
-            width: 50px; height: 6px; background: rgba(255,255,255,0.2);
-            border-radius: 10px; margin: -15px auto 30px;
+        .sheet-handle {
+            width: 45px; height: 5px; background: #333;
+            border-radius: 10px; margin: -15px auto 25px;
         }
 
-        .oneui-btn {
+        .primary-btn {
             background: #fff; color: #000; border: none;
-            width: 100%; padding: 20px; border-radius: 25px;
-            font-size: 1.2rem; font-weight: 700; margin-top: 25px;
-            transition: 0.2s;
+            width: 100%; padding: 18px; border-radius: 20px;
+            font-size: 1.15rem; font-weight: bold; margin-top: 25px;
         }
 
-        .oneui-btn:active { transform: scale(0.97); opacity: 0.9; }
+        .primary-btn:active { transform: scale(0.97); }
 
         textarea {
-            width: 100%; height: 180px; background: rgba(255,255,255,0.06);
-            color: #fff; border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 25px; padding: 18px; font-size: 14px; margin-top: 20px;
+            width: 100%; height: 180px; background: #1e1e1e;
+            color: #fff; border: none; border-radius: 20px;
+            padding: 15px; font-size: 14px; margin-top: 20px;
         }
 
-        @keyframes sheetReveal { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
 
         #blast-zone { position: fixed; inset: 0; z-index: 10000; pointer-events: none; display: none; }
-        .smoke { position: absolute; background: #fff; border-radius: 50%; animation: explode 1s forwards; filter: blur(15px); }
-        @keyframes explode { 0% { transform: scale(0.1); opacity: 0.8; } 100% { transform: scale(60); opacity: 0; } }
+        .smoke { position: absolute; background: #fff; border-radius: 50%; animation: explode 1s forwards; filter: blur(10px); }
+        @keyframes explode { 0% { transform: scale(0.1); opacity: 1; } 100% { transform: scale(50); opacity: 0; } }
 
     </style>
 </head>
 <body>
 
+<div class="edge-lighting"></div>
+
 <div id="audio-unlocker">
-    <div style="font-size: 4rem; filter: drop-shadow(0 0 20px #0355d0);">🇩🇿</div>
-    <h1 style="font-weight: 200; margin-top: 20px;">نظام الجلاد الـجزائري</h1>
-    <button class="oneui-btn" style="width: 240px; background: #fff;" onclick="activateSystem()">تـسجيل الـدخول</button>
+    <div style="font-size: 4rem; margin-bottom: 20px;">🇩🇿</div>
+    <h1 style="font-weight: 300;">منظومة جيش التبليغ</h1>
+    <button class="primary-btn" style="width: 220px; background: var(--samsung-blue); color: white;" onclick="activateSystem()">تـسجيل الـدخول</button>
 </div>
 
-<canvas id="matrix-canvas"></canvas>
 <div id="blast-zone"></div>
 
 <div id="main-ui" style="display:none;">
-    <div class="one-ui-header">
+    <div class="header-section">
         <h1>الـجلاد الـجزائري</h1>
-        <p>نـظام الـتحكم بـجيش الـتبليغ</p>
+        <p>One UI 8.0 Cyber Ops</p>
     </div>
 
-    <div class="action-list">
-        <div class="cyber-card" onclick="openOps('p1')">
-            <div class="icon-shield blue-grad">🛡️</div>
-            <div class="text-group">
+    <div class="apps-container">
+        <div class="samsung-card" onclick="openOps('p1')">
+            <div class="app-icon blue-icon">📄</div>
+            <div class="card-text">
                 <h3>بـوابة الـبلاغ</h3>
-                <p>إطـلاق قـذيفة عـبر الـرابط الـرسمي</p>
+                <p>إرسال بلاغ رسمي عبر استمارة الدعم</p>
             </div>
         </div>
 
-        <div class="cyber-card" onclick="openOps('p2')">
-            <div class="icon-shield red-grad">💥</div>
-            <div class="text-group">
-                <h3>الاقـتحام الـشامل</h3>
-                <p>هـجوم مـيداني مـكثف عـلى الـهدف</p>
+        <div class="samsung-card" onclick="openOps('p2')">
+            <div class="app-icon red-icon">💥</div>
+            <div class="card-text">
+                <h3>اقـتحام مـباشر</h3>
+                <p>هجوم ميداني شامل على الحساب</p>
             </div>
         </div>
 
-        <div class="cyber-card" onclick="openOps('p3')">
-            <div class="icon-shield gold-grad">📧</div>
-            <div class="text-group">
-                <h3>مـدفعية الـبريد</h3>
-                <p>تـوليد قـنابل مـشفرة لإدارة تـيك تـوك</p>
+        <div class="samsung-card" onclick="openOps('p3')">
+            <div class="app-icon gold-icon">💣</div>
+            <div class="card-text">
+                <h3>قـنبلة الـجيميل</h3>
+                <p>توليد شفرات بلاغ مشفرة ومعقدة</p>
             </div>
         </div>
     </div>
 </div>
 
 <div class="ops-sheet" id="p1">
-    <div class="sheet-drag"></div>
-    <h2 style="font-weight: 500;">بـروتوكول الـبلاغ</h2>
-    <p style="color: rgba(255,255,255,0.5);">سيتم فتح بوابة الدعم الفني الآن. تأكد من لصق رابط الهدف في حقل المخالفة.</p>
-    <button class="oneui-btn" style="background: #0a84ff; color: #fff;" onclick="executeStrike('https://www.tiktok.com/legal/report/feedback')">تـنفيذ الإطـلاق</button>
-    <button style="background:none; border:none; color:#ff453a; margin-top:30px; font-size: 1.1rem;" onclick="closeOps()">إلـغاء الـعملية</button>
+    <div class="sheet-handle"></div>
+    <h2 style="font-weight: 400;">استمارة البلاغ</h2>
+    <p style="color: #888;">سيتم فتح بوابة TikTok الرسمية الآن.</p>
+    <button class="primary-btn" style="background: var(--samsung-blue); color: #fff;" onclick="executeStrike('https://www.tiktok.com/legal/report/feedback')">إطلاق القذيفة</button>
+    <button style="background:none; border:none; color:#ff3b30; margin-top:20px; font-size: 1.1rem;" onclick="closeOps()">إلغاء</button>
 </div>
 
 <div class="ops-sheet" id="p2">
-    <div class="sheet-drag"></div>
-    <h2 style="font-weight: 500; color: #ff453a;">الاقـتحام الـميداني</h2>
-    <p style="color: rgba(255,255,255,0.5);">أنت الآن تتقدم نحو جبهة العدو. اضغط تبليغ داخل الحساب بشكل متكرر حتى الإسقاط.</p>
-    <button class="oneui-btn" style="background: #ff453a; color: #fff;" id="direct-btn">بـدء الـهجوم</button>
-    <button style="background:none; border:none; color:#ff453a; margin-top:30px; font-size: 1.1rem;" onclick="closeOps()">تـراجع</button>
+    <div class="sheet-handle"></div>
+    <h2 style="font-weight: 400; color: var(--war-red);">الهجوم المباشر</h2>
+    <p style="color: #888;">أنت تدخل جبهة العدو. كرر التبليغ يدوياً حتى الإسقاط.</p>
+    <button class="primary-btn" style="background: var(--war-red); color: #fff;" id="direct-btn">بدء الاقتحام</button>
+    <button style="background:none; border:none; color:#ff3b30; margin-top:20px; font-size: 1.1rem;" onclick="closeOps()">تراجع</button>
 </div>
 
 <div class="ops-sheet" id="p3">
-    <div class="sheet-drag"></div>
-    <h2 style="font-weight: 500; color: #ffd60a;">مـدفعية الـبريد</h2>
-    <textarea id="mail-content" readonly placeholder="جـارِ تـجهيز الـشفرة..."></textarea>
-    <button class="oneui-btn" style="background: #ffd60a; color: #000;" onclick="generateSmartBomber()">🔄 تـوليد شـفرة جـديدة</button>
-    <button class="oneui-btn" style="background: #fff; color: #000;" onclick="launchEmail()">🚀 قـصف الـبريد</button>
-    <button style="background:none; border:none; color:#ff453a; margin-top:20px; font-size: 1.1rem;" onclick="closeOps()">إغـلاق</button>
+    <div class="sheet-handle"></div>
+    <h2 style="font-weight: 400; color: var(--gold-icon);">توليد الشفرات</h2>
+    <textarea id="mail-content" readonly></textarea>
+    <button class="primary-btn" style="background: var(--gold-icon); color: #000;" onclick="generateSmartBomber()">🔄 توليد شفرة جديدة</button>
+    <button class="primary-btn" onclick="launchEmail()">🚀 تنفيذ القصف</button>
+    <button style="background:none; border:none; color:#ff3b30; margin-top:20px;" onclick="closeOps()">إغلاق</button>
 </div>
 
 <script>
-    const tapSnd = new Howl({ src: ['https://www.soundjay.com/buttons/button-20.mp3'], volume: 0.5 });
-    const boomSnd = new Howl({ src: ['https://assets.mixkit.co/active_storage/sfx/1690/1690-preview.mp3'] });
+    // نظام صوت الرصاص القوي
+    const gunshot = new Howl({ 
+        src: ['https://www.soundjay.com/mechanical/gun-shot-01.mp3'], 
+        volume: 0.7 
+    });
+    
+    const explosion = new Howl({ 
+        src: ['https://assets.mixkit.co/active_storage/sfx/1690/1690-preview.mp3'] 
+    });
+
+    function playActionEffects() {
+        gunshot.play();
+        // نظام الاهتزاز (Haptic Feedback)
+        if (navigator.vibrate) {
+            navigator.vibrate(70); 
+        }
+    }
 
     function activateSystem() {
-        tapSnd.play();
+        playActionEffects();
         document.getElementById('audio-unlocker').style.transform = 'translateY(-100%)';
         setTimeout(() => {
             document.getElementById('audio-unlocker').style.display = 'none';
             document.getElementById('main-ui').style.display = 'block';
-            initMatrix();
             startSystem();
         }, 600);
     }
@@ -228,38 +245,43 @@
         let captured = urlParams.get('target') || urlParams.get('url');
         if (captured) {
             finalTarget = captured;
-            document.getElementById('direct-btn').onclick = () => executeStrike(finalTarget);
+            document.getElementById('direct-btn').onclick = () => {
+                playActionEffects();
+                executeStrike(finalTarget);
+            };
         }
     }
 
     function openOps(id) {
-        tapSnd.play();
-        if (navigator.vibrate) navigator.vibrate(20);
+        playActionEffects();
         document.getElementById(id).classList.add('active');
         if(id === 'p3') generateSmartBomber();
     }
 
     function closeOps() {
+        playActionEffects();
         document.querySelectorAll('.ops-sheet').forEach(r => r.classList.remove('active'));
     }
 
     function executeStrike(url) {
-        boomSnd.play();
+        explosion.play();
+        if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
         const zone = document.getElementById('blast-zone');
         zone.style.display = 'block';
-        for(let i=0; i<40; i++) {
+        for(let i=0; i<35; i++) {
             let p = document.createElement('div');
             p.className = 'smoke';
             p.style.left = Math.random() * 100 + "%";
             p.style.top = Math.random() * 100 + "%";
-            p.style.width = p.style.height = (Math.random() * 100 + 30) + "px";
+            p.style.width = p.style.height = (Math.random() * 70 + 20) + "px";
             zone.appendChild(p);
         }
         setTimeout(() => { window.location.href = url; }, 1300);
     }
 
-    // الخوارزمية الأصلية كما هي تماماً
+    // خوارزمية توليد البلاغات الأصلية (بدون تغيير)
     function generateSmartBomber() {
+        playActionEffects();
         const intros = [
             "Dear TikTok Safety and Legal Support Team, I am writing to you today to express my deep concern regarding a severe breach of community standards.",
             "To the Professional Moderation Staff at TikTok, this is an official urgent report concerning a high-risk account that is currently operating on your platform.",
@@ -294,29 +316,13 @@
                        "\n\nSystem_DZ_Reference: " + Math.random().toString(36).substring(2, 15).toUpperCase();
 
         document.getElementById('mail-content').value = report;
+        navigator.clipboard.writeText(report);
     }
 
     function launchEmail() {
+        playActionEffects();
         const body = encodeURIComponent(document.getElementById('mail-content').value);
         executeStrike(`mailto:legal@tiktok.com,feedback@tiktok.com,community_safety@tiktok.com?subject=URGENT_REPORT&body=${body}`);
-    }
-
-    function initMatrix() {
-        const canvas = document.getElementById('matrix-canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        const letters = "01"; const fontSize = 10;
-        const drops = Array(Math.floor(canvas.width/fontSize)).fill(1);
-        function draw() {
-            ctx.fillStyle = "rgba(0,0,0,0.05)"; ctx.fillRect(0,0,canvas.width,canvas.height);
-            ctx.fillStyle = "#0f0"; ctx.font = fontSize + "px monospace";
-            for(let i=0; i<drops.length; i++) {
-                ctx.fillText(letters[Math.floor(Math.random()*letters.length)], i*fontSize, drops[i]*fontSize);
-                if(drops[i]*fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-                drops[i]++;
-            }
-        }
-        setInterval(draw, 33);
     }
 </script>
 </body>
