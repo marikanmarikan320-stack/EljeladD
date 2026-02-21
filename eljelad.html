@@ -8,224 +8,212 @@
     <style>
         :root {
             --samsung-blue: #0355d0;
-            --warrior-red: #ff3b30;
-            --dark-surface: rgba(20, 20, 20, 0.9);
-            --border-glow: rgba(255, 59, 48, 0.4);
+            --war-red: #ff3b30;
+            --glass: rgba(255, 255, 255, 0.05);
+            --device-radius: 40px;
         }
 
-        body, html {
-            margin: 0; padding: 0; width: 100%; height: 100%;
-            background: #000; color: white; font-family: 'Segoe UI', Roboto, sans-serif;
-            overflow: hidden; display: flex; justify-content: center; align-items: center;
+        body {
+            background: #000; margin: 0; padding: 0;
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; overflow: hidden; font-family: 'Segoe UI', Roboto, sans-serif;
         }
 
-        /* خلفية الهكر والمصفوفة */
-        .bg-video {
-            position: fixed; inset: 0; z-index: -1;
-            background: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000') center/cover;
-            opacity: 0.3; filter: grayscale(1);
+        /* إطار الهاتف الذكي */
+        #phone-wrapper {
+            width: 380px; height: 800px;
+            background: #000; border: 8px solid #222;
+            border-radius: var(--device-radius);
+            position: relative; box-shadow: 0 0 50px rgba(3, 85, 208, 0.3);
+            display: flex; flex-direction: column; overflow: hidden;
         }
 
-        /* حاوية الهاتف */
-        .phone-frame {
-            width: 100%; max-width: 420px; height: 90vh;
-            background: rgba(0,0,0,0.8);
-            border: 2px solid #333; border-radius: 40px;
-            position: relative; overflow: hidden;
-            display: flex; flex-direction: column;
-            box-shadow: 0 0 30px var(--border-glow);
+        /* إضاءة الحواف Edge Lighting */
+        .edge-glow {
+            position: absolute; inset: 0; border: 3px solid var(--samsung-blue);
+            border-radius: 32px; pointer-events: none; z-index: 1000;
+            animation: pulse-glow 3s infinite;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { border-color: var(--samsung-blue); box-shadow: inset 0 0 15px var(--samsung-blue); }
+            50% { border-color: var(--war-red); box-shadow: inset 0 0 25px var(--war-red); }
         }
 
-        /* إضاءة الحواف النبضية */
-        .edge-light {
-            position: absolute; inset: 0; border: 2px solid var(--warrior-red);
-            border-radius: 38px; pointer-events: none; z-index: 100;
-            animation: pulse 2s infinite linear;
+        /* الخلفية الحية */
+        .bg-cyber {
+            position: absolute; inset: 0; z-index: -1;
+            background: radial-gradient(circle at center, #0a192f 0%, #000 100%);
+            opacity: 0.8;
+        }
+        .radar-line {
+            position: absolute; top: 20%; left: 50%; transform: translate(-50%, -50%);
+            width: 300px; height: 300px; border: 1px solid rgba(3, 85, 208, 0.2);
+            border-radius: 50%;
+        }
+        .radar-line::after {
+            content: ''; position: absolute; top: 50%; left: 50%; width: 150px; height: 2px;
+            background: linear-gradient(to right, var(--samsung-blue), transparent);
+            transform-origin: left; animation: rotate 4s linear infinite;
+        }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        /* المحتوى */
+        .app-content {
+            padding: 60px 24px 20px; flex: 1; display: flex; flex-direction: column; z-index: 10;
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 0.2; box-shadow: inset 0 0 10px var(--warrior-red); }
-            50% { opacity: 0.6; box-shadow: inset 0 0 25px var(--warrior-red); }
-        }
+        .header-box { text-align: center; margin-bottom: 40px; }
+        .header-box h1 { font-size: 2.2rem; font-weight: 300; color: white; margin: 0; }
+        .header-box p { color: var(--samsung-blue); font-size: 0.8rem; letter-spacing: 2px; margin-top: 5px; }
 
-        /* الرأس */
-        .header {
-            padding: 50px 20px 20px; text-align: center;
+        /* أزرار One UI الناعمة */
+        .card-btn {
+            background: var(--glass); backdrop-filter: blur(20px);
+            border-radius: 28px; padding: 22px; margin-bottom: 15px;
+            display: flex; align-items: center; border: 1px solid rgba(255,255,255,0.08);
+            transition: 0.3s cubic-bezier(0.2, 0, 0, 1); cursor: pointer;
         }
-        .header h1 { font-weight: 300; font-size: 2.2rem; margin: 0; color: #fff; }
-        .header p { color: var(--warrior-red); font-size: 0.8rem; letter-spacing: 3px; font-weight: bold; }
+        .card-btn:active { transform: scale(0.94); background: rgba(255,255,255,0.15); }
 
-        /* الأزرار بنمط One UI */
-        .apps-container {
-            padding: 20px; flex-grow: 1; display: flex; flex-direction: column; gap: 15px;
-        }
-
-        .action-card {
-            background: var(--dark-surface);
-            backdrop-filter: blur(20px);
-            border-radius: 28px; padding: 20px;
-            display: flex; align-items: center;
-            border: 1px solid rgba(255,255,255,0.1);
-            cursor: pointer; transition: 0.2s;
-        }
-
-        .action-card:active {
-            transform: scale(0.94);
-            background: rgba(255, 59, 48, 0.2);
-            border-color: var(--warrior-red);
-        }
-
-        .icon-box {
-            width: 55px; height: 55px; border-radius: 18px;
+        .icon-circle {
+            width: 52px; height: 52px; border-radius: 18px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.6rem; margin-left: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            font-size: 1.5rem; margin-left: 15px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.3);
         }
 
-        .text-box h3 { margin: 0; font-size: 1.1rem; color: #fff; }
-        .text-box p { margin: 4px 0 0; font-size: 0.8rem; color: #888; }
+        .info-text h3 { margin: 0; font-size: 1.1rem; color: #fff; font-weight: 500; }
+        .info-text p { margin: 4px 0 0; font-size: 0.8rem; color: #aaa; }
 
-        /* نافذة الجيميل المنبثقة */
-        .sheet {
-            position: absolute; bottom: -100%; left: 0; width: 100%; height: 70%;
-            background: #111; border-radius: 35px 35px 0 0;
-            padding: 30px 20px; z-index: 1000;
-            transition: 0.4s cubic-bezier(0, 0, 0.2, 1);
-            border-top: 2px solid var(--warrior-red);
-            display: flex; flex-direction: column;
+        /* شاشة التبليغ المنبثقة */
+        .modern-sheet {
+            position: absolute; bottom: -100%; left: 0; width: 100%; height: 75%;
+            background: rgba(15, 15, 15, 0.98); border-radius: 35px 35px 0 0;
+            z-index: 2000; padding: 30px 20px; transition: 0.5s cubic-bezier(0, 0, 0, 1);
+            border-top: 1px solid var(--samsung-blue);
         }
-        .sheet.active { bottom: 0; }
+        .modern-sheet.active { bottom: 0; }
 
         textarea {
-            width: 100%; height: 180px; background: #000; color: #0f0;
+            width: 100%; height: 220px; background: #000; color: #00ff00;
             border: 1px solid #333; border-radius: 20px; padding: 15px;
             font-family: monospace; font-size: 0.85rem; outline: none;
         }
 
-        .launch-btn {
+        .main-action-btn {
             width: 100%; padding: 18px; border-radius: 20px; border: none;
-            background: var(--warrior-red); color: white; font-weight: bold;
-            font-size: 1.1rem; margin-top: 15px; cursor: pointer;
+            background: var(--samsung-blue); color: white; font-weight: bold;
+            font-size: 1.1rem; margin-top: 20px;
         }
 
-        /* تأثير الفلاش عند الضغط */
-        #flash {
-            position: fixed; inset: 0; background: #fff; z-index: 5000;
-            display: none; pointer-events: none;
+        /* شريط التنقل السفلي */
+        .nav-bar {
+            height: 60px; display: flex; justify-content: space-around;
+            align-items: center; background: rgba(0,0,0,0.4); z-index: 100;
         }
+        .nav-bar span { color: white; opacity: 0.4; font-size: 1.3rem; }
     </style>
 </head>
 <body>
 
-<div id="flash"></div>
-<div class="bg-video"></div>
+<div id="phone-wrapper">
+    <div class="edge-glow"></div>
+    <div class="bg-cyber"></div>
+    <div class="radar-line"></div>
 
-<div class="phone-frame">
-    <div class="edge-light"></div>
+    <div class="app-content">
+        <div class="header-box">
+            <h1>ترسانة الجلاد</h1>
+            <p>ONE UI 8.0 | HACKER EDITION</p>
+        </div>
 
-    <div class="header">
-        <h1>ترسانة الجلاد</h1>
-        <p>SYSTEM DZ-8.0 ACTIVE</p>
-    </div>
-
-    <div class="apps-container">
-        <div class="action-card" onclick="runAttack('legal')">
-            <div class="icon-box" style="background: linear-gradient(135deg, #007aff, #003a80);">⚖️</div>
-            <div class="text-box">
+        <div class="card-btn" onclick="executeStrike('p1')">
+            <div class="icon-circle" style="background: linear-gradient(135deg, #0a74da, #0355d0);">⚖️</div>
+            <div class="info-text">
                 <h3>البلاغ القانوني</h3>
-                <p>فتح بوابة التبليغ الرسمية (TikTok)</p>
+                <p>إرسال قذيفة عبر بوابة TikTok الرسمية</p>
             </div>
         </div>
 
-        <div class="action-card" onclick="runAttack('strike')">
-            <div class="icon-box" style="background: linear-gradient(135deg, #ff3b30, #800000);">🧨</div>
-            <div class="text-box">
-                <h3>اقتحام ميداني</h3>
-                <p>بدء هجوم مباشر على الهدف</p>
+        <div class="card-btn" onclick="executeStrike('p2')">
+            <div class="icon-circle" style="background: linear-gradient(135deg, #ff5e57, #ff3b30);">🧨</div>
+            <div class="info-text">
+                <h3>الاقتحام الميداني</h3>
+                <p>هجوم مباشر لتدمير جبهة الهدف</p>
             </div>
         </div>
 
-        <div class="action-card" onclick="runAttack('gmail')">
-            <div class="icon-box" style="background: linear-gradient(135deg, #ffcc00, #997a00);">📧</div>
-            <div class="text-box">
+        <div class="card-btn" onclick="executeStrike('p3')">
+            <div class="icon-circle" style="background: linear-gradient(135deg, #ffcc00, #ff9500);">📧</div>
+            <div class="info-text">
                 <h3>مدفعية الجيميل</h3>
-                <p>توليد تقارير AI مشفرة وقوية</p>
+                <p>توليد بلاغات ذكية عالية الدقة</p>
             </div>
         </div>
     </div>
 
-    <div style="height: 60px; display: flex; justify-content: space-around; align-items: center; background: rgba(0,0,0,0.5);">
-        <span style="opacity: 0.4;">Ⅲ</span>
-        <span style="opacity: 0.4;">⬠</span>
-        <span style="opacity: 0.4;">≺</span>
+    <div class="modern-sheet" id="gmail-sheet">
+        <div style="width: 40px; height: 4px; background: #333; margin: -10px auto 20px; border-radius: 10px;"></div>
+        <h2 style="text-align: center; font-weight: 300;">تجهيز الشفرة الهجومية</h2>
+        <textarea id="report-text" readonly></textarea>
+        <button class="main-action-btn" onclick="launchEmail()">إطلاق الهجوم البريدي 🚀</button>
+        <button onclick="closeSheet()" style="width:100%; background:none; border:none; color:gray; margin-top:15px;">إلغاء العملية</button>
     </div>
 
-    <div class="sheet" id="gmailSheet">
-        <h2 style="text-align: center; margin-bottom: 20px;">تجهيز شفرة الهجوم</h2>
-        <textarea id="reportContent" readonly></textarea>
-        <button class="launch-btn" onclick="sendEmail()">إطلاق القذيفة البريدية 🚀</button>
-        <button onclick="closeSheet()" style="background:none; border:none; color:gray; width:100%; margin-top:15px;">إلغاء العملية</button>
+    <div class="nav-bar">
+        <span>Ⅲ</span>
+        <span>⬠</span>
+        <span>≺</span>
     </div>
 </div>
 
 <script>
-    // إعداد الأصوات
-    const soundCock = new Howl({ src: ['https://assets.mixkit.co/active_storage/sfx/1690/1690-preview.mp3'] });
-    const soundFire = new Howl({ src: ['https://www.soundjay.com/mechanical/gun-shot-01.mp3'], volume: 0.7 });
-
-    // الوظيفة الأساسية للأزرار
-    function runAttack(type) {
-        soundCock.play(); // صوت سحب الأقسام
-        vibrate(60);
-
-        if (type === 'legal') {
-            setTimeout(() => {
-                triggerFlash();
-                window.location.href = "https://www.tiktok.com/legal/report/feedback";
-            }, 500);
-        } 
-        else if (type === 'strike') {
-            triggerFlash();
-            alert("تم إرسال أوامر الهجوم المباشر بنجاح! كرر العملية للضغط.");
-        } 
-        else if (type === 'gmail') {
-            generateReport();
-            document.getElementById('gmailSheet').classList.add('active');
-        }
-    }
-
-    // توليد تقرير ذكي
-    function generateReport() {
-        const reports = [
-            "URGENT: This account is violating international safety standards by promoting violent extremism and cyber-attacks. Please review and terminate immediately. [REF: AL-GHALLAD-8.0]",
-            "CRITICAL_REPORT: Detected illegal activity and bypass tools being used by this profile to harm the platform community. Requesting hardware ban.",
-            "SECURITY_ALERT: Formal complaint against this user for spreading hate speech and incitement to violence. Immediate action required."
-        ];
-        document.getElementById('reportContent').value = reports[Math.floor(Math.random()*reports.length)];
-    }
-
-    // إرسال الجيميل
-    function sendEmail() {
-        soundFire.play();
-        triggerFlash();
-        const content = encodeURIComponent(document.getElementById('reportContent').value);
-        window.location.href = `mailto:legal@tiktok.com,feedback@tiktok.com?subject=URGENT_REPORT&body=${content}`;
-    }
-
-    function closeSheet() {
-        document.getElementById('gmailSheet').classList.remove('active');
-    }
-
-    // تأثيرات بصرية واهتزاز
-    function triggerFlash() {
-        const f = document.getElementById('flash');
-        f.style.display = 'block';
-        setTimeout(() => f.style.display = 'none', 100);
-        soundFire.play();
-    }
+    // نظام الأصوات
+    const tapSnd = new Howl({ src: ['https://assets.mixkit.co/active_storage/sfx/1690/1690-preview.mp3'] });
+    const boomSnd = new Howl({ src: ['https://www.soundjay.com/mechanical/gun-shot-01.mp3'], volume: 0.6 });
 
     function vibrate(ms) {
         if (navigator.vibrate) navigator.vibrate(ms);
+    }
+
+    function executeStrike(type) {
+        tapSnd.play();
+        vibrate(60);
+
+        if (type === 'p1') {
+            setTimeout(() => {
+                boomSnd.play();
+                window.location.href = "https://www.tiktok.com/legal/report/feedback";
+            }, 500);
+        } 
+        else if (type === 'p2') {
+            boomSnd.play();
+            alert("تم إرسال أوامر الاقتحام! كرر العملية حتى يسقط الهدف.");
+        } 
+        else if (type === 'p3') {
+            generateSmartReport();
+            document.getElementById('gmail-sheet').classList.add('active');
+        }
+    }
+
+    function generateSmartReport() {
+        const reports = [
+            "URGENT: This account is consistently hosting live broadcasts that promote violent extremism and organized criminal activities. Full termination required.",
+            "SECURITY REPORT: User identified as high-risk, using prohibited software to bypass platform security. Hardware ban (IMEI) recommended.",
+            "POLICY VIOLATION: Formal complaint regarding hate speech and incitement to violence. Immediate review by legal department requested."
+        ];
+        document.getElementById('report-text').value = reports[Math.floor(Math.random()*reports.length)] + "\n\nREF_ID: AL-GHALLAD-8.0-STRIKE";
+    }
+
+    function launchEmail() {
+        boomSnd.play();
+        vibrate([100, 50, 100]);
+        const body = encodeURIComponent(document.getElementById('report-text').value);
+        window.location.href = `mailto:legal@tiktok.com,feedback@tiktok.com?subject=URGENT_CYBER_REPORT&body=${body}`;
+    }
+
+    function closeSheet() {
+        document.getElementById('gmail-sheet').classList.remove('active');
     }
 </script>
 
