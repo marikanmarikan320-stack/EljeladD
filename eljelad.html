@@ -109,38 +109,32 @@
 
     <div style="margin-top: 30px; border-top: 1px solid #333; padding-top: 10px;">
         <p style="font-size: 1.2rem; color: #fff; font-weight: bold;">"أصبعك هو زنادك وهاتفك هو سلاحك"</p>
-        <p style="font-size: 0.8rem; color: var(--neon); opacity: 0.7;">انقضوا عليهم كالصقور يا أسود الجزائر.. الموت للخونة!</p>
     </div>
 </div>
 
+<div class="panel" id="p3">
+    <h2 style="color: var(--gold);">💣 توليد القنابل البريدية (600+ حرف)</h2>
+    <textarea id="mail-content" readonly style="width:100%; height:180px; background:#000; color:var(--gold); border:1px solid var(--gold); font-size:10px; font-family: 'Courier New', monospace; padding: 5px;"></textarea>
+    
+    <button class="war-btn" style="background: var(--gold); color: #000; border: none; padding: 10px;" onclick="generateAndCopy()">🔄 توليد ونسخ البلاغ الرسمي</button>
+    <button class="war-btn" style="border-color: var(--gold); color: var(--gold); padding: 10px;" onclick="launchEmail()">🚀 إرسال القذيفة (جيميل)</button>
+    
+    <button onclick="closeAll()" style="color:red; background:none; border:none; width:100%; margin-top:5px;">تراجع</button>
+</div>
+
 <div class="panel" id="p1">
-    <h2 style="color: var(--cyber);">⚠️ غـرفة الـبلاغ الـرسمي</h2>
-    <p>سيتم نقلك لمركز المساعدة. اختر: (تبليغ انتهاك > حساب > آخر) ثم ضع البيانات.</p>
-    <button class="war-btn" onclick="strike('https://www.tiktok.com/legal/report/feedback')">🚀 إطـلاق الـقذيفة</button>
+    <h2>⚠️ غرفة الاستمارة</h2>
+    <button class="war-btn" onclick="strike('https://www.tiktok.com/legal/report/feedback')">🚀 إطلاق القذيفة</button>
     <button onclick="closeAll()" style="color:red; background:none; border:none; width:100%; margin-top:10px;">تراجع</button>
 </div>
 
 <div class="panel" id="p2">
-    <h2 style="color: var(--war);">🔥 اقـتحام الـبث الـمباشر</h2>
-    <p>سيفتح التطبيق على الحساب مباشرة. قم بالتبليغ 100 مرة متتالية دون توقف!</p>
-    <button class="war-btn" id="direct-attack-btn">⚡ بـدء الاقـتحام</button>
-    <button onclick="closeAll()" style="color:red; background:none; border:none; width:100%; margin-top:10px;">تراجع</button>
-</div>
-
-<div class="panel" id="p3">
-    <h2 style="color: var(--gold);">💣 توليد القنابل البريدية</h2>
-    <p style="font-size: 0.8rem; color: #ccc;">اضغط توليد لنسخ وتغيير البلاغ فوراً:</p>
-    <textarea id="mail-content" readonly style="width:100%; height:150px; background:#000; color:var(--gold); border:1px solid var(--gold); font-size:11px; font-family: 'Courier New', monospace;"></textarea>
-    
-    <button class="war-btn" style="background: var(--gold); color: #000; border: none;" onclick="generateAndCopy()">🔄 توليد ونسخ البلاغ</button>
-    
-    <button class="war-btn" style="border-color: var(--gold); color: var(--gold);" onclick="launchEmail()">🚀 إرسال القذيفة (جيميل)</button>
-    
+    <h2>🔥 اقتحام مباشر</h2>
+    <button class="war-btn" id="direct-btn">⚡ بدء الاقتحام</button>
     <button onclick="closeAll()" style="color:red; background:none; border:none; width:100%; margin-top:10px;">تراجع</button>
 </div>
 
 <script>
-    const startSnd = new Howl({ src: ['https://assets.mixkit.co/active_storage/sfx/2560/2560-preview.mp3'] }); 
     const clickSnd = new Howl({ src: ['https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3'] });
     const boomSnd = new Howl({ src: ['https://assets.mixkit.co/active_storage/sfx/1690/1690-preview.mp3'] });
 
@@ -152,13 +146,10 @@
         if (captured) {
             finalTarget = captured;
             document.getElementById('target-url').innerText = finalTarget;
-            document.getElementById('direct-attack-btn').onclick = () => strike(finalTarget);
+            document.getElementById('direct-btn').onclick = () => strike(finalTarget);
         }
-        startSnd.play();
         initMatrix();
-        setInterval(() => {
-            document.getElementById('clock').innerText = new Date().toLocaleTimeString();
-        }, 1000);
+        setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }, 1000);
     }
 
     function openPanel(id) {
@@ -185,19 +176,36 @@
         setTimeout(() => { window.location.href = url; }, 1800);
     }
 
+    // محرك البلاغات القانوني الضخم (600+ حرف)
     function generateBomber() {
-        const intros = ["Dear TikTok Safety Team,", "To the Help and Legal Center,", "Attention: Legal Support Department,"];
-        const violations = [
-            `The profile (${finalTarget}) hosts broadcasts with hate speech and violent incitement.`,
-            `The user at (${finalTarget}) is using modified apps to bypass reports while spreading extremist content.`,
-            `This account (${finalTarget}) is promoting illegal activities and using prohibited tools to harass users.`
+        const intros = [
+            "Dear TikTok Safety and Legal Support Team, I am writing to you today to express my deep concern regarding a severe breach of community standards.",
+            "To the Professional Moderation Staff at TikTok, this is an official urgent report concerning a high-risk account that is currently operating on your platform.",
+            "Subject: Formal Complaint for Immediate Review. Respected TikTok Security Department, I am reporting an account that systematically violates your safety policies."
         ];
-        const closings = ["Regards, DZ Security.", "Sincerely, Algerian Safety Unit.", "Thank you, Digital Defense Team."];
-        
+        const violations = [
+            `The account (${finalTarget}) is consistently hosting live broadcasts that promote violent extremism and organized criminal activities. The content displayed is harmful to the community and contradicts your international safety guidelines.`,
+            `I have observed that the user at (${finalTarget}) is using prohibited third-party software and hacked applications to bypass TikTok's security algorithms and hide their toxic behavior.`
+        ];
+        const technical = [
+            "The user utilizes sophisticated methods to block legitimate reports and uses decentralized tools to remain undetected. This behavior is a direct threat to the integrity of the ecosystem.",
+            "Their live sessions are filled with verbal abuse, incitement to hatred, and the promotion of radical ideologies, exploiting the platform's features to broadcast dangerous content."
+        ];
+        const demands = [
+            "We strongly demand a permanent ban for this account. Furthermore, we urge your team to implement a hardware-level ID (IMEI) ban to prevent new accounts on this device.",
+            "Please take swift and decisive action to delete this account and its associated data. This user must be held accountable for violating the terms of service."
+        ];
+        const closings = [
+            "We deeply appreciate your tireless efforts in maintaining a safe environment for all users worldwide. Thank you for your professional cooperation.",
+            "Thank you for your commitment to digital safety. We look forward to seeing your team's immediate response to protect the platform's integrity."
+        ];
+
         const report = intros[Math.floor(Math.random()*intros.length)] + "\n\n" + 
                        violations[Math.floor(Math.random()*violations.length)] + "\n\n" + 
+                       technical[Math.floor(Math.random()*technical.length)] + "\n\n" + 
+                       demands[Math.floor(Math.random()*demands.length)] + "\n\n" + 
                        closings[Math.floor(Math.random()*closings.length)] + 
-                       "\n\nTRACK_ID: " + Math.random().toString(36).toUpperCase().substring(2, 12);
+                       "\n\nREF_ID: DZ-ALGERIA-" + Math.random().toString(36).toUpperCase().substring(2, 12);
         
         document.getElementById('mail-content').value = report;
     }
@@ -206,7 +214,6 @@
         generateBomber();
         const copyText = document.getElementById("mail-content");
         copyText.select();
-        copyText.setSelectionRange(0, 99999); 
         navigator.clipboard.writeText(copyText.value);
         clickSnd.play();
         if (navigator.vibrate) navigator.vibrate(50);
@@ -214,21 +221,20 @@
 
     function launchEmail() {
         const body = encodeURIComponent(document.getElementById('mail-content').value);
-        strike(`mailto:legal@tiktok.com,feedback@tiktok.com?subject=URGENT_REPORT&body=${body}`);
+        strike(`mailto:legal@tiktok.com,feedback@tiktok.com?subject=URGENT_SAFETY_REPORT&body=${body}`);
     }
 
     function initMatrix() {
         const canvas = document.getElementById('matrix-canvas');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        const letters = "010101"; const fontSize = 10;
-        const drops = Array(Math.floor(canvas.width/fontSize)).fill(1);
+        const drops = Array(Math.floor(canvas.width/10)).fill(1);
         function draw() {
             ctx.fillStyle = "rgba(0,0,0,0.05)"; ctx.fillRect(0,0,canvas.width,canvas.height);
-            ctx.fillStyle = "#0f0"; ctx.font = fontSize + "px monospace";
+            ctx.fillStyle = "#0f0"; ctx.font = "10px monospace";
             for(let i=0; i<drops.length; i++) {
-                ctx.fillText(letters[Math.floor(Math.random()*letters.length)], i*fontSize, drops[i]*fontSize);
-                if(drops[i]*fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                ctx.fillText(Math.floor(Math.random()*2), i*10, drops[i]*10);
+                if(drops[i]*10 > canvas.height && Math.random() > 0.975) drops[i] = 0;
                 drops[i]++;
             }
         }
