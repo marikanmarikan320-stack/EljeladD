@@ -3,151 +3,316 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ترسانة الجلاد الجزائري | الإصدار النهائي</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+    <title>ترسانة الجلاد الجزائري | قيادة العمليات</title>
     <style>
         :root {
             --neon-green: #00ff41;
             --neon-red: #ff0000;
             --cyber-blue: #00d4ff;
+            --gold-accent: #ffcc00;
+            --dark-bg: #0d0d0d;
+            --button-dark: #1a1a1a;
+            --button-border: #333;
         }
 
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
-            background: #000; color: #fff; font-family: 'Courier New', Courier, monospace;
+            background: var(--dark-bg);
+            color: #fff;
+            font-family: 'Segoe UI', Arial, sans-serif;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; /* تبدأ من الأعلى للتناسب مع الشريط العلوي */
+            position: relative;
         }
 
-        /* حواف الهاتف المشتعلة بالضوء */
-        body::after {
-            content: ''; position: fixed; inset: 0;
-            border: 4px solid var(--neon-green);
-            box-shadow: inset 0 0 20px var(--neon-green), 0 0 30px var(--neon-green);
-            z-index: 9999; pointer-events: none;
-            animation: border-flicker 2s infinite;
+        /* الخلفية المركبة (شفرات، جماجم، إضاءات) */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: 
+                linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), /* تعتيم */
+                url('https://i.ibb.co/JnH89z1/cyber-bg.jpg'); /* خلفية شفرات وجمجمات */
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.7);
+            z-index: -2;
         }
 
-        @keyframes border-flicker {
-            0%, 100% { border-color: var(--neon-green); box-shadow: inset 0 0 20px var(--neon-green); }
-            50% { border-color: var(--neon-red); box-shadow: inset 0 0 40px var(--neon-red); }
+        /* شريط العلم الجزائري العلوي */
+        .national-header {
+            width: 100%;
+            height: 30px;
+            background: #000; /* خلفية سوداء للشريط */
+            border-bottom: 2px solid #222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 100;
         }
 
-        /* خلفية الهاكر الجزائري المقنع */
-        .background-overlay {
-            position: fixed; inset: 0;
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.8)), 
-                        url('https://w0.peakpx.com/wallpaper/424/644/HD-wallpaper-hacker-hoodie-mask-dark-background-glitch-art.jpg');
-            background-size: cover; background-position: center;
-            z-index: -1;
+        .flag-strip {
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, #006233 33%, #fff 33%, #fff 66%, #d21034 66%);
+            position: absolute;
+            bottom: 0;
         }
 
-        /* عنوان الواجهة */
-        .header { text-align: center; padding: 50px 20px 10px; z-index: 10; position: relative; }
-        .main-title {
-            font-size: 1.8rem; font-weight: 900; color: #fff;
-            text-shadow: 0 0 15px var(--neon-green);
+        .header-text {
+            font-size: 0.8rem;
+            color: #bbb;
+            letter-spacing: 1px;
+            text-shadow: 0 0 5px #000;
+            margin: 0;
+            padding-bottom: 5px;
         }
 
-        /* تصميم الأزرار الميكانيكية التي تشتغل وتنطفئ */
-        .container {
-            display: flex; flex-direction: column; align-items: center;
-            gap: 25px; margin-top: 30px; z-index: 10; position: relative;
+        /* حاوية الواجهة الرئيسية */
+        .main-ui-container {
+            width: 90%;
+            max-width: 500px;
+            margin-top: 40px; /* مسافة من الشريط العلوي */
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding-bottom: 80px; /* مسافة للفقرة السفلية */
         }
 
-        .mech-button {
-            position: relative; width: 85%; max-width: 380px; height: 70px;
-            background: #0a0a0a; color: #fff; border: none;
-            font-size: 1.2rem; font-weight: bold; cursor: pointer;
-            clip-path: polygon(10% 0, 90% 0, 100% 30%, 100% 70%, 90% 100%, 10% 100%, 0 70%, 0 30%);
+        /* الأزرار العلوية مع الصقور */
+        .top-button-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .falcon-icon {
+            width: 50px;
+            height: 50px;
+            filter: drop-shadow(0 0 10px var(--neon-green));
+            animation: falcon-pulse 2s infinite alternate ease-in-out;
+        }
+        .falcon-icon.red { filter: drop-shadow(0 0 10px var(--neon-red)); animation: falcon-pulse-red 2s infinite alternate ease-in-out; }
+
+        @keyframes falcon-pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.1); opacity: 1; }
+        }
+        @keyframes falcon-pulse-red {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.1); opacity: 1; filter: drop-shadow(0 0 15px var(--neon-red)); }
+        }
+
+
+        /* زر نمط الصورة (المستطيل بحواف مشطوفة ومزدوجة) */
+        .mech-button-img {
+            position: relative;
+            width: 250px; /* حجم الزر حسب الصورة */
+            height: 60px;
+            background: var(--button-dark);
+            border: 2px solid var(--button-border);
+            clip-path: polygon(5% 0, 95% 0, 100% 25%, 100% 75%, 95% 100%, 5% 100%, 0 75%, 0 25%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 5px #000;
+            margin: 0 10px;
+            cursor: pointer;
             transition: 0.2s;
-            /* أنيميشن التشغيل والانطفاء */
-            animation: button-pulse 3s infinite ease-in-out;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
         }
 
-        @keyframes button-pulse {
-            0%, 100% { box-shadow: 0 0 5px var(--neon-green); filter: brightness(0.8); }
-            50% { box-shadow: 0 0 25px var(--neon-green); filter: brightness(1.5); }
+        .mech-button-img::before { /* الإطار المزدوج */
+            content: '';
+            position: absolute;
+            inset: 3px;
+            background: var(--button-dark);
+            clip-path: inherit;
+            border: 1px solid var(--neon-green);
+            box-shadow: 0 0 8px var(--neon-green);
+            z-index: 1;
+            animation: button-glow 1.5s infinite alternate;
         }
 
-        .mech-button::before {
-            content: ''; position: absolute; inset: 2px;
-            background: #000; clip-path: inherit; z-index: -1;
+        .mech-button-img.red::before {
+            border: 1px solid var(--neon-red);
+            box-shadow: 0 0 8px var(--neon-red);
+            animation: button-glow-red 1.5s infinite alternate;
         }
 
-        /* تلوين الأزرار */
-        .btn-green { border: 1px solid var(--neon-green); }
-        .btn-red { border: 1px solid var(--neon-red); animation-name: button-pulse-red; }
-        
-        @keyframes button-pulse-red {
-            0%, 100% { box-shadow: 0 0 5px var(--neon-red); filter: brightness(0.8); }
-            50% { box-shadow: 0 0 25px var(--neon-red); filter: brightness(1.5); }
+        @keyframes button-glow {
+            from { opacity: 0.7; }
+            to { opacity: 1; }
+        }
+        @keyframes button-glow-red {
+            from { opacity: 0.7; }
+            to { opacity: 1; }
         }
 
-        /* شريط الحالة المتحرك */
-        .status-ticker {
-            position: fixed; bottom: 0; width: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            border-top: 2px solid var(--neon-green);
-            padding: 8px 0; overflow: hidden; white-space: nowrap;
+        .mech-button-img:hover { transform: scale(1.05); }
+        .mech-button-img:active { transform: scale(0.95); }
+
+
+        /* صورة الهاكر في المنتصف */
+        .hacker-image {
+            width: 150px; /* حجم الهاكر حسب الصورة */
+            height: auto;
+            margin: 20px 0;
+            filter: drop-shadow(0 0 15px var(--neon-green)); /* إضاءة خضراء */
+            animation: hacker-pulse 2s infinite alternate;
+            z-index: 5;
+        }
+        @keyframes hacker-pulse {
+            0% { transform: scale(1); filter: drop-shadow(0 0 10px var(--neon-green)); }
+            100% { transform: scale(1.05); filter: drop-shadow(0 0 25px var(--neon-green)); }
         }
 
-        .ticker-text {
-            display: inline-block; font-size: 0.9rem;
-            color: var(--neon-green); font-family: monospace;
-            animation: ticker 15s linear infinite;
+        /* الأزرار السفلية (بكل أيقونة) */
+        .bottom-button {
+            position: relative;
+            width: 320px; /* حجم الأزرار السفلية */
+            height: 60px;
+            background: var(--button-dark);
+            border: 2px solid var(--button-border);
+            clip-path: polygon(10% 0, 90% 0, 100% 25%, 100% 75%, 90% 100%, 10% 100%, 0 75%, 0 25%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            animation: button-pulse-blue 2s infinite alternate;
         }
 
-        @keyframes ticker {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
+        .bottom-button::before { /* الإطار المزدوج */
+            content: '';
+            position: absolute;
+            inset: 3px;
+            background: var(--button-dark);
+            clip-path: inherit;
+            border: 1px solid var(--cyber-blue);
+            box-shadow: 0 0 8px var(--cyber-blue);
+            z-index: 1;
+        }
+        .bottom-button:nth-of-type(2)::before { /* الزر الذهبي */
+            border: 1px solid var(--gold-accent);
+            box-shadow: 0 0 8px var(--gold-accent);
+            animation: button-pulse-gold 2s infinite alternate;
+        }
+        .bottom-button:nth-of-type(3)::before { /* زر الجيميل الأزرق */
+            border: 1px solid var(--cyber-blue);
+            box-shadow: 0 0 8px var(--cyber-blue);
+            animation: button-pulse-blue 2s infinite alternate;
         }
 
-        /* تأثير المسح الضوئي */
-        .scanline {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
-            background-size: 100% 4px; pointer-events: none; z-index: 1000;
+        @keyframes button-pulse-blue {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+        @keyframes button-pulse-gold {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        .bottom-button:hover { transform: scale(1.05); }
+        .bottom-button:active { transform: scale(0.95); }
+
+        .button-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 2;
+        }
+
+        .button-icon {
+            width: 30px;
+            height: 30px;
+            filter: drop-shadow(0 0 5px currentColor);
+        }
+
+        /* الفقرة السفلية جداً */
+        .footer-text {
+            position: absolute;
+            bottom: 20px;
+            width: 90%;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #ccc;
+            line-height: 1.5;
+            text-shadow: 0 0 5px #000;
+            animation: flicker 1.5s infinite alternate; /* تأثير الوميض */
+            z-index: 10;
+        }
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
         }
 
     </style>
 </head>
 <body>
 
-    <div class="background-overlay"></div>
-    <div class="scanline"></div>
-
-    <div class="header">
-        <h1 class="main-title">منظومة الجلاد الـجزائري</h1>
-        <p style="color: var(--neon-green); font-size: 0.8rem;">[ ALGERIAN HACKER SYSTEM // ACTIVE ]</p>
+    <div class="national-header">
+        <p class="header-text">نيـاز. الدلـكز. العليـر. العـايد. الثـمي.. أشـي البيـادعيـة. الحليـة.. موا.. الجـتضـراي .</p>
+        <div class="flag-strip"></div>
     </div>
 
-    <div class="container">
-        <button class="mech-button btn-green" onclick="playSound()">🛡️ بـلاغ رسـمي</button>
-        <button class="mech-button btn-red" onclick="playSound()">💥 هـجوم مـباشر</button>
-        <button class="mech-button btn-green" style="border-color: #ffcc00;" onclick="playSound()">📧 قـصف الـجيميل</button>
-    </div>
+    <div class="main-ui-container">
+        <div class="top-button-group">
+            <img src="https://i.ibb.co/hM300zG/falcon-green.png" alt="Falcon" class="falcon-icon">
+            <div class="mech-button-img">ستكمل العنبيل كناوما العنجل الكاكلل الحناحاة</div>
+            <img src="https://i.ibb.co/hM300zG/falcon-green.png" alt="Falcon" class="falcon-icon">
+        </div>
 
-    <div class="status-ticker">
-        <div class="ticker-text">
-            ALGERIA CYBER ARMY ACTIVE... [!] TARGET: TIKTOK... [!] STATUS: ATTACKING... [!] الله اكبر .. المجد والخلود لشهدائنا الابرار .. الجلاد الجزائري يحييكم من قلب الترسانة...
+        <div class="top-button-group">
+            <img src="https://i.ibb.co/v4x32dZ/falcon-red.png" alt="Falcon" class="falcon-icon red">
+            <div class="mech-button-img red">ستكمل العنبيل كناوما الحتكـل الكاكلل الحناحاة</div>
+            <img src="https://i.ibb.co/v4x32dZ/falcon-red.png" alt="Falcon" class="falcon-icon red">
+        </div>
+
+        <img src="https://i.ibb.co/k2xQh4c/hacker-hood-green-glow.png" alt="Hacker" class="hacker-image">
+
+        <div class="bottom-button">
+            <div class="button-content" style="color: var(--cyber-blue);">
+                <svg class="button-icon" style="fill: currentColor;" viewBox="0 0 24 24"><path d="M12 2L3 6v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V6L12 2zm0 10.99c-.73 0-1.3-.57-1.3-1.3s.57-1.3 1.3-1.3 1.3.57 1.3 1.3-.57 1.3-1.3 1.3zm0-3.99c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zM7 6l5-2 5 2v5.09c-.7-.3-1.46-.51-2.29-.62C12.8 9.58 11.23 9 9.5 9c-3.59 0-6.5 2.91-6.5 6.5s2.91 6.5 6.5 6.5c2.47 0 4.67-1.37 5.86-3.41L17 19.12V6z"/></svg>
+                <span>بكيـل - فـنكم Official (امبتحدا)</span>
+            </div>
+        </div>
+
+        <div class="bottom-button">
+            <div class="button-content" style="color: var(--gold-accent);">
+                <svg class="button-icon" style="fill: currentColor;" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+                <span>بعـوم - طعـاش - شبفـا (شوييو)</span>
+            </div>
+        </div>
+
+        <div class="bottom-button">
+            <div class="button-content" style="color: var(--cyber-blue);">
+                <svg class="button-icon" style="fill: currentColor;" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                <span>بعـم - العنيـل - Gmail (ثانـيـا)</span>
+            </div>
         </div>
     </div>
 
-    <script>
-        // كود تشغيل صوت الرصاص
-        const gunshot = new Howl({
-            src: ['https://www.soundjay.com/mechanical/gun-shot-01.mp3'], // رابط صوت طلقة رصاص
-            volume: 1.0
-        });
-
-        function playSound() {
-            gunshot.play();
-            // إضافة اهتزاز للهاتف إذا كان مدعوماً
-            if (navigator.vibrate) {
-                navigator.vibrate(100);
-            }
-        }
-    </script>
+    <p class="footer-text">
+        ثـمبـاس المواص الحلدر مو التغيـاة<br>
+        تياء ماياشاة الوفل و إلـياء
+    </p>
 
 </body>
 </html>
