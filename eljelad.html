@@ -8,10 +8,11 @@
     <style>
         :root { --neon: #00ff41; --war: #ff0000; --cyber: #00d4ff; --gold: #ffcc00; }
         * { cursor: crosshair; }
-        body { background: #000; color: var(--neon); font-family: 'Segoe UI', sans-serif; margin: 0; overflow-x: hidden; }
+        body {
+            background: #000; color: var(--neon); font-family: 'Segoe UI', sans-serif;
+            margin: 0; overflow-x: hidden; position: relative;
+        }
         #matrix-canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.2; }
-        
-        /* تأثير الإنذار */
         body::after {
             content: ""; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             border: 5px solid var(--neon); pointer-events: none; z-index: 9999;
@@ -21,37 +22,35 @@
             0% { border-color: var(--neon); box-shadow: inset 0 0 20px var(--neon); } 
             100% { border-color: var(--war); box-shadow: inset 0 0 40px var(--war); } 
         }
-
         .national-header {
             background: linear-gradient(90deg, #006233, #fff, #d21034);
             color: #000; font-weight: 900; padding: 12px; text-align: center;
+            font-size: 1.2rem; box-shadow: 0 5px 15px rgba(255,255,255,0.5);
+            text-shadow: 1px 1px #fff;
         }
-
         .war-btn {
             background: rgba(0, 20, 0, 0.9); border: 2px solid var(--neon);
-            color: var(--neon); padding: 15px; width: 100%; margin: 10px 0;
-            font-weight: bold; clip-path: polygon(5% 0, 100% 0, 95% 100%, 0% 100%);
-            transition: 0.2s;
+            color: var(--neon); padding: 20px; width: 100%; margin: 12px 0;
+            font-weight: bold; font-size: 1.1rem; text-transform: uppercase;
+            clip-path: polygon(5% 0, 100% 0, 95% 100%, 0% 100%);
+            transition: 0.2s; position: relative; overflow: hidden;
         }
-        .war-btn:hover { background: var(--neon); color: #000; box-shadow: 0 0 30px var(--neon); }
-
-        /* نافذة الهكر وإطلاق النار */
-        #hacker-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 30000; text-align: center;
+        .war-btn:hover { background: var(--neon); color: #000; box-shadow: 0 0 30px var(--neon); transform: scale(1.02); }
+        .radar {
+            width: 60px; height: 60px; border: 2px solid var(--neon); border-radius: 50%;
+            position: absolute; top: 80px; left: 20px;
         }
-        #hacker-img { height: 80%; margin-top: 5%; filter: drop-shadow(0 0 20px var(--war)); }
-        .muzzle-flash {
-            position: absolute; width: 100px; height: 100px;
-            background: radial-gradient(circle, #fff, #ffea00, transparent);
-            border-radius: 50%; opacity: 0; display: none;
+        .radar::after {
+            content: ""; position: absolute; width: 100%; height: 100%;
+            border-top: 2px solid var(--neon); border-radius: 50%;
+            animation: rotate 2s linear infinite;
         }
-
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         .panel {
             display: none; position: fixed; top: 50%; left: 50%;
             transform: translate(-50%, -50%); width: 90%; max-width: 450px;
             background: rgba(0, 5, 0, 0.98); border: 3px solid var(--cyber);
-            padding: 25px; z-index: 10001;
+            padding: 25px; z-index: 10001; box-shadow: 0 0 100px #000;
         }
         .panel.active { display: block; }
     </style>
@@ -60,40 +59,63 @@
 
 <canvas id="matrix-canvas"></canvas>
 
-<div id="hacker-overlay">
-    <img id="hacker-img" src="https://i.ibb.co/v6XfXfG/hacker-shooting.png" alt="Attacking">
-    <div id="flash" class="muzzle-flash"></div>
-    <h1 style="color:var(--war); text-shadow: 0 0 10px #000;">جاري الإبادة الشاملة... 🔥</h1>
+<div class="national-header">
+    <marquee scrollamount="12">🇩🇿 تحيا الجزائر .. المجد والخلود لشهدائنا الابرار .. جيش التبليغ الجزائري بقيادة الجلاد يقصف الآن 🇩🇿</marquee>
 </div>
 
-<div class="national-header">
-    <marquee>🇩🇿 جيش التبليغ الجزائري - الرصد والابادة - المجد والخلود لشهدائنا الابرار 🇩🇿</marquee>
-</div>
+<div class="radar"></div>
 
 <div style="padding: 20px; text-align: center;">
-    <h1 style="text-shadow: 0 0 20px var(--neon);">مـنظومة الـجلاد v2.0</h1>
+    <h1 style="margin: 0; font-size: 2rem; text-shadow: 0 0 20px var(--neon);">مـنظومة الـجلاد</h1>
+    <p style="color: var(--war); letter-spacing: 2px; font-weight: bold;">[ مـستوى الـخطر: أقـصى ]</p>
+    
     <div style="background: rgba(255,255,0,0.1); border: 1px solid var(--gold); padding: 10px; margin: 15px 0;">
-        <span style="color: var(--gold);">🎯 إحداثيات الهدف:</span><br>
-        <span id="target-url" style="color: #fff; font-family: monospace;">جاري المسح...</span>
+        <span style="color: var(--gold); font-size: 0.8rem;">🎯 إحداثيات الهدف المرصود:</span><br>
+        <span id="target-url" style="color: #fff; font-family: monospace; font-size: 0.9rem; word-break: break-all;">جاري مسح الروابط...</span>
     </div>
 
-    <button class="war-btn" onclick="openPanel('p2')">💥 هـجوم مـباشر (رصاص مكثف)</button>
-    <button class="war-btn" style="border-color: var(--gold); color: var(--gold);" onclick="openPanel('p3')">📧 قـصف الـجيميل (بلاغات ذكية)</button>
+    <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: #aaa; margin-bottom: 10px;">
+        <span id="rank-display">الرتبة: جندي مستجد</span>
+        <span id="clock">00:00:00</span>
+    </div>
+
+    <button class="war-btn" onclick="openPanel('p1')">🛡️ بـلاغ رسـمي (اسـتمارة)</button>
+    <button class="war-btn" onclick="openPanel('p2')">💥 هـجوم مـباشر (تطبيق)</button>
+    <button class="war-btn" style="border-color: var(--gold); color: var(--gold);" onclick="openPanel('p3')">📧 قـصف الـجيميل (قنابل)</button>
+
+    <div style="margin-top: 30px; border-top: 1px solid #333; padding-top: 10px;">
+        <p style="font-size: 1.2rem; color: #fff; font-weight: bold;">"أصبعك هو زنادك وهاتفك هو سلاحك"</p>
+    </div>
+</div>
+
+<div class="panel" id="p1">
+    <h2 style="color: var(--cyber);">⚠️ غـرفة الـبلاغ الـرسمي</h2>
+    <p>سيتم نقلك لمركز المساعدة. اختر: (تبليغ انتهاك > حساب > آخر) ثم ضع البيانات.</p>
+    <button class="war-btn" onclick="strike('https://www.tiktok.com/legal/report/feedback')">🚀 إطـلاق الـقذيفة</button>
+    <button onclick="closeAll()" style="color:red; background:none; border:none; width:100%; margin-top:10px;">تراجع</button>
+</div>
+
+<div class="panel" id="p2">
+    <h2 style="color: var(--war);">🔥 اقـتحام الـبث الـمباشر</h2>
+    <p>سيفتح التطبيق على الحساب مباشرة. قم بالتبليغ 100 مرة متتالية دون توقف!</p>
+    <button class="war-btn" id="direct-attack-btn">⚡ بـدء الاقـتحام</button>
+    <button onclick="closeAll()" style="color:red; background:none; border:none; width:100%; margin-top:10px;">تراجع</button>
 </div>
 
 <div class="panel" id="p3">
-    <h2 style="color: var(--gold);">💣 مولد البلاغات الإدارية</h2>
-    <p style="font-size: 0.8rem;">تم توليد بلاغ قانوني (600+ حرف) بصياغة احترافية:</p>
-    <textarea id="mail-content" readonly style="width:100%; height:180px; background:#000; color:var(--gold); border:1px solid var(--gold); font-size:11px; font-family:serif;"></textarea>
-    <button class="war-btn" style="color: var(--gold);" onclick="launchEmail()">🚀 إرسال القذيفة الإدارية</button>
-    <button onclick="closeAll()" style="color:red; background:none; border:none; width:100%; margin-top:10px;">إغلاق</button>
+    <h2 style="color: var(--gold);">💣 تـوليد الـقنبلة الـبريدية</h2>
+    <textarea id="mail-content" readonly style="width:100%; height:150px; background:#000; color:var(--gold); border:1px solid var(--gold); font-size:11px;"></textarea>
+    <button class="war-btn" style="color: var(--gold);" onclick="launchEmail()">🚀 نـسخ وإرسـال فـوري</button>
+    <button onclick="closeAll()" style="color:red; background:none; border:none; width:100%; margin-top:10px;">تراجع</button>
 </div>
 
 <script>
-    const startSnd = new Howl({ src: ['https://assets.mixkit.co/active_storage/sfx/2560/2560-preview.mp3'] });
-    const gunSnd = new Howl({ src: ['https://actions.google.com/sounds/v1/weapons/automatic_gun_fire.ogg'], loop: true });
+    // أصوات مطورة
+    const startSnd = new Howl({ src: ['https://www.soundboard.com/handler/DownLoadTrack.ashx?cliptitle=Military+Alarm&filename=mt/MTI0MDUzNjAxMjQwNTU5_U02V5z6i8_2b8.mp3'] }); // إنذار عسكري
+    const musicSnd = new Howl({ src: ['https://www.soundboard.com/handler/DownLoadTrack.ashx?cliptitle=War+Music&filename=22/227184-7e5d1792-2628-4683-9b1d-c454e9955742.mp3'], loop: true, volume: 0.5 }); // موسيقى حماسية
+    const ak47Snd = new Howl({ src: ['https://www.soundboard.com/handler/DownLoadTrack.ashx?cliptitle=AK47+Burst&filename=24/246416-2911b33b-8f3e-4b6a-9351-46864f13426e.mp3'] }); // صوت الكلاشنكوف
 
-    let finalTarget = "https://www.tiktok.com/@target";
+    let finalTarget = "https://www.tiktok.com";
 
     function startSystem() {
         const urlParams = new URLSearchParams(window.location.search);
@@ -101,98 +123,84 @@
         if (captured) {
             finalTarget = captured;
             document.getElementById('target-url').innerText = finalTarget;
+            document.getElementById('direct-attack-btn').onclick = () => strike(finalTarget);
         }
         startSnd.play();
+        musicSnd.play();
         initMatrix();
+        setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }, 1000);
     }
 
     function openPanel(id) {
         document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-        if(id === 'p3') generateSmartReport();
+        if(id === 'p3') generateSmartBomber();
     }
 
     function closeAll() { document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); }
 
-    // خوارزمية توليد البلاغات الذكية
-    function generateSmartReport() {
-        const intros = [
-            "Dear TikTok Legal and Safety Department,\n\nI am writing to formally submit a high-priority complaint regarding a severe violation of community standards.",
-            "To the TikTok Moderation Team,\n\nThis is an official administrative report concerning a persistent breach of TikTok's Terms of Service and safety regulations.",
-            "Subject: Urgent Legal Notification of Safety Violations.\n\nDear Global Safety Team, we are reporting a high-risk entity on your platform."
-        ];
+    function strike(url) {
+        ak47Snd.play();
+        if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200, 50, 500]);
+        setTimeout(() => { window.location.href = url; }, 1500);
+    }
 
-        const bodies = [
-            `The account (${finalTarget}) is consistently broadcasting live streams that include extreme hate speech, violent extremism, and illegal activities. The content promoted here directly incites violence and creates an unsafe environment for the community. The user utilizes the platform to harass individuals and promote prohibited substances and dangerous acts.`,
-            `We have identified that the user at (${finalTarget}) is violating the 'Community Guidelines' specifically regarding illegal acts and regulated goods. Their recent live sessions are filled with verbal abuse, radicalization, and the promotion of violent behavior which is strictly forbidden under your safety policy.`,
-            `The profile (${finalTarget}) serves as a hub for organized harassment and violent threats. They are bypassing automated filters to spread extremist ideologies and engage in illegal transactions during live broadcasts, posing a direct threat to public safety and the integrity of your platform.`
-        ];
-
-        const demands = [
-            "We strongly demand the immediate and permanent termination of this account. Furthermore, we request a hardware ID (IMEI) ban to prevent this individual from creating further accounts on this device to protect your ecosystem.",
-            "Pursuant to your safety guidelines, this user must be permanently banned. We urge your team to implement a device-level restriction to ensure this perpetrator cannot return to the platform.",
-            "Based on the gravity of these violations, we expect a permanent suspension of the profile and a permanent block on the associated mobile hardware to mitigate future risks."
-        ];
-
-        const closings = "\n\nSincerely and with deep respect,\nDigital Safety Enforcement Unit.\nRef ID: DZ-ANTI-TERROR-" + Math.floor(Math.random()*999999);
-
-        // تجميع البلاغ ليكون أكثر من 600 حرف
-        let report = intros[Math.floor(Math.random()*intros.length)] + "\n\n" + 
-                     bodies[Math.floor(Math.random()*bodies.length)] + "\n\n" + 
-                     demands[Math.floor(Math.random()*demands.length)] + closings;
+    // خوارزمية توليد البلاغات الذكية (Matrix Generation)
+    function generateSmartBomber() {
+        const intros = ["Dear TikTok Support Team,", "To the Help and Safety Center,", "To the TikTok Legal Department,", "To the Moderation Management Team,"];
         
+        const coreContent = [
+            `I am officially reporting the account (${finalTarget}) for severe violations. This user employs modified/hacked software to bypass the reporting system and continuously broadcasts live content containing extreme violence and hate speech.`,
+            `The profile (${finalTarget}) is systematically violating community guidelines. Their live streams promote violence, illegal activities, and use coded language to incite hatred against diverse global communities, evading automated moderation.`,
+            `This is an urgent report against (${finalTarget}). This user is broadcasting illegal activities and displaying prohibited visual content. They use third-party tools to mask their offensive behavior, which includes bullying and harassment.`
+        ];
+
+        const keywords = [
+            "This account is a threat to the platform safety and must be terminated immediately to prevent further harm.",
+            "We have documented several instances of violent extremism and dangerous activities during their recent broadcasts.",
+            "The user explicitly displays offensive imagery and promotes violent behavior, violating your terms of service regarding human safety."
+        ];
+
+        const closing = ["Thank you for your immediate attention to this matter and for keeping TikTok safe.", "We appreciate your hard work in maintaining a secure environment. Best regards.", "Kindly take swift action to ban this user permanently. Regards."];
+
+        // تركيب البلاغ بشكل عشوائي لضمان عدم التكرار
+        let report = intros[Math.floor(Math.random() * intros.length)] + "\n\n" +
+                     coreContent[Math.floor(Math.random() * coreContent.length)] + " " +
+                     keywords[Math.floor(Math.random() * keywords.length)] + "\n\n" +
+                     closing[Math.floor(Math.random() * closing.length)] + 
+                     "\n\nReport ID: DZ-" + Math.random().toString(36).substr(2, 9).toUpperCase();
+
         document.getElementById('mail-content').value = report;
     }
 
     function launchEmail() {
         const body = encodeURIComponent(document.getElementById('mail-content').value);
-        executeAttack(`mailto:legal@tiktok.com,feedback@tiktok.com,community_safety@tiktok.com?subject=URGENT: Legal Violation Report&body=${body}`);
+        strike(`mailto:legal@tiktok.com,feedback@tiktok.com?subject=URGENT_REPORT_DZ&body=${body}`);
     }
 
-    // تأثير الهكر وإطلاق النار
-    function executeAttack(url) {
-        const overlay = document.getElementById('hacker-overlay');
-        const flash = document.getElementById('flash');
-        overlay.style.display = 'block';
-        gunSnd.play();
-
-        // محاكاة وميض الرصاص
-        let interval = setInterval(() => {
-            flash.style.display = 'block';
-            flash.style.left = (50 + (Math.random()*10 - 5)) + "%";
-            flash.style.top = (40 + (Math.random()*10 - 5)) + "%";
-            flash.style.opacity = "1";
-            if (navigator.vibrate) navigator.vibrate(50);
-            setTimeout(() => { flash.style.opacity = "0"; }, 50);
-        }, 100);
-
-        setTimeout(() => {
-            clearInterval(interval);
-            gunSnd.stop();
-            overlay.style.display = 'none';
-            if(url) window.location.href = url;
-        }, 5000);
-    }
-
-    // كود الماتريكس
     function initMatrix() {
         const canvas = document.getElementById('matrix-canvas');
         const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        const letters = "010101"; const fontSize = 10;
-        const drops = Array(Math.floor(canvas.width/fontSize)).fill(1);
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const letters = "01010101010101010101010101010101";
+        const fontSize = 10;
+        const columns = canvas.width / fontSize;
+        const drops = Array(Math.floor(columns)).fill(1);
         function draw() {
-            ctx.fillStyle = "rgba(0,0,0,0.05)"; ctx.fillRect(0,0,canvas.width,canvas.height);
-            ctx.fillStyle = "#0f0"; ctx.font = fontSize + "px monospace";
-            for(let i=0; i<drops.length; i++) {
-                ctx.fillText(letters[Math.floor(Math.random()*letters.length)], i*fontSize, drops[i]*fontSize);
-                if(drops[i]*fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+            ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#0f0";
+            ctx.font = fontSize + "px monospace";
+            for (let i = 0; i < drops.length; i++) {
+                const text = letters[Math.floor(Math.random() * letters.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
                 drops[i]++;
             }
         }
         setInterval(draw, 33);
     }
 </script>
-
 </body>
 </html>
