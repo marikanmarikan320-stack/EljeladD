@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ترسانة الجلاد | الواجهة الرسومية</title>
+    <title>ترسانة الجلاد | المركز الرئيسي</title>
     <style>
         :root {
-            --neon-green: #00ff41;
-            --neon-red: #ff0000;
-            --metal-grey: #1a1a1a;
-            --glow-shadow: 0 0 20px rgba(0, 255, 65, 0.4);
+            --primary: #00ff41; /* أخضر نيون */
+            --danger: #ff003c;  /* أحمر قتالي */
+            --accent: #00d4ff;  /* أزرق سيبراني */
+            --gold: #ffcc00;    /* ذهبي تكتيكي */
+            --panel-bg: rgba(10, 10, 10, 0.9);
         }
 
         body {
@@ -17,183 +18,223 @@
             padding: 0;
             background: #000;
             color: #fff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Roboto, sans-serif;
             height: 100vh;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            /* خلفية مرعبة بنمط تقني */
+            /* خلفية الهاكر مع تأثير تعتيم احترافي */
             background-image: 
-                linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)),
+                radial-gradient(circle at center, transparent 0%, #000 90%),
                 url('https://w0.peakpx.com/wallpaper/424/644/HD-wallpaper-hacker-hoodie-mask-dark-background-glitch-art.jpg');
             background-size: cover;
             background-position: center;
         }
 
-        /* الإطار العلوي الوطني كالصورة */
-        .national-strip {
+        /* تأثير إضاءة الحواف (Edge Glow) */
+        body::before {
+            content: '';
             position: fixed;
-            top: 0;
-            width: 100%;
-            height: 30px;
-            background: #000;
-            border-bottom: 2px solid #333;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
+            inset: 0;
+            border: 2px solid var(--primary);
+            box-shadow: inset 0 0 50px rgba(0, 255, 65, 0.2), 0 0 20px rgba(0, 255, 65, 0.2);
+            pointer-events: none;
+            z-index: 9999;
+            animation: border-pulse 4s infinite;
         }
 
-        .flag-line {
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(90deg, #006233 33%, #fff 33%, #fff 66%, #d21034 66%);
-            position: absolute;
-            bottom: 0;
+        @keyframes border-pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
         }
 
-        /* عنوان الواجهة */
-        .header-section {
+        /* العنوان العلوي الميكانيكي */
+        .header-tactical {
+            margin-top: 40px;
             text-align: center;
-            margin-bottom: 40px;
+            z-index: 10;
         }
 
         .main-title {
-            font-size: 1.8rem;
+            font-size: 2rem;
             font-weight: 900;
-            color: #fff;
             text-transform: uppercase;
-            letter-spacing: 3px;
-            text-shadow: 0 0 15px var(--neon-green);
+            letter-spacing: 5px;
+            background: linear-gradient(to bottom, #fff, #888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 10px var(--primary));
+            margin: 0;
         }
 
-        /* --- تصميم الصناديق المعدنية المزدوجة (الأزرار) --- */
-        .cyber-box {
+        /* حاوية الأزرار (صناديق ميكانيكية مزدوجة) */
+        .arsenal-grid {
+            margin-top: 50px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+        }
+
+        .mech-box {
             position: relative;
-            width: 320px;
-            height: 80px;
-            margin: 20px 0;
-            background: #050505;
+            background: #111;
+            height: 70px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: 0.3s;
-            /* الحواف الميكانيكية المزدوجة */
-            clip-path: polygon(10% 0, 90% 0, 100% 25%, 100% 75%, 90% 100%, 10% 100%, 0 75%, 0 25%);
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            /* شكل الصندوق الميكانيكي المزود بحواف مقطوعة */
+            clip-path: polygon(5% 0, 95% 0, 100% 20%, 100% 80%, 95% 100%, 5% 100%, 0 80%, 0 20%);
         }
 
-        /* الإطار المعدني الخارجي */
-        .cyber-box::before {
+        /* الطبقة المعدنية المزدوجة */
+        .mech-box::before {
+            content: '';
+            position: absolute;
+            inset: 3px;
+            background: #050505;
+            clip-path: polygon(5% 0, 95% 0, 100% 20%, 100% 80%, 95% 100%, 5% 100%, 0 80%, 0 20%);
+            z-index: 1;
+        }
+
+        /* إضاءة الزر الحافة (Border Glow) */
+        .mech-box::after {
             content: '';
             position: absolute;
             inset: 0;
-            padding: 2px; /* سماكة الحافة الميكانيكية */
-            background: linear-gradient(90deg, #333, var(--neon-green), #333);
-            clip-path: polygon(10% 0, 90% 0, 100% 25%, 100% 75%, 90% 100%, 10% 100%, 0 75%, 0 25%);
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask-composite: exclude;
+            background: var(--primary);
+            z-index: 0;
+            opacity: 0.5;
+            transition: 0.3s;
         }
 
-        /* النبض الضوئي خلف الزر */
-        .cyber-box::after {
+        .mech-box:hover::after {
+            opacity: 1;
+            box-shadow: 0 0 30px var(--primary);
+        }
+
+        .mech-box:hover {
+            transform: translateY(-5px) scale(1.02);
+        }
+
+        /* نصوص الأزرار */
+        .btn-label {
+            position: relative;
+            z-index: 2;
+            font-weight: 900;
+            font-size: 1.2rem;
+            color: #fff;
+            text-shadow: 0 0 5px #000;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* تنويع ألوان الأزرار كما في الصورة */
+        .box-red::after { background: var(--danger); }
+        .box-red:hover::after { box-shadow: 0 0 30px var(--danger); }
+
+        .box-gold::after { background: var(--gold); }
+        .box-gold:hover::after { box-shadow: 0 0 30px var(--gold); }
+        .box-gold .btn-label { color: var(--gold); }
+
+        /* الصقور الجانبية (أيقونات) */
+        .side-icon {
+            width: 30px;
+            height: 30px;
+            filter: drop-shadow(0 0 5px inherit);
+        }
+
+        /* تأثير النبض الضوئي على الجوانب */
+        .side-glow {
+            position: fixed;
+            width: 5px;
+            height: 100px;
+            background: var(--primary);
+            filter: blur(10px);
+            animation: move-glow 5s infinite linear;
+        }
+        .left-glow { left: 0; }
+        .right-glow { right: 0; }
+
+        @keyframes move-glow {
+            0% { top: -100px; }
+            100% { top: 100vh; }
+        }
+
+        /* الرادار الخلفي (تأثير بصري) */
+        .bg-radar {
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            border: 1px solid rgba(0, 255, 65, 0.1);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+        }
+        .bg-radar::after {
             content: '';
             position: absolute;
-            inset: -5px;
-            background: var(--neon-green);
-            opacity: 0.1;
-            filter: blur(15px);
-            z-index: -1;
-            animation: pulse-glow 2s infinite;
-        }
-
-        /* تلوين الأزرار حسب الطلب */
-        .box-red::before { background: linear-gradient(90deg, #333, var(--neon-red), #333); }
-        .box-red::after { background: var(--neon-red); }
-
-        .btn-text {
-            color: #fff;
-            font-size: 1.1rem;
-            font-weight: bold;
-            z-index: 2;
-        }
-
-        /* حركات التفاعل */
-        .cyber-box:hover {
-            transform: scale(1.05);
-            filter: brightness(1.2);
-        }
-
-        .cyber-box:active {
-            transform: scale(0.95);
-        }
-
-        /* الصقور الجانبية */
-        .falcon-svg {
-            position: absolute;
-            width: 40px;
-            height: 40px;
-            fill: var(--neon-green);
-            filter: drop-shadow(0 0 5px var(--neon-green));
-        }
-
-        @keyframes pulse-glow {
-            0% { opacity: 0.1; transform: scale(1); }
-            50% { opacity: 0.3; transform: scale(1.05); }
-            100% { opacity: 0.1; transform: scale(1); }
-        }
-
-        /* تأثير المسح الضوئي (Scanning) على الشاشة */
-        .scan-line {
-            position: fixed;
+            width: 2px;
+            height: 50%;
+            background: linear-gradient(to top, var(--primary), transparent);
+            left: 50%;
             top: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: rgba(0, 255, 65, 0.2);
-            box-shadow: 0 0 10px var(--neon-green);
-            animation: scan 4s linear infinite;
-            z-index: 2000;
-            pointer-events: none;
+            transform-origin: bottom;
+            animation: radar-rotate 4s linear infinite;
         }
 
-        @keyframes scan {
-            0% { top: -10%; }
-            100% { top: 110%; }
+        @keyframes radar-rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
     </style>
 </head>
 <body>
 
-    <div class="scan-line"></div>
+    <div class="side-glow left-glow"></div>
+    <div class="side-glow right-glow" style="animation-delay: 2.5s; background: var(--danger);"></div>
+    <div class="bg-radar"></div>
 
-    <div class="national-strip">
-        <span style="font-size: 0.7rem; color: #888; letter-spacing: 2px;">SECURE CONNECTION ESTABLISHED // DZ-ARMY</span>
-        <div class="flag-line"></div>
+    <div class="header-tactical">
+        <h1 class="main-title">ترسانة الجلاد الـجزائري</h1>
+        <p style="color: var(--primary); font-family: monospace; letter-spacing: 2px;">WEAPON SYSTEM ACTIVE // VOLTAGE: 100%</p>
     </div>
 
-    <div class="header-section">
-        <h1 class="main-title">ترسانة الجلاد الجزائري</h1>
-        <p style="color: var(--neon-green); font-family: monospace; font-size: 0.8rem;">[ STATUS: OPERATIONAL ]</p>
+    <div class="arsenal-grid">
+        <div class="mech-box" onclick="console.log('Strike 1')">
+            <div class="btn-label">
+                <span>🛡️</span>
+                <span>بـلاغ رسـمي (اسـتمارة)</span>
+            </div>
+        </div>
+
+        <div class="mech-box box-red" onclick="console.log('Strike 2')">
+            <div class="btn-label">
+                <span>💥</span>
+                <span>هـجوم مـباشر (تطبيق)</span>
+            </div>
+        </div>
+
+        <div class="mech-box box-gold" onclick="console.log('Strike 3')">
+            <div class="btn-label">
+                <span>📧</span>
+                <span>قـصف الـجيميل (قنابل)</span>
+            </div>
+        </div>
     </div>
 
-    <div class="cyber-box">
-        <span class="btn-text">🛡️ بـلاغ رسـمي</span>
-    </div>
-
-    <div class="cyber-box box-red">
-        <span class="btn-text">💥 هـجوم مـباشر</span>
-    </div>
-
-    <div class="cyber-box" style="--neon-green: #ffcc00;">
-        <span class="btn-text">📧 قـصف الـجيميل</span>
-    </div>
-
-    <div style="margin-top: 50px; text-align: center; opacity: 0.5;">
-        <p style="font-size: 0.7rem;">نظام هجوم سيبراني تكتيكي v1.0</p>
+    <div style="position: fixed; bottom: 20px; font-size: 0.8rem; opacity: 0.5; text-align: center;">
+        <p>بـقيادة الـجلاد الـجزائري © 2026</p>
+        <p style="color: var(--danger);">WARNING: UNAUTHORIZED ACCESS PROHIBITED</p>
     </div>
 
 </body>
