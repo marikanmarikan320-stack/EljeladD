@@ -3,169 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ALGERIAN CYBER ARMY | V5 NEON OPS</title>
+    <title>One UI | منظومة الجلاد</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
     <style>
         :root { 
-            --neon: #00ff41; --war: #ff003c; --cyber: #00e5ff; --gold: #ffc400;
-            --bg-black: #020406; --panel-bg: rgba(0, 20, 40, 0.4);
+            --samsung-blue: #0355d0; --war-red: #e91e63; --cyber-green: #00ff41;
+            --bg-color: #000000; --card-bg: rgba(28, 28, 30, 0.9);
         }
         
-        * { cursor: crosshair; box-sizing: border-box; -webkit-tap-highlight-color: transparent; } 
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; } 
 
         body {
-            background: var(--bg-black); color: white; 
-            font-family: 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-color); 
+            color: white; 
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             margin: 0; overflow: hidden; height: 100vh; width: 100vw; 
-            position: relative;
-            background-image: 
-                radial-gradient(circle at center, #001f3f 0%, #000 100%),
-                url('https://images.alphacoders.com/109/1098555.jpg');
+            background-image: linear-gradient(180deg, rgba(0,0,0,0.7) 0%, #000 100%), url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1000&q=80');
             background-size: cover; background-position: center;
-            background-blend-mode: overlay;
         }
 
-        /* الطبقة الضوئية للمصفوفة */
-        #matrix-canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.2; filter: blur(1px); }
-
-        /* شاشة تصريح الدخول */
+        /* شاشة الدخول بنمط سامسونج */
         #audio-unlocker {
             position: fixed; inset: 0; background: #000; z-index: 50000;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            border: 2px solid var(--neon); margin: 10px;
         }
 
-        /* الرأس الوطني المتطور */
-        .national-header {
-            background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
-            border-bottom: 1px solid var(--cyber);
-            padding: 10px; text-align: center; font-size: 0.8rem;
-            position: fixed; top: 0; width: 100%; z-index: 1000;
-            letter-spacing: 2px;
+        .one-ui-header {
+            padding: 60px 20px 20px; text-align: center;
         }
 
-        /* الأزرار التقنية (Tech-Buttons) */
-        .smart-btn {
-            position: relative;
-            background: var(--panel-bg);
-            color: #fff;
-            padding: 20px 35px;
-            width: 80%; max-width: 400px;
-            margin: 25px auto; display: block;
-            font-size: 1.1rem; font-weight: bold;
-            border: 1px solid var(--cyber);
-            clip-path: polygon(20px 0%, 100% 0%, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0% 100%, 0% 20px);
-            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 0 15px rgba(0, 229, 255, 0.1);
+        .one-ui-header h1 {
+            font-size: 2.2rem; font-weight: 300; margin: 0; color: #fff;
         }
 
-        .smart-btn::before {
-            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.05), transparent);
-            transform: translateX(-100%); transition: 0.5s;
+        .one-ui-header p {
+            color: #888; margin-top: 10px; font-size: 1rem;
         }
 
-        .smart-btn:hover::before { transform: translateX(100%); }
-        .smart-btn:hover {
-            box-shadow: 0 0 30px var(--cyber);
-            transform: translateY(-3px);
-            background: rgba(0, 229, 255, 0.1);
+        /* حاوية الأزرار - نمط القوائم في One UI */
+        .menu-container {
+            padding: 0 20px; margin-top: 20px;
         }
 
-        .btn-strike { border-color: var(--war); color: var(--war); }
-        .btn-strike:hover { box-shadow: 0 0 30px var(--war); background: rgba(255, 0, 60, 0.05); }
-
-        .btn-gold { border-color: var(--gold); color: var(--gold); }
-        .btn-gold:hover { box-shadow: 0 0 30px var(--gold); background: rgba(255, 196, 0, 0.05); }
-
-        /* عنوان النظام */
-        .system-hub { margin-top: 100px; text-align: center; }
-        .system-title {
-            font-size: 2rem; font-weight: 100; color: white;
-            text-transform: uppercase; letter-spacing: 8px;
-            border-bottom: 2px solid var(--neon);
-            display: inline-block; padding-bottom: 10px;
-            text-shadow: 0 0 10px var(--neon);
+        .one-ui-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            margin-bottom: 16px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            transition: transform 0.2s, background 0.2s;
+            border: 1px solid rgba(255,255,255,0.05);
+            cursor: pointer;
         }
 
-        /* الرادار الدائري المتطور */
-        .radar-container {
-            width: 200px; height: 200px; margin: 30px auto;
-            position: relative; border: 1px solid rgba(0, 255, 65, 0.2);
-            border-radius: 50%;
-        }
-        .radar-scanner {
-            position: absolute; width: 100%; height: 100%;
-            border-radius: 50%;
-            background: conic-gradient(from 0deg, transparent 0%, rgba(0, 255, 65, 0.3) 100%);
-            animation: scan 2s linear infinite;
-        }
-        .radar-circles {
-            position: absolute; inset: 10%; border: 1px solid rgba(0, 255, 65, 0.1); border-radius: 50%;
+        .one-ui-card:active {
+            transform: scale(0.96);
+            background: rgba(44, 44, 46, 1);
         }
 
-        /* نوافذ العمليات الشفافة */
+        .card-icon {
+            width: 48px; height: 48px;
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; margin-left: 15px;
+        }
+
+        .card-info { flex-grow: 1; text-align: right; }
+        .card-info h3 { margin: 0; font-size: 1.1rem; font-weight: 500; }
+        .card-info p { margin: 4px 0 0; font-size: 0.85rem; color: #8e8e93; }
+
+        /* الألوان التكتيكية */
+        .icon-p1 { background: rgba(3, 85, 208, 0.2); color: #58a6ff; }
+        .icon-p2 { background: rgba(233, 30, 99, 0.2); color: #ff4081; }
+        .icon-p3 { background: rgba(255, 196, 0, 0.2); color: #ffc400; }
+
+        /* نوافذ العمليات (Sheets) */
         .full-ops-panel {
-            display: none; position: fixed; inset: 0; 
-            background: rgba(0,5,10,0.95);
-            z-index: 5000; padding: 40px 20px; text-align: center;
+            display: none; position: fixed; bottom: 0; left: 0; right: 0; 
+            height: 85vh; background: #1c1c1e;
+            z-index: 5000; border-radius: 30px 30px 0 0;
+            padding: 30px 20px; text-align: center;
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
         }
-        .full-ops-panel.active { display: block; animation: slideUp 0.3s ease-out; }
+        .full-ops-panel.active { display: block; animation: slideUp 0.4s cubic-bezier(0, 0, 0.2, 1); }
+
+        .handle {
+            width: 40px; height: 5px; background: #3a3a3c;
+            border-radius: 10px; margin: -10px auto 20px;
+        }
+
+        .action-btn {
+            background: var(--samsung-blue);
+            color: white; border: none;
+            width: 100%; padding: 16px;
+            border-radius: 16px; font-size: 1.1rem; font-weight: bold;
+            margin-top: 20px;
+        }
 
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        @keyframes scan { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-        .instruction-box {
-            background: rgba(0,0,0,0.4); border: 1px solid #333;
-            padding: 20px; border-radius: 4px; margin: 20px 0;
-            text-align: right; font-size: 0.9rem; line-height: 1.8;
-            color: #ccc; position: relative;
-        }
 
         #blast-zone { position: fixed; inset: 0; z-index: 10000; pointer-events: none; display: none; }
-        .smoke { position: absolute; background: radial-gradient(circle, #fff, var(--war), transparent); border-radius: 50%; animation: explode 1s forwards; }
-        @keyframes explode { 0% { transform: scale(0.1); opacity: 1; } 100% { transform: scale(50); opacity: 0; } }
+        .smoke { position: absolute; background: radial-gradient(circle, #fff, var(--war-red), transparent); border-radius: 50%; animation: explode 1s forwards; }
+        @keyframes explode { 0% { transform: scale(0.1); opacity: 1; } 100% { transform: scale(40); opacity: 0; } }
 
+        #matrix-canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.1; }
     </style>
 </head>
 <body>
 
 <div id="audio-unlocker">
-    <div style="font-size: 5rem; filter: drop-shadow(0 0 20px var(--neon));">🦅</div>
-    <h1 style="color: var(--neon); letter-spacing: 10px; margin-top: 20px;">OPERATIONAL HUB</h1>
-    <button class="smart-btn" style="width: 250px; margin-top: 40px;" onclick="activateSystem()">دخول الواجهة 0.5</button>
+    <div style="font-size: 4rem; margin-bottom: 20px;">🇩🇿</div>
+    <h2 style="font-weight: 300;">مرحباً بك، سيادة الجلاد</h2>
+    <button class="action-btn" style="width: 200px; margin-top: 30px;" onclick="activateSystem()">فتح النظام</button>
 </div>
 
 <canvas id="matrix-canvas"></canvas>
 <div id="blast-zone"></div>
 
-<div class="national-header">
-    <marquee direction="right" scrollamount="10">🔴 تحذير: نظام الجلاد الجزائري في حالة استنفار قصوى .. نراقب كل الأهداف .. تحيا الجزائر 🇩🇿</marquee>
-</div>
-
 <div id="main-ui">
-    <div class="system-hub">
-        <h1 class="system-title">منظومة القصف</h1>
-        <div class="radar-container">
-            <div class="radar-scanner"></div>
-            <div class="radar-circles"></div>
-            <div class="radar-circles" style="inset: 30%"></div>
-            <div class="radar-circles" style="inset: 50%"></div>
-        </div>
+    <div class="one-ui-header">
+        <h1>الترسانة الرقمية</h1>
+        <p>جيش التبليغ الجزائري</p>
     </div>
 
-    <div style="margin-top: -10px;">
-        <button class="smart-btn" onclick="openOps('p1')">CORE: بروتوكول البلاغ</button>
-        <button class="smart-btn btn-strike" onclick="openOps('p2')">STRIKE: الهجوم المباشر</button>
-        <button class="smart-btn btn-gold" onclick="openOps('p3')">BOMB: قصف الجيميل</button>
-    </div>
-
-    <div style="position: absolute; bottom: 20px; width: 100%; text-align: center; opacity: 0.3;">
-        <p style="font-size: 0.7rem; font-family: monospace;">ENCRYPTION: 4096-BIT / COMMANDER: ELJELAD DZ</p>
-    </div>
-</div>
-
-<div class="full-ops-panel" id="p1">
-    <h2 style="color: var(--cyber); letter-spacing: 5px;">[ LEGAL STRIKE ]</h2>
-    <div class="instruction-box">
+    <div class="menu-container">
+        <div class="one-ui-card" onclick="openOps('p1')
