@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>تطبيق منظومة الجلاد v17.0</title>
+    <title>تطبيق منظومة الجلاد v17.5</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
     <style>
         :root { 
             --samsung-primary: #0355d0; --war-red: #ff3b30; --cyber-green: #00ff41;
-            --gold: #ffcc00; --bg: #000000; --card-bg: rgba(20, 20, 20, 0.9);
+            --gold: #ffcc00; --bg: #000000; --card-bg: rgba(20, 20, 20, 0.95);
         }
         
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; } 
@@ -19,30 +19,21 @@
             overflow: hidden; 
         }
 
-        /* واجهة التطبيق - الخلفية */
         .app-container {
             width: 100%; height: 100%;
             background: url('https://i.postimg.cc/j2fHMWGY/unnamed-3.jpg') no-repeat center/cover;
             position: relative; transition: filter 0.5s ease;
         }
 
-        /* شاشة التحميل (Splash Screen) */
         #splash-screen {
             position: fixed; inset: 0; z-index: 99999; background: #000;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
 
-        .loading-bar {
-            width: 200px; height: 4px; background: #222; border-radius: 10px;
-            margin-top: 20px; overflow: hidden; position: relative;
-        }
-        .loading-progress {
-            width: 0%; height: 100%; background: var(--cyber-green);
-            box-shadow: 0 0 10px var(--cyber-green); animation: load 2.5s forwards;
-        }
+        .loading-bar { width: 200px; height: 4px; background: #222; border-radius: 10px; margin-top: 20px; overflow: hidden; }
+        .loading-progress { width: 0%; height: 100%; background: var(--cyber-green); animation: load 2.5s forwards; }
         @keyframes load { to { width: 100%; } }
 
-        /* العناصر الرقمية */
         #digital-clock {
             position: absolute; top: 40px; width: 100%; text-align: center;
             color: var(--cyber-green); font-size: 3.5rem; font-weight: bold;
@@ -61,42 +52,45 @@
         }
         @keyframes sweep { to { transform: rotate(360deg); } }
 
-        /* نظام الأيقونات (App Drawer) */
         .bottom-dock {
             position: absolute; bottom: 30px; width: 100%;
             display: flex; justify-content: space-evenly; padding: 0 10px; z-index: 100;
         }
-        .app-icon {
-            width: 75px; text-align: center; cursor: pointer;
-        }
+        .app-icon { width: 75px; text-align: center; cursor: pointer; }
         .icon-shape {
             width: 65px; height: 65px; border-radius: 20px; 
             display: flex; align-items: center; justify-content: center;
             font-size: 1.8rem; margin-bottom: 5px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);
         }
-        .app-name { font-size: 0.75rem; color: #ccc; font-weight: 500; }
+        .app-name { font-size: 0.75rem; color: #ccc; }
 
-        /* النوافذ المنبثقة (Sheets) */
         .modal-sheet {
             position: fixed; bottom: -100%; left: 0; right: 0; height: 85vh;
             background: var(--card-bg); backdrop-filter: blur(30px);
             border-radius: 40px 40px 0 0; z-index: 1000;
             padding: 40px 25px; transition: 0.5s cubic-bezier(0, 0, 0.2, 1);
-            border-top: 1px solid rgba(0, 255, 65, 0.3);
+            border-top: 2px solid var(--cyber-green);
         }
         .modal-sheet.active { bottom: 0; }
         .sheet-handle { width: 40px; height: 5px; background: #444; border-radius: 10px; margin: -20px auto 30px; }
 
-        /* الأزرار والنصوص */
+        /* إطار تعليمات القيادة */
+        .instruction-frame {
+            background: rgba(0, 255, 65, 0.05); border: 1px dashed var(--cyber-green);
+            border-radius: 15px; padding: 15px; margin-bottom: 20px; text-align: right;
+        }
+        .instruction-title { color: var(--cyber-green); font-weight: bold; font-size: 0.9rem; display: block; margin-bottom: 5px; }
+        .instruction-text { font-size: 0.85rem; color: #ddd; line-height: 1.4; }
+
         .btn-action {
             width: 100%; padding: 20px; border-radius: 25px; border: none;
             font-size: 1.2rem; font-weight: bold; margin-bottom: 15px; cursor: pointer;
         }
         textarea {
-            width: 100%; height: 220px; background: rgba(0,0,0,0.8);
+            width: 100%; height: 180px; background: #000;
             color: var(--cyber-green); border: 1px solid var(--cyber-green);
-            border-radius: 25px; padding: 20px; font-family: monospace; font-size: 14px;
+            border-radius: 20px; padding: 15px; font-family: monospace; font-size: 13px; margin-bottom: 10px;
         }
 
         #matrix-bg { position: fixed; inset: 0; z-index: -1; opacity: 0.1; pointer-events: none; }
@@ -106,76 +100,80 @@
 
 <div id="splash-screen">
     <div style="width:180px; height:180px; border-radius:50%; border:3px solid var(--cyber-green); background: url('https://i.postimg.cc/vmdZn4vn/Screenshot-20260222-031125-Tik-Tok.jpg') center/cover; box-shadow: 0 0 40px var(--cyber-green);"></div>
-    <h2 style="margin-top:30px; letter-spacing: 3px; color: var(--cyber-green);">جاري تهيئة الترسانة...</h2>
+    <h2 id="status-text" style="margin-top:30px; letter-spacing: 3px; color: var(--cyber-green);">جاري تهيئة النظام...</h2>
     <div class="loading-bar"><div class="loading-progress"></div></div>
     <button id="entry-btn" style="display:none; margin-top:30px; background:var(--cyber-green); color:black; padding:15px 40px; border-radius:50px; font-weight:bold; border:none;" onclick="launchApp()">فتح النظام ⚔️</button>
 </div>
 
 <div class="app-container" id="main-app">
     <div id="digital-clock">00:00:00</div>
-    
-    <div class="radar-box">
-        <div class="radar-sweep"></div>
-        <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:5px; height:5px; background:red; border-radius:50%; box-shadow:0 0 10px red;"></div>
-    </div>
-
+    <div class="radar-box"><div class="radar-sweep"></div></div>
     <canvas id="matrix-bg"></canvas>
 
     <div class="bottom-dock">
         <div class="app-icon" onclick="openSheet('s1')">
             <div class="icon-shape" style="background: linear-gradient(135deg, #0a74da, #0355d0);">🛡️</div>
-            <div class="app-name">البلاغ القانوني</div>
+            <div class="app-name">البوابة</div>
         </div>
         <div class="app-icon" onclick="openSheet('s2')">
-            <div class="icon-box icon-shape" style="background: linear-gradient(135deg, #ff5e57, #ff3b30);">🎯</div>
-            <div class="app-name">الاقتحام المباشر</div>
+            <div class="icon-shape" style="background: linear-gradient(135deg, #ff5e57, #ff3b30);">🎯</div>
+            <div class="app-name">اقتحام</div>
         </div>
         <div class="app-icon" onclick="openSheet('s3')">
-            <div class="icon-box icon-shape" style="background: linear-gradient(135deg, #ffcc00, #ff9500);">☣️</div>
-            <div class="app-name">المولد النووي</div>
+            <div class="icon-shape" style="background: linear-gradient(135deg, #ffcc00, #ff9500);">☣️</div>
+            <div class="app-name">المولد</div>
         </div>
     </div>
 </div>
 
 <div class="modal-sheet" id="s1">
     <div class="sheet-handle"></div>
-    <h2 style="text-align:center; color:var(--samsung-primary);">مركز المساعدة الرسمي</h2>
-    <p style="text-align:center; color: #aaa;">سيتم توجيهك إلى بوابة تيك توك القانونية.</p>
-    <button class="btn-action" style="background: var(--samsung-primary); color: white;" onclick="strikeAction('https://www.tiktok.com/legal/report/feedback')">إطلاق القذيفة القانونية</button>
-    <button onclick="closeSheet()" style="width:100%; background:none; border:none; color:var(--war-red); font-size:1.1rem;">إلغاء العملية</button>
+    <div class="instruction-frame">
+        <span class="instruction-title">⚠️ تعليمات القيادة [بروتوكول 01]:</span>
+        <span class="instruction-text">توجه للبوابة، اختر بلاغ "آخر"، ثم قم بلصق الشفرة النووية المولدة من الترسانة.</span>
+    </div>
+    <button class="btn-action" style="background: var(--samsung-primary); color: white;" onclick="strikeAction('https://www.tiktok.com/legal/report/feedback')">إطلاق القذيفة</button>
+    <button onclick="closeSheet()" style="width:100%; background:none; border:none; color:grey;">تراجع</button>
 </div>
 
 <div class="modal-sheet" id="s2">
     <div class="sheet-handle"></div>
-    <h2 style="text-align:center; color:var(--war-red);">اقتحام ميداني مكثف</h2>
-    <p style="text-align:center; color: #aaa;">فتح الهدف داخل تطبيق TikTok للهجوم اليدوي.</p>
+    <div class="instruction-frame">
+        <span class="instruction-title">⚠️ تعليمات القيادة [بروتوكول 02]:</span>
+        <span class="instruction-text">سيتم فتح الحساب مباشرة. كرر البلاغات اليدوية داخل التطبيق لضمان السقوط.</span>
+    </div>
     <button class="btn-action" style="background: var(--war-red); color: white;" onclick="launchNativeTikTok()">بدء الاقتحام الآن</button>
-    <button onclick="closeSheet()" style="width:100%; background:none; border:none; color:grey; font-size:1.1rem;">تراجع</button>
+    <button onclick="closeSheet()" style="width:100%; background:none; border:none; color:grey;">تراجع</button>
 </div>
 
 <div class="modal-sheet" id="s3">
     <div class="sheet-handle"></div>
-    <h2 style="text-align:center; color:var(--gold);">مدفعية الجيميل (600 حرف)</h2>
+    <div class="instruction-frame">
+        <span class="instruction-title">⚠️ تعليمات القيادة [بروتوكول 03]:</span>
+        <span class="instruction-text">شفرة 600 حرف تتضمن رابط الهدف أوتوماتيكياً. انسخ، أرسل، ثم كرر العملية.</span>
+    </div>
     <textarea id="mail-text" readonly></textarea>
-    <button class="btn-action" style="background: var(--gold); color: black;" onclick="generateMassiveReport()">🔄 توليد شفرة نووية جديدة</button>
-    <button class="btn-action" style="background: white; color: black;" onclick="sendFinalEmail()">🚀 تنفيذ القصف البريدي</button>
-    <button onclick="closeSheet()" style="width:100%; background:none; border:none; color:grey; font-size:1.1rem;">إغلاق الترسانة</button>
+    <button class="btn-action" style="background: var(--gold); color: black;" onclick="generateMassiveReport()">🔄 توليد شفرة نووية</button>
+    <button class="btn-action" style="background: white; color: black;" onclick="sendFinalEmail()">🚀 قصف الجيميل</button>
+    <button onclick="closeSheet()" style="width:100%; background:none; border:none; color:grey;">إغلاق</button>
 </div>
 
 <script>
-    // نظام الأصوات
+    // نظام الصوت
     const clickSnd = new Howl({ src: ['https://www.soundjay.com/buttons/button-19.mp3'], volume: 0.5 });
     const boomSnd = new Howl({ src: ['https://www.soundjay.com/sci-fi/sci-fi-03.mp3'], volume: 0.6 });
-    const bgMusic = new Howl({ src: ['https://assets.mixkit.co/active_storage/sfx/2070/2070-preview.mp3'], loop: true, volume: 0.2 });
+    // موسيقى الخلفية (Cyber Ambient)
+    const bgMusic = new Howl({ 
+        src: ['https://www.soundjay.com/sci-fi/sci-fi-hum-01.mp3'], 
+        loop: true, 
+        volume: 0.3 
+    });
 
     let finalTarget = "https://www.tiktok.com/@ELJELAD_DZ";
 
-    // محاكاة شاشة التحميل
     setTimeout(() => {
-        document.querySelector('.loading-progress').style.animation = 'none';
-        document.querySelector('.loading-progress').style.width = '100%';
         document.getElementById('entry-btn').style.display = 'block';
-        document.querySelector('h2').innerText = "النظام جاهز للعمل";
+        document.getElementById('status-text').innerText = "النظام جاهز للعمل";
     }, 2500);
 
     function launchApp() {
@@ -184,7 +182,6 @@
         const urlParams = new URLSearchParams(window.location.search);
         let captured = urlParams.get('target') || urlParams.get('url');
         if (captured) finalTarget = captured;
-
         document.getElementById('splash-screen').style.display = 'none';
         initMatrix();
         updateClock();
@@ -199,11 +196,12 @@
     function openSheet(id) {
         clickSnd.play();
         document.getElementById(id).classList.add('active');
-        document.getElementById('main-app').style.filter = 'blur(10px) brightness(0.5)';
+        document.getElementById('main-app').style.filter = 'blur(10px)';
         if(id === 's3') generateMassiveReport();
     }
 
     function closeSheet() {
+        clickSnd.play();
         document.querySelectorAll('.modal-sheet').forEach(s => s.classList.remove('active'));
         document.getElementById('main-app').style.filter = 'none';
     }
@@ -218,16 +216,14 @@
         clickSnd.play();
         const intros = ["Dear TikTok Safety Team,", "Official Violation Notice:", "To Legal Compliance Dept:"];
         const violations = [
-            `Account (${finalTarget}) is promoting extremist violence and harmful illegal activities via live-streams.`,
-            `User (${finalTarget}) is utilizing modded applications to bypass security protocols and ban systems.`,
-            `This profile (${finalTarget}) is consistently engaging in severe harassment and hate speech.`
+            `Account (${finalTarget}) is promoting extremist violence via live-streams.`,
+            `User (${finalTarget}) is bypassing security protocols with modded apps.`,
+            `Profile (${finalTarget}) is engaging in severe hate speech and harassment.`
         ];
         let report = intros[Math.floor(Math.random()*3)] + "\n\n" + violations[Math.floor(Math.random()*3)];
-        // إكمال النص ليتجاوز 600 حرف بدقة
-        const filler = " We strongly urge your moderation team to conduct a manual review of this user's recent activity. The content shared poses a direct threat to the community guidelines and international digital safety standards. A permanent hardware-ID (IMEI) ban is recommended to prevent further violations. ";
+        const filler = " We demand a manual review for community guideline 4.2. This account poses a direct threat to platform safety and user integrity. A hardware ban (IMEI) is strongly requested. ";
         while(report.length < 600) { report += filler; }
-        report += "\n\nReport_Hash: " + Math.random().toString(36).substring(2, 12).toUpperCase();
-
+        report += "\n\nID: #" + Math.random().toString(36).substring(2, 10).toUpperCase();
         document.getElementById('mail-text').value = report;
         navigator.clipboard.writeText(report);
     }
@@ -235,7 +231,7 @@
     function sendFinalEmail() {
         boomSnd.play();
         const body = encodeURIComponent(document.getElementById('mail-text').value);
-        window.location.href = `mailto:legal@tiktok.com,feedback@tiktok.com?subject=CRITICAL_VIOLATION_REPORT&body=${body}`;
+        window.location.href = `mailto:legal@tiktok.com,feedback@tiktok.com?subject=URGENT_REPORT&body=${body}`;
     }
 
     function strikeAction(url) {
@@ -247,8 +243,7 @@
         const canvas = document.getElementById('matrix-bg');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        const columns = Math.floor(canvas.width / 15);
-        const drops = Array(columns).fill(1);
+        const drops = Array(Math.floor(canvas.width / 15)).fill(1);
         function draw() {
             ctx.fillStyle = "rgba(0,0,0,0.05)"; ctx.fillRect(0,0,canvas.width,canvas.height);
             ctx.fillStyle = "#0f0"; ctx.font = "15px monospace";
