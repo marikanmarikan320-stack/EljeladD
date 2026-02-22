@@ -20,7 +20,7 @@
         
         #digital-clock { position: absolute; top: 40px; width: 100%; text-align: center; color: var(--cyber-green); font-size: 3.5rem; font-weight: bold; text-shadow: 0 0 20px var(--cyber-green); z-index: 10; }
 
-        /* أيقونة القمر الصناعي الجديدة */
+        /* أيقونة القمر الصناعي */
         #sat-info { position: absolute; top: 120px; width: 100%; text-align: center; color: var(--cyber-green); font-family: monospace; font-size: 0.8rem; z-index: 10; opacity: 0.7; }
 
         .bottom-dock { position: absolute; bottom: 30px; width: 100%; display: flex; justify-content: space-evenly; padding: 0 10px; z-index: 100; }
@@ -52,7 +52,7 @@
 
 <div class="app-container" id="main-app">
     <div id="digital-clock">00:00:00</div>
-    <div id="sat-info">SATELLITE CONN: ACTIVE [LAT: 34.05 / LONG: 118.24]</div>
+    <div id="sat-info">SATELLITE CONN: ACTIVE</div>
 
     <div class="bottom-dock">
         <div class="app-icon" onclick="openSheet('s1')">
@@ -66,10 +66,6 @@
         <div class="app-icon" onclick="openSheet('s3')">
             <div class="icon-shape" style="background: linear-gradient(135deg, #ffcc00, #ff9500);">☣️</div>
             <div class="app-name">المولد</div>
-        </div>
-        <div class="app-icon" onclick="openKillLog()">
-            <div class="icon-shape" style="background: linear-gradient(135deg, #444, #111);">💀</div>
-            <div class="app-name">سجل السقوط</div>
         </div>
     </div>
 </div>
@@ -90,22 +86,31 @@
     <div class="circular-logo"></div>
     <textarea id="mail-text" readonly></textarea>
     <button class="btn-action" style="background: var(--gold); color:black;" onclick="generateMassiveReport()">🔄 توليد ونسخ شفرة (600 حرف)</button>
-    <button class="btn-action" style="background: white; color:black;" onclick="sendFinalEmail()">🚀 قصف الجيميل</button>
+    <button class="btn-action" style="background: white; color:black;" onclick="sendFinalEmail()">🚀 قصف الجيميلات الرسمية</button>
     <button onclick="closeSheet()" style="width:100%; background:none; border:none; color:grey;">رجوع</button>
 </div>
 
 <script>
-    // --- نظام الصوت اليدوي المطور ---
+    // --- الأسطر البرمجية الجديدة (الصوت والجيميلات) ---
     const sounds = {
         click: new Audio("https://www.soundjay.com/mechanical/mechanical-clunk-1.mp3"),
         boom: new Audio("https://www.soundjay.com/mechanical/gun-shot-01.mp3"),
         reload: new Audio("https://www.soundjay.com/mechanical/gun-cocking-01.mp3"),
-        bg: new Audio("https://archive.org/download/boyka-music-remix/boyka.mp3") // رابط الأغنية المباشر
+        bg: new Audio("https://cdn.pixabay.com/audio/2022/10/14/audio_9045300f8b.mp3") // أغنية بويكا الحماسية
     };
+
+    // قائمة جيميلات إدارة تيك توك الرسمية (MENA)
+    const adminEmails = [
+        "legal@tiktok.com",
+        "feedback@tiktok.com",
+        "communitymanager.mena@tiktok.com",
+        "privacy@tiktok.com",
+        "info@tiktok.com"
+    ];
 
     function playSnd(name) {
         sounds[name].currentTime = 0;
-        sounds[name].play().catch(e => console.log("تفاعل مطلوب"));
+        sounds[name].play().catch(e => console.log("الصوت مفعل بعد الدخول"));
     }
 
     let targetURL = "https://www.tiktok.com/@ELJELAD_DZ";
@@ -118,18 +123,11 @@
         sounds.bg.play();
         document.getElementById('splash-screen').style.display = 'none';
         updateClock();
-        setInterval(updateSatInfo, 3000);
     }
 
     function updateClock() {
         document.getElementById('digital-clock').innerText = new Date().toLocaleTimeString('en-GB');
         setTimeout(updateClock, 1000);
-    }
-
-    function updateSatInfo() {
-        const lat = (Math.random() * 90).toFixed(2);
-        const long = (Math.random() * 180).toFixed(2);
-        document.getElementById('sat-info').innerText = `SATELLITE CONN: ACTIVE [LAT: ${lat} / LONG: ${long}]`;
     }
 
     function openSheet(id) {
@@ -147,11 +145,19 @@
 
     function generateMassiveReport() {
         playSnd('reload');
-        let report = `URGENT SECURITY NOTICE: Profile (${targetURL}) is violating major community protocols. `;
-        const filler = "System has detected extremist incitement and illegal mod use. Hardware ban requested immediately. ";
+        let report = `OFFICIAL REPORT: Account (${targetURL}) is violating Middle East community safety laws. `;
+        const filler = "Serious policy violations detected regarding violent incitement and security bypass. Hardware investigation is required. ";
         while(report.length < 600) { report += filler; }
         document.getElementById('mail-text').value = report;
         navigator.clipboard.writeText(report);
+    }
+
+    function sendFinalEmail() {
+        playSnd('boom');
+        const subject = "URGENT_POLICY_VIOLATION_MENA";
+        const body = encodeURIComponent(document.getElementById('mail-text').value);
+        // إرسال لجميع الجيميلات الرسمية دفعة واحدة
+        window.location.href = `mailto:${adminEmails.join(',')}?subject=${subject}&body=${body}`;
     }
 
     function launchNativeTikTok() {
@@ -160,19 +166,9 @@
         window.location.href = `intent://${clean}#Intent;package=com.zhiliaoapp.musically;scheme=https;end`;
     }
 
-    function sendFinalEmail() {
-        playSnd('boom');
-        window.location.href = `mailto:legal@tiktok.com?subject=VIOLATION&body=${encodeURIComponent(document.getElementById('mail-text').value)}`;
-    }
-
     function strikeAction(url) {
         playSnd('boom');
         setTimeout(() => { window.location.href = url; }, 500);
-    }
-
-    function openKillLog() {
-        playSnd('click');
-        alert("سجل السقوط: تم رصد 12 عملية ناجحة هذا الأسبوع.");
     }
 </script>
 </body>
