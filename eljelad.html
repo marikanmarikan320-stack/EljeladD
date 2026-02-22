@@ -3,219 +3,225 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>المنظومة النهائية | الجلاد الجزائري</title>
+    <title>منظومة الجلاد v15.2 - القتالية</title>
     <style>
-        :root { --glow: #00ff41; --accent: #00ccff; --smoke: rgba(200,200,200,0.4); }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        :root { --dz-green: #00ff41; --dz-red: #ff003c; --glow: #00ff41; --bg-dark: #050505; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body, html { 
             margin: 0; padding: 0; width: 100%; height: 100%; 
-            background: #000; font-family: 'Courier New', monospace; overflow: hidden;
+            background: #000; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow: hidden;
+            color: white;
         }
 
-        /* حاوية الهاتف الثابتة */
-        .phone-container {
-            width: 100vw; height: 100vh; max-width: 500px; margin: 0 auto;
-            border: 4px solid var(--glow); position: relative;
-            box-shadow: inset 0 0 20px var(--glow); animation: edgeGlow 2s infinite;
-        }
-        @keyframes edgeGlow { 0%, 100% { border-color: var(--glow); } 50% { border-color: #004411; } }
-
-        /* شاشة الغلاف */
+        /* غلاف الدخول */
         #splash-screen {
-            position: absolute; inset: 0; z-index: 9999; background: url('https://i.postimg.cc/vmdZn4vn/Screenshot-20260222-031125-Tik-Tok.jpg') no-repeat center center;
-            background-size: cover; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            position: fixed; inset: 0; z-index: 10000; background: #000;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
-        .welcome-box {
-            border: 3px double var(--glow); padding: 20px; background: rgba(0,0,0,0.8);
-            text-align: center; color: var(--glow); text-shadow: 0 0 10px var(--glow);
-            font-size: 1.2rem; font-weight: bold; animation: textPulse 1.5s infinite;
+
+        .bg-image {
+            position: absolute; inset: 0;
+            background: url('https://i.postimg.cc/vmdZn4vn/Screenshot-20260222-031125-Tik-Tok.jpg') no-repeat center center;
+            background-size: cover; opacity: 0.4; z-index: -1;
         }
 
         /* تأثير الدخان */
-        #smoke-effect {
-            position: absolute; inset: 0; pointer-events: none; z-index: 10000; display: none;
-            background: radial-gradient(circle, var(--smoke) 10%, transparent 70%);
-            filter: blur(40px); animation: smokeRise 3s forwards;
+        #smoke-screen {
+            position: fixed; inset: 0; z-index: 11000; pointer-events: none; display: none;
+            background: rgba(255,255,255,0.2); filter: blur(40px); animation: smoke 1s forwards;
         }
-        @keyframes smokeRise { 0% { opacity: 0; transform: scale(0.5); } 50% { opacity: 1; } 100% { opacity: 0; transform: scale(2); } }
+        @keyframes smoke { 0% { opacity: 0; transform: scale(0.8); } 100% { opacity: 0; transform: scale(1.5); } }
 
         /* الواجهة الرئيسية */
         #main-ui {
-            display: none; height: 100%; background: url('https://i.postimg.cc/j2fHMWGY/unnamed-3.jpg') no-repeat center center;
-            background-size: cover; position: relative;
-        }
-        .digital-clock { position: absolute; top: 15%; left: 50%; transform: translateX(-50%); color: var(--glow); font-size: 3rem; text-shadow: 0 0 15px var(--glow); }
-        
-        /* الرادار الهولوجرامي */
-        .radar {
-            position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%);
-            width: 250px; height: 250px; border-radius: 50%; border: 1px solid var(--glow);
-            background: conic-gradient(from 0deg, transparent, rgba(0,255,65,0.3));
-            animation: rotateRadar 4s linear infinite; opacity: 0.6;
-        }
-        @keyframes rotateRadar { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
-
-        /* الأزرار */
-        .btn-grid { position: absolute; bottom: 5%; width: 100%; padding: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .op-btn { 
-            background: rgba(0,0,0,0.9); border: 1px solid var(--glow); color: var(--glow);
-            padding: 15px; font-size: 0.8rem; cursor: pointer; border-radius: 5px; text-align: center;
+            display: none; height: 100%; position: relative;
+            background: radial-gradient(circle, #111 0%, #000 100%);
         }
 
-        /* النوافذ المنبثقة */
-        .window { 
-            display: none; position: absolute; inset: 10px; background: rgba(0,0,0,0.95);
-            border: 2px solid var(--accent); z-index: 5000; padding: 15px; overflow-y: auto;
-        }
-        .window-header { 
-            width: 100px; height: 100px; border-radius: 50%; margin: 0 auto;
-            border: 2px solid var(--glow); background: url('https://i.postimg.cc/vmdZn4vn/Screenshot-20260222-031125-Tik-Tok.jpg') center/cover;
-            animation: logoPulse 1s infinite;
-        }
-        @keyframes logoPulse { 0%, 100% { box-shadow: 0 0 5px var(--glow); } 50% { box-shadow: 0 0 20px var(--glow); } }
-        
-        .command-box { 
-            border: 1px solid var(--accent); background: rgba(0,20,40,0.8);
-            padding: 10px; color: #fff; font-size: 0.85rem; line-height: 1.4; margin-top: 15px;
+        /* تطبيقات الهاتف النائمة والمتوهجة */
+        .app-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px;
+            padding: 40px 20px; position: absolute; bottom: 10%; width: 100%;
         }
 
-        .strike-action { width: 100%; padding: 15px; background: var(--glow); color: #000; border: none; font-weight: bold; margin-top: 15px; cursor: pointer; }
+        .app-icon {
+            display: flex; flex-direction: column; align-items: center; gap: 8px;
+            cursor: pointer; transition: 0.3s; opacity: 0.6;
+        }
+
+        .app-icon:active { transform: scale(0.9); opacity: 1; }
+
+        .icon-box {
+            width: 65px; height: 65px; border-radius: 18px;
+            background: rgba(0, 255, 65, 0.1);
+            border: 2px solid var(--glow);
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.2);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; position: relative;
+        }
+
+        .app-icon:hover .icon-box {
+            box-shadow: 0 0 25px var(--glow);
+            background: rgba(0, 255, 65, 0.2);
+            opacity: 1;
+        }
+
+        .app-label { font-size: 0.75rem; font-weight: bold; color: var(--glow); text-shadow: 0 0 5px #000; }
+
+        /* نوافذ الهكر */
+        .hacker-window {
+            display: none; position: fixed; inset: 0; 
+            background: rgba(0, 5, 0, 0.98); z-index: 5000; padding: 20px;
+            border-top: 3px solid var(--glow); color: var(--glow);
+        }
+
+        .instruction-box {
+            border: 1px solid var(--glow); padding: 10px; margin: 15px 0;
+            background: rgba(0, 255, 0, 0.05); font-size: 0.8rem; border-right: 5px solid var(--glow);
+        }
+
+        textarea {
+            width: 100%; height: 250px; background: #000; color: var(--glow);
+            border: 1px solid var(--glow); padding: 10px; font-family: monospace; font-size: 0.8rem;
+        }
+
+        .strike-btn {
+            width: 100%; padding: 15px; background: var(--dz-red); color: white;
+            border: none; font-weight: bold; margin-top: 10px; box-shadow: 0 0 20px var(--dz-red);
+        }
+
+        #clock { position: absolute; top: 5%; width: 100%; text-align: center; font-size: 2.5rem; color: var(--glow); font-weight: 100; }
     </style>
 </head>
 <body>
 
-<audio id="click-sound"><source src="https://www.soundjay.com/buttons/button-09a.mp3" type="audio/mpeg"></audio>
-<iframe id="bg-music" style="display:none" width="100" height="100" src="https://www.youtube.com/embed/hvJ2VES1fjU?autoplay=1&loop=1&playlist=hvJ2VES1fjU" allow="autoplay"></iframe>
+<audio id="snd-click" src="https://www.soundjay.com/buttons/button-19.mp3"></audio>
+<audio id="snd-boot" src="https://www.soundjay.com/button/button-09.mp3"></audio>
+<div id="music-container">
+    <iframe id="bg-music" width="0" height="0" src="" frameborder="0" allow="autoplay"></iframe>
+</div>
 
-<div class="phone-container">
-    <div id="smoke-effect"></div>
+<div id="smoke-screen"></div>
 
-    <div id="splash-screen">
-        <div class="welcome-box">
-            منظومة جيش التبليغ الجزائري<br>بقيادة الجلاد الجزائري ترحب بكم
-        </div>
-        <button onclick="startSequence()" style="margin-top:20px; padding:15px 30px; background:var(--glow); border:none; border-radius:50px; font-weight:bold; cursor:pointer;">دخول غرفة العمليات ⚔️</button>
+<div id="splash-screen">
+    <div class="bg-image"></div>
+    <div style="text-align:center; z-index:10; margin-bottom:30px;">
+        <h2 style="color:var(--dz-green); text-shadow: 0 0 20px var(--dz-green);">قيادة الجلاد الجزائري</h2>
+        <p>منظومة الردع الإلكتروني v15.2</p>
     </div>
+    <button onclick="bootSystem()" style="z-index:20; padding:18px 50px; background:none; color:var(--glow); border:2px solid var(--glow); border-radius:5px; font-weight:bold; cursor:pointer; text-transform:uppercase; letter-spacing:2px;">دخول القاعة ⚔️</button>
+</div>
 
-    <div id="main-ui">
-        <div class="digital-clock" id="clock">00:00:00</div>
-        <div class="radar"></div>
-        
-        <div class="btn-grid">
-            <div class="op-btn" onclick="openWin('win1')">📋 مركز المساعدة</div>
-            <div class="op-btn" onclick="openWin('win2')">🎬 قصف يدوي</div>
-            <div class="op-btn" onclick="openWin('win3')">🔄 مولد البلاغات</div>
-            <div class="op-btn" onclick="location.reload()">🔄 تحديث المنظومة</div>
+<div id="main-ui">
+    <div id="clock">00:00:00</div>
+    
+    <div class="app-grid">
+        <div class="app-icon" onclick="openWin('win1')">
+            <div class="icon-box">🛡️</div>
+            <div class="app-label">الدعم الفني</div>
         </div>
-    </div>
-
-    <div class="window" id="win1">
-        <div class="window-header"></div>
-        <div class="command-box">
-            📜 <b>تعليمات القيادة:</b><br>
-            1. اضغط الزر بالأسفل لفتح مركز المساعده.<br>
-            2. اختر (التبليغ عن انتهاك) -> (التبليغ عن حساب).<br>
-            3. ضع رابط الهدف واسم المستخدم بريدك الالكتروني.<br>
-            4. الصق الوصف الرسمي الذي ستولده من الزر الثالث.
+        <div class="app-icon" onclick="openWin('win2')">
+            <div class="icon-box">🚀</div>
+            <div class="app-label">قصف مباشر</div>
         </div>
-        <button class="strike-action" onclick="goStrike('https://www.tiktok.com/legal/report/feedback')">إرسال الاستمارة</button>
-        <button onclick="closeWin()" style="width:100%; background:none; color:red; border:none; margin-top:10px;">رجوع</button>
-    </div>
-
-    <div class="window" id="win2">
-        <div class="window-header"></div>
-        <div class="command-box">
-            📜 <b>تعليمات القيادة:</b><br>
-            سيتم تحويلك لحساب الهدف مباشرة. اضغط بلاغ على (الحساب) و (البث المباشر) بكل قوة. استمر بالضرب حتى سقوط الهدف نهائياً.
+        <div class="app-icon" onclick="openWin('win3')">
+            <div class="icon-box">☢️</div>
+            <div class="app-label">المولد النووي</div>
         </div>
-        <button class="strike-action" style="background:#ff0050; color:white;" onclick="goStrike(targetUrl)">قصف الحساب الآن</button>
-        <button onclick="closeWin()" style="width:100%; background:none; color:red; border:none; margin-top:10px;">رجوع</button>
-    </div>
-
-    <div class="window" id="win3">
-        <div class="window-header"></div>
-        <div class="command-box">
-            📜 <b>تعليمات القيادة:</b><br>
-            اضغط الزر الأصفر لتوليد بلاغ (600 حرف). سيتم النسخ تلقائياً. ثم اضغط زر الجيميل لإرسال البلاغ لجميع إدارات التيك توك بضغطة واحدة.
-        </div>
-        <textarea id="matrix-out" style="width:100%; height:100px; background:#000; color:var(--glow); border:1px solid var(--glow); margin-top:10px; font-size:0.7rem;" readonly></textarea>
-        <button class="strike-action" style="background:#ffcc00;" onclick="generateMatrix()">🔄 توليد ونسخ البلاغ</button>
-        <button class="strike-action" style="background:#007aff; color:white;" onclick="goStrike('mailto')">📧 إرسال عبر الجيميل</button>
-        <button onclick="closeWin()" style="width:100%; background:none; color:red; border:none; margin-top:10px;">رجوع</button>
     </div>
 </div>
 
-<script>
-    const clickSnd = document.getElementById('click-sound');
-    const urlParams = new URLSearchParams(window.location.search);
-    const targetUrl = urlParams.get('target') || "https://www.tiktok.com/@USER";
+<div class="hacker-window" id="win1">
+    <h3>[ مركز القيادة والتحكم ]</h3>
+    <div class="instruction-box">توجيه: اختر "التبليغ عن انتهاك" ثم حدد "الحساب" لاستخدام البيانات الرسمية المولدة.</div>
+    <button class="strike-btn" onclick="fireAction('https://www.tiktok.com/legal/report/feedback')">فتح بوابة التبليغ</button>
+    <button onclick="closeWin()" style="width:100%; background:none; color:grey; border:none; margin-top:20px;">تراجع</button>
+</div>
 
-    function startSequence() {
-        clickSnd.play();
-        vibrate(200);
-        document.getElementById('smoke-effect').style.display = 'block';
+<div class="hacker-window" id="win2">
+    <h3>[ القصف اليدوي المكثف ]</h3>
+    <div class="instruction-box">أوامر: سيتم تحويلك للحساب. قم بالتبليغ اليدوي المتكرر على البث المباشر.</div>
+    <button class="strike-btn" onclick="fireAction(targetAccount)">هجوم شامل</button>
+    <button onclick="closeWin()" style="width:100%; background:none; color:grey; border:none; margin-top:20px;">تراجع</button>
+</div>
+
+<div class="hacker-window" id="win3">
+    <h3>[ مصفوفة البلاغات القانونية ]</h3>
+    <div class="instruction-box">الحالة: يتم الآن صياغة بلاغ رسمي 600 حرف (خوارزمية الجلاد).</div>
+    <textarea id="report-text" readonly></textarea>
+    <button class="strike-btn" style="background:var(--glow); color:black;" onclick="generateReport()">🔄 توليد البلاغ النووي</button>
+    <button class="strike-btn" style="background:#007aff;" onclick="fireAction('mailto')">📧 إرسال عبر الإيميل</button>
+    <button onclick="closeWin()" style="width:100%; background:none; color:grey; border:none; margin-top:20px;">تراجع</button>
+</div>
+
+<script>
+    const targetAccount = "https://www.tiktok.com/@ELJELAD_DZ";
+    const musicUrl = "https://www.youtube.com/embed/hvJ2VES1fjU?autoplay=1&loop=1&playlist=hvJ2VES1fjU";
+    
+    function bootSystem() {
+        document.getElementById('snd-boot').play();
+        document.getElementById('smoke-screen').style.display = 'block';
         setTimeout(() => {
             document.getElementById('splash-screen').style.display = 'none';
             document.getElementById('main-ui').style.display = 'block';
-            document.getElementById('smoke-effect').style.display = 'none';
-        }, 3000);
+            toggleMusic(true);
+        }, 1200);
+    }
+
+    function toggleMusic(on) {
+        const m = document.getElementById('bg-music');
+        m.src = on ? musicUrl : "";
     }
 
     function openWin(id) {
-        clickSnd.play();
-        vibrate(50);
+        document.getElementById('snd-click').play();
+        toggleMusic(false); // إيقاف الموسيقى عند العمل
         document.getElementById(id).style.display = 'block';
+        if(id === 'win3') generateReport();
     }
 
     function closeWin() {
-        document.querySelectorAll('.window').forEach(w => w.style.display = 'none');
+        document.querySelectorAll('.hacker-window').forEach(w => w.style.display = 'none');
+        toggleMusic(true); // إعادة الموسيقى عند العودة للواجهة
     }
 
-    function vibrate(ms) { if(navigator.vibrate) navigator.vibrate(ms); }
-
-    function goStrike(url) {
-        clickSnd.play();
-        vibrate([100, 50, 100]);
-        document.getElementById('smoke-effect').style.display = 'block';
-        setTimeout(() => {
-            if(url === 'mailto') {
-                const emails = "legal@tiktok.com,feedback@tiktok.com,privacy@tiktok.com,reports@tiktok.com";
-                const body = encodeURIComponent(document.getElementById('matrix-out').value);
-                window.location.href = `mailto:${emails}?subject=Safety_Report&body=${body}`;
-            } else {
-                window.location.href = url;
-            }
-        }, 3000);
-    }
-
-    function generateMatrix() {
-        vibrate(100);
-        const intros = ["Urgent safety compliance report regarding account: ", "Formal investigation request for profile: ", "Immediate escalation notice for: "];
-        const cores = [" This user is persistently promoting extremist content and targeted harassment. The broadcast involves severe violations of community standards and international safety protocols. ", " We have detected organized cyber-bullying and hate speech originating from this account. Such behavior is detrimental to the digital environment and requires immediate manual intervention. "];
-        const ends = [" Permanent deactivation is requested to maintain platform integrity. Thank you, Global Security Enforcement.", " We expect a swift resolution and account suspension. Regards, Safety Review Board."];
+    function generateReport() {
+        const intros = ["Dear TikTok Safety Team,", "To the TikTok Content Moderation Department,", "Formal Safety Violation Report for Review:"];
+        const bodies = [
+            "I am writing to report a severe violation of community guidelines. The targeted account is utilizing unauthorized third-party modified applications to bypass platform security filters and evade live-stream restrictions. This systematic exploitation of the infrastructure constitutes a direct threat to the integrity of the community.",
+            "The user is actively promoting extremist ideologies and engaging in coordinated cyber-bullying. Our monitoring indicates the use of hacked APKs designed to prevent account suspension and mask illegal activities from automated detection systems. This profile is involved in persistent harassment and the spread of violent content.",
+            "Persistent cyber-harassment and hate speech are being broadcasted via this channel. The operator uses specialized tools to bypass the reporting system, which is a violation of the Terms of Service. We request an immediate manual audit of the account's metadata and live-stream logs to ensure global safety standards are maintained."
+        ];
+        const closings = ["We trust TikTok will take immediate action to protect its users.", "Thank you for your dedication to platform safety.", "Sincerely, Global Safety Compliance Observer."];
         
-        let report = intros[Math.floor(Math.random()*intros.length)] + targetUrl + cores[Math.floor(Math.random()*cores.length)] + ends[Math.floor(Math.random()*ends.length)];
+        // خوارزمية التوليد لضمان 600 حرف بدون تكرار
+        let report = intros[Math.floor(Math.random()*intros.length)] + "\n\n";
+        report += bodies[0] + " " + bodies[1] + " " + bodies[2] + "\n\n";
+        report += "Target: " + targetAccount + "\n\n";
+        report += closings[Math.floor(Math.random()*closings.length)];
         
-        while(report.length < 600) { report += " This documentation is part of an official security audit and policy compliance check."; }
-        
-        document.getElementById('matrix-out').value = report;
+        document.getElementById('report-text').value = report;
         navigator.clipboard.writeText(report);
-        alert("تم التوليد والنسخ تلقائياً!");
     }
 
-    function updateClock() {
-        const now = new Date();
-        document.getElementById('clock').innerText = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0') + ":" + now.getSeconds().toString().padStart(2,'0');
+    function fireAction(url) {
+        document.getElementById('snd-boot').play();
+        if(url === 'mailto') {
+            const emails = "legal@tiktok.com,feedback@tiktok.com,privacy@tiktok.com";
+            const body = encodeURIComponent(document.getElementById('report-text').value);
+            window.location.href = `mailto:${emails}?subject=Urgent_Policy_Violation_Report&body=${body}`;
+        } else {
+            window.open(url, '_blank');
+        }
     }
-    setInterval(updateClock, 1000); updateClock();
 
-    // إدارة الموسيقى عند الخروج والعودة
-    document.addEventListener("visibilitychange", () => {
-        const music = document.getElementById('bg-music');
-        if (document.hidden) music.src = "";
-        else music.src = "https://www.youtube.com/embed/hvJ2VES1fjU?autoplay=1&loop=1&playlist=hvJ2VES1fjU";
-    });
+    function updateTime() {
+        const n = new Date();
+        document.getElementById('clock').innerText = n.getHours().toString().padStart(2,'0')+":"+n.getMinutes().toString().padStart(2,'0')+":"+n.getSeconds().toString().padStart(2,'0');
+    }
+    setInterval(updateTime, 1000); updateTime();
 </script>
+
 </body>
 </html>
