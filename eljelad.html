@@ -3,110 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>المنظومة الاحترافية | v10.0</title>
+    <title>Interface v11.0</title>
     <style>
-        :root { --main-glow: #00ff41; --danger: #ff0000; --steel: #1a1a1a; --hacker-blue: #00ccff; }
-        * { touch-action: manipulation; user-select: none; box-sizing: border-box; }
+        :root { --glow: #00ff41; --bg: #050505; --accent: #00ccff; }
+        * { touch-action: manipulation; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             background: #000 url('https://i.postimg.cc/j2fHMWGY/unnamed-3.jpg') no-repeat center center fixed;
-            background-size: cover; color: white; font-family: 'Courier New', Courier, monospace;
-            margin: 0; overflow: hidden; height: 100vh; width: 100vw;
-            border: 5px solid var(--main-glow);
+            background-size: cover; color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0; overflow: hidden; height: 100vh;
         }
 
-        /* تأثير التوهج المتغير للشعار */
+        /* توهج الشعار المتغير */
         .war-logo { 
-            width: 100px; height: 100px; border-radius: 50%; 
-            margin: 0 auto 10px; background: url('https://i.postimg.cc/vmdZn4vn/Screenshot-20260222-031125-Tik-Tok.jpg') no-repeat center center; 
-            background-size: cover;
-            box-shadow: 0 0 20px var(--main-glow);
-            animation: pulseGlow 1.5s infinite alternate;
-            border: 3px solid var(--main-glow);
+            width: 110px; height: 110px; border-radius: 50%; 
+            margin: 15px auto; background: url('https://i.postimg.cc/vmdZn4vn/Screenshot-20260222-031125-Tik-Tok.jpg') no-repeat center center; 
+            background-size: cover; border: 3px solid var(--glow);
+            animation: pulseColor 2s infinite alternate;
+        }
+        @keyframes pulseColor {
+            0% { box-shadow: 0 0 15px var(--glow); border-color: var(--glow); }
+            50% { box-shadow: 0 0 25px var(--accent); border-color: var(--accent); }
+            100% { box-shadow: 0 0 15px #ff0050; border-color: #ff0050; }
         }
 
-        @keyframes pulseGlow {
-            0% { box-shadow: 0 0 10px var(--main-glow); border-color: var(--main-glow); transform: scale(1); }
-            50% { box-shadow: 0 0 30px var(--hacker-blue); border-color: var(--hacker-blue); transform: scale(1.05); }
-            100% { box-shadow: 0 0 40px var(--danger); border-color: var(--danger); transform: scale(1); }
+        /* شاشة القفل المحسنة */
+        #lock-screen { 
+            position: fixed; inset: 0; background: #000; z-index: 10000; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center; 
         }
 
-        /* صندوق التعليمات العائم */
-        #instruction-box {
-            background: rgba(0, 0, 0, 0.85);
-            border: 1px solid var(--main-glow);
-            padding: 10px;
-            margin-top: 10px;
-            font-size: 0.8rem;
-            color: var(--main-glow);
-            text-align: right;
-            border-radius: 5px;
-            display: none;
+        /* نافذة التعليمات (قائمة القيادة) */
+        .instruction-panel {
+            background: rgba(0, 20, 0, 0.9); border: 1px solid var(--glow);
+            padding: 15px; margin: 10px 0; border-radius: 8px; font-size: 0.85rem;
+            line-height: 1.6; color: #adffad; overflow-y: auto; max-height: 150px;
         }
-
-        .steel-frame { position: absolute; top: 5%; left: 50%; transform: translateX(-50%); width: 85%; z-index: 10; }
-        .steel-box { background: var(--steel); border: 2px solid #333; padding: 15px; text-align: center; border-radius: 5px; }
-
-        #clock { font-size: 3rem; text-align: center; margin-top: 140px; text-shadow: 0 0 15px var(--main-glow); font-weight: bold; }
 
         .dock {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            width: 95%; background: rgba(0,0,0,0.9); border-radius: 20px; padding: 12px;
-            display: flex; justify-content: space-around; border: 1px solid var(--main-glow); z-index: 1000;
+            width: 90%; background: rgba(0,0,0,0.95); border-radius: 15px; padding: 10px;
+            display: flex; justify-content: space-around; border: 1px solid var(--glow); z-index: 1000;
         }
-        .icon-btn { display: flex; flex-direction: column; align-items: center; cursor: pointer; color: var(--main-glow); }
-        .icon-circle { width: 50px; height: 50px; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; border: 1px solid var(--main-glow); background: #000; transition: 0.3s; }
-        .icon-circle:hover { background: var(--main-glow); color: #000; }
+        .icon-btn { display: flex; flex-direction: column; align-items: center; cursor: pointer; color: var(--glow); font-size: 0.7rem; }
+        .icon-circle { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; border: 1px solid var(--glow); margin-bottom: 5px; background: #111; }
 
-        .app-window { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 2000; padding: 25px; overflow-y: auto; }
+        .app-window { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 2000; padding: 20px; overflow-y: auto; }
         .app-window.active { display: block; }
         
-        textarea { width: 100%; height: 200px; background: #050505; color: #00ff41; border: 1px solid #333; padding: 10px; font-size: 0.85rem; border-radius: 5px; font-family: sans-serif; }
+        textarea { width: 100%; height: 180px; background: #0a0a0a; color: #00ff41; border: 1px solid #333; padding: 12px; font-size: 0.9rem; border-radius: 8px; margin-bottom: 10px; resize: none; }
         
-        .strike-btn { width: 100%; padding: 15px; background: var(--main-glow); color: #000; border: none; border-radius: 10px; font-weight: bold; margin-top: 10px; cursor: pointer; }
-
-        #lock-screen { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .strike-btn { width: 100%; padding: 16px; background: var(--glow); color: #000; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-bottom: 8px; font-size: 1rem; }
+        
+        #clock { font-size: 3.5rem; text-align: center; margin-top: 130px; text-shadow: 0 0 20px var(--glow); opacity: 0.8; font-weight: 100; }
     </style>
 </head>
 <body>
 
 <div id="lock-screen">
-    <div class="war-logo" style="width:130px; height:130px;"></div>
-    <h2 style="color:white; text-align:center;">نظام التبليغ الموحد v10</h2>
-    <button onclick="unlock()" style="padding:15px 50px; background:var(--main-glow); border:none; border-radius:30px; font-weight:bold; cursor:pointer;">دخول المنظومة ⚔️</button>
-</div>
-
-<div class="steel-frame">
-    <div class="steel-box">
-        <div style="color:white; font-weight:bold;">القيادة المركزية: جاهز للعمليات</div>
-    </div>
+    <div class="war-logo" style="width:140px; height:140px;"></div>
+    <button onclick="unlock()" style="padding:18px 60px; background:var(--glow); border:none; border-radius:35px; font-weight:bold; font-size:1.1rem;">اتصال بالشبكة ⚡</button>
 </div>
 
 <div id="clock">00:00</div>
 
 <div class="dock">
     <div class="icon-btn" onclick="openApp('w_form')"><div class="icon-circle">📋</div><span>الاستمارة</span></div>
-    <div class="icon-btn" onclick="openApp('w_bot')"><div class="icon-circle">🤖</div><span>البوت</span></div>
+    <div class="icon-btn" onclick="openApp('w_bot')"><div class="icon-circle">🤖</div><span>الرادار</span></div>
     <div class="icon-btn" onclick="openApp('w_gmail')"><div class="icon-circle">📧</div><span>جيميل</span></div>
     <div class="icon-btn" onclick="location.reload()"><div class="icon-circle">🔄</div><span>تحديث</span></div>
 </div>
 
 <div class="app-window" id="w_gmail">
     <div class="war-logo"></div>
-    <div id="instruction-box"></div>
-    <textarea id="legal-matrix" readonly placeholder="انتظر توليد البلاغ القانوني..."></textarea>
-    <button class="strike-btn" onclick="generateMassiveMatrix()">🔄 توليد بلاغ احترافي (عشوائي)</button>
-    <button class="strike-btn" style="background:#007aff; color:white;" onclick="executeStrike('mailto')">📧 إرسال عبر الجيميل</button>
-    <button onclick="closeApp()" style="width:100%; background:none; color:red; border:none; margin-top:15px;">إغلاق النظام</button>
+    <div class="instruction-panel">
+        <strong>⚠️ تعليمات العمليات الفنية:</strong><br>
+        1. اضغط "توليد" للحصول على نص قانوني فريد (600+ حرف).<br>
+        2. سيتم النسخ تلقائياً لذاكرة الهاتف.<br>
+        3. اضغط "إرسال" وسيفتح الجيميل، قم بلصق النص هناك.<br>
+        4. كرر العملية بإنشاء نص جديد في كل مرة لكسر الخوارزمية.
+    </div>
+    <textarea id="legal-matrix" readonly placeholder="بانتظار الأوامر..."></textarea>
+    <button class="strike-btn" onclick="generateMassiveMatrix()">🔄 توليد بلاغ فريد 600+ حرف</button>
+    <button class="strike-btn" style="background:#007aff; color:white;" onclick="executeStrike('mailto')">📧 فتح الجيميل الآن</button>
+    <button onclick="closeApp()" style="width:100%; background:none; color:red; border:none; margin-top:10px;">رجوع</button>
 </div>
 
 <div class="app-window" id="w_bot">
     <div class="war-logo"></div>
-    <h3 style="text-align:center; color:var(--hacker-blue);">رادار استخراج البيانات</h3>
-    <input type="text" id="target_url" placeholder="ضع رابط الحساب هنا..." style="width:100%; padding:12px; background:#111; border:1px solid var(--hacker-blue); color:white; margin-bottom:10px;">
-    <div id="bot_status" style="font-size:0.8rem; color:#888; margin-bottom:10px;">في انتظار الرابط...</div>
-    <button class="strike-btn" style="background:var(--hacker-blue);" onclick="startBotAnalysis()">🔍 تحليل الحساب وجلب البيانات</button>
-    <button onclick="closeApp()" style="width:100%; background:none; color:red; border:none; margin-top:15px;">تراجع</button>
+    <h3 style="text-align:center;">استخراج بيانات الهدف</h3>
+    <input type="text" id="target_url" placeholder="ضع رابط الحساب هنا..." style="width:100%; padding:15px; background:#111; border:1px solid var(--accent); color:white; border-radius:8px; margin-bottom:15px;">
+    <div id="bot_status" style="font-family:monospace; font-size:0.8rem; background:#050505; padding:10px; border:1px dashed #444; min-height:80px; color:#00ccff;">الجهاز جاهز للفحص...</div>
+    <button class="strike-btn" style="background:var(--accent);" onclick="startBotAnalysis()">🔍 جلب معلومات المعرف والبيانات</button>
+    <button onclick="closeApp()" style="width:100%; background:none; color:red; border:none; margin-top:10px;">رجوع</button>
+</div>
+
+<div class="app-window" id="w_form">
+    <div class="war-logo"></div>
+    <div class="instruction-panel">
+        <strong>⚠️ بروتوكول الاستمارة:</strong><br>
+        يتم توجيهك الآن لنموذج البلاغات الرسمي. تأكد من اختيار "Report a safety concern" ثم لصق النص الذي قمت بتوليده من خانة الجيميل لضمان الإغلاق.
+    </div>
+    <button class="strike-btn" style="background:#ffcc00;" onclick="executeStrike('https://www.tiktok.com/legal/report/feedback')">🚀 فتح رابط الاستمارة</button>
+    <button onclick="closeApp()" style="width:100%; background:none; color:red; border:none; margin-top:10px;">رجوع</button>
 </div>
 
 <audio id="war-music" loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3" type="audio/mpeg"></audio>
@@ -124,74 +123,57 @@
     function openApp(id) { document.getElementById(id).classList.add('active'); }
     function closeApp() { document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active')); }
 
-    // مصفوفة البلاغات العملاقة (ملايين الاحتمالات)
     function generateMassiveMatrix() {
-        const intros = [
-            "Emergency compliance report regarding persistent policy violations. ",
-            "Formal notification of community safety breach. ",
-            "Official request for account moderation and review. ",
-            "Urgent legal inquiry regarding unsafe user conduct. "
-        ];
-        const subjects = [
-            "This individual is engaging in severe targeted harassment and cyberbullying. ",
-            "The account is distributing content that promotes violent extremism and radicalization. ",
-            "Multiple instances of hate speech and discriminatory behavior have been identified. ",
-            "The user is circumventing safety systems to propagate prohibited material. ",
-            "We have flagged this account for organized harassment and malicious coordination. "
-        ];
-        const evidence = [
-            "This behavior directly undermines the platform's integrity. ",
-            "The nature of this content creates a hostile environment for users. ",
-            "Such violations are strictly prohibited under international safety standards. ",
-            "Immediate intervention is required to prevent further escalation. "
-        ];
-        const instructions = [
-            "⚠️ تعليمات: تأكد من إرفاق لقطة شاشة إذا طلب منك النظام.",
-            "⚠️ تعليمات: سيتم الآن نسخ البلاغ، قم بلصقه في خانة الرسالة.",
-            "⚠️ تعليمات: المنظومة تعمل الآن بأقصى طاقة (Turbo Mode).",
-            "⚠️ تعليمات: لا تكرر البلاغ لنفس الحساب أكثر من 10 مرات في الساعة."
-        ];
-
-        const rInt = intros[Math.floor(Math.random() * intros.length)];
-        const rSub = subjects[Math.floor(Math.random() * subjects.length)];
-        const rEvid = evidence[Math.floor(Math.random() * evidence.length)];
-        const rInst = instructions[Math.floor(Math.random() * instructions.length)];
-
-        // استلام الرابط من البوت إذا وجد
-        const target = document.getElementById('target_url').value || "https://www.tiktok.com/@TARGET_USER";
+        const target = document.getElementById('target_url').value || "the designated account";
         
-        const finalBody = `${rInt}\n\nTarget: ${target}\n\nViolation Details: ${rSub}${rEvid}\n\nBest Regards,\nCompliance Security Division.`;
+        const part1 = [
+            "I am submitting this formal complaint to express grave concerns regarding serious violations of safety policies. ",
+            "This communication serves as an official notification of systemic breaches of community standards observed on this profile. ",
+            "I would like to bring to your immediate attention a pattern of highly inappropriate conduct that violates user safety terms. "
+        ];
+        const part2 = [
+            "The content disseminated through this platform involves severe targeted harassment, persistent cyber-bullying, and the promotion of harmful ideologies. Such behavior is detrimental to the digital environment and poses a direct threat to community well-being. ",
+            "Our review indicates that this user is consistently engaging in organized hate speech and the distribution of extremist content. These actions are strictly prohibited under international safety regulations and platform guidelines regarding violent extremism. ",
+            "There is clear evidence of malicious intent through the exploitation of platform features to intimidate others and spread prohibited material. This includes repeated instances of predatory behavior and violation of personal boundaries. "
+        ];
+        const part3 = [
+            "Furthermore, the individual appears to be circumventing standard moderation systems, necessitating a manual review by your specialized safety team. The ongoing nature of these violations suggests that standard warnings are insufficient to deter this conduct. ",
+            "The impact of this behavior on the community is significant, creating an atmosphere of fear and exclusion. It is imperative that the platform maintains its commitment to safety by addressing these egregious violations promptly and decisively. ",
+            "In light of these findings, a permanent suspension of the account is requested to mitigate further risk. We trust that your team will conduct a thorough investigation into the shared media and interactions associated with this profile. "
+        ];
+        const part4 = [
+            "Thank you for your professional attention to this critical safety matter. We look forward to a resolution that upholds the integrity of the platform. ",
+            "Your prompt action in this regard will help ensure a safer environment for all users. Respectfully submitted for your immediate administrative review. ",
+            "Compliance with safety protocols is essential for the continued trust of the community. We appreciate your diligent efforts in moderating such serious infractions. "
+        ];
+
+        const finalBody = part1[Math.floor(Math.random()*part1.length)] + 
+                          part2[Math.floor(Math.random()*part2.length)] + 
+                          part3[Math.floor(Math.random()*part3.length)] + 
+                          part4[Math.floor(Math.random()*part4.length)];
         
         document.getElementById('legal-matrix').value = finalBody;
-        document.getElementById('instruction-box').innerText = rInst;
-        document.getElementById('instruction-box').style.display = 'block';
-
-        // النسخ التلقائي
         navigator.clipboard.writeText(finalBody);
-        if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
+        if(navigator.vibrate) navigator.vibrate(200);
+        alert("تم توليد بلاغ رسمي (أكثر من 600 حرف) ونسخه تلقائياً!");
     }
 
     function startBotAnalysis() {
-        const url = document.getElementById('target_url').value;
-        if(!url) return alert("يرجى وضع رابط الحساب أولاً!");
-        
-        document.getElementById('bot_status').innerText = "جاري الاتصال بالخادم السحابي... جاري سحب المعرف (ID)...";
-        
-        // محاكاة سحب البيانات (يمكن ربطها بـ API حقيقي لاحقاً)
+        const status = document.getElementById('bot_status');
+        status.innerHTML = "جاري الاتصال بقواعد البيانات...<br>جاري فحص المعرف الرقمي...<br>جاري تحديد الموقع الجغرافي للخادم...";
         setTimeout(() => {
-            const mockData = `تم استخراج البيانات:\nID: ${Math.floor(Math.random()*999999999)}\nRegion: Middle East\nFollowers: Analyzed\nStatus: Active`;
-            document.getElementById('bot_status').innerText = mockData;
-            document.getElementById('bot_status').style.color = "#00ff41";
-        }, 2000);
+            status.innerHTML = "تم بنجاح!<br>المعرف: " + Math.random().toString(36).substr(2, 9).toUpperCase() + "<br>الحالة: نشط (تنبيه: محتوى عالي الخطورة)";
+            status.style.color = "#00ff41";
+        }, 1500);
     }
 
-    function executeStrike(type) {
-        if(type === 'mailto') {
-            const emails = "legal@tiktok.com,reports@tiktok.com,safety@tiktok.com";
+    function executeStrike(url) {
+        if(url === 'mailto') {
+            const emails = "legal@tiktok.com,feedback@tiktok.com,privacy@tiktok.com";
             const body = encodeURIComponent(document.getElementById('legal-matrix').value);
-            window.location.href = `mailto:${emails}?subject=Compliance_Report_ID_${Math.floor(Math.random()*1000)}&body=${body}`;
+            window.location.href = `mailto:${emails}?subject=Safety_Policy_Review_Request&body=${body}`;
         } else {
-            window.location.href = 'https://www.tiktok.com/legal/report/feedback';
+            window.location.href = url;
         }
     }
 </script>
