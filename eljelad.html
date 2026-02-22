@@ -3,147 +3,434 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>منظومة الجلاد | V8 FINAL PRO</title>
+    <title>منظومة جيش التبليغ الجزائري - COMMANDER AL JALLAD</title>
     <style>
-        :root { --neon: #00ff41; --glow: 0 0 15px #00ff41; }
-
-        body, html {
-            margin: 0; padding: 0; height: 100vh; width: 100vw;
-            background: #000; display: flex; justify-content: center; align-items: center;
-            overflow: hidden; font-family: sans-serif;
+        :root {
+            --hacker-green: #00ff41;
+            --hacker-red: #ff0041;
+            --glass-bg: rgba(0, 0, 0, 0.7);
+            --glow-effect: 0 0 10px var(--hacker-green), 0 0 20px var(--hacker-green);
         }
 
-        /* الإطار الخارجي المتوهج */
-        .phone {
-            width: 370px; height: 780px;
-            border: 4px solid var(--neon);
-            border-radius: 45px;
+        body {
+            background-color: #000;
+            margin: 0; padding: 0;
+            overflow: hidden; /* يمنع التمرير */
+            height: 100vh; width: 100vw;
+            display: flex; justify-content: center; align-items: center;
+            font-family: 'Segoe UI', sans-serif;
+            -webkit-touch-callout: none; /* لمنع ظهور قائمة الضغط المطول في iOS */
+            -webkit-user-select: none; /* لمنع تحديد النص في iOS */
+            -khtml-user-select: none; /* لمنع تحديد النص في Chrome/Safari */
+            -moz-user-select: none; /* لمنع تحديد النص في Firefox */
+            -ms-user-select: none; /* لمنع تحديد النص في IE/Edge */
+            user-select: none; /* لمنع تحديد النص */
+        }
+
+        /* حاوية الهاتف الثابتة */
+        .phone-display {
+            width: 380px; /* عرض ثابت للهاتف */
+            height: 780px; /* ارتفاع ثابت للهاتف */
+            background: #111;
+            border-radius: 40px;
+            box-shadow: 0 0 50px rgba(0,255,65,0.7), inset 0 0 30px rgba(0,255,65,0.5);
             position: relative;
-            background: url('https://i.postimg.cc/j2fHMWGY/unnamed-(3).jpg') no-repeat center center;
-            background-size: cover;
-            box-shadow: var(--glow), inset 0 0 20px #000;
-            animation: borderPulse 3s infinite;
+            overflow: hidden;
+            border: 5px solid;
+            animation: borderGlow 3s infinite alternate; /* توهج الحواف */
         }
 
-        @keyframes borderPulse { 0%, 100% { border-color: var(--neon); } 50% { border-color: #ff0041; } }
+        @keyframes borderGlow {
+            0% { border-color: var(--hacker-green); box-shadow: 0 0 50px var(--hacker-green), inset 0 0 30px var(--hacker-green); }
+            50% { border-color: var(--hacker-red); box-shadow: 0 0 50px var(--hacker-red), inset 0 0 30px var(--hacker-red); }
+            100% { border-color: var(--hacker-green); box-shadow: 0 0 50px var(--hacker-green), inset 0 0 30px var(--hacker-green); }
+        }
 
-        .overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.4); border-radius: 40px; z-index: 1; }
+        /* الخلفية المخصصة (صورتك) */
+        .background-image {
+            position: absolute;
+            inset: 0;
+            background-image: url('https://i.postimg.cc/j2fHMWGY/unnamed-(3).jpg');
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.7) contrast(1.1); /* لجعلها تبدو أكثر قتامة ومناسبة */
+            z-index: 1;
+        }
 
-        .content { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; padding: 25px; box-sizing: border-box; }
+        /* طبقة تراكب لضمان وضوح النص والأيقونات */
+        .content-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.8) 100%);
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+            box-sizing: border-box;
+        }
 
-        /* الساعة والاسم */
-        .header { text-align: center; color: white; margin-top: 30px; }
-        #time { font-size: 3.5rem; font-weight: 100; text-shadow: var(--glow); }
-        .title-box { border: 1px double var(--neon); padding: 8px; margin-top: 15px; background: rgba(0,0,0,0.7); }
+        /* شريط الحالة العلوي */
+        .status-bar {
+            width: 100%; height: 30px;
+            display: flex; justify-content: space-between; align-items: center;
+            color: var(--hacker-green); font-size: 0.9rem;
+            text-shadow: var(--glow-effect);
+        }
 
-        /* شبكة الـ 8 أزرار */
-        .app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: auto; margin-bottom: 30px; }
-        .app { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: 0.2s; }
-        .app:active { transform: scale(0.8); }
-        .icon { width: 60px; height: 60px; border-radius: 16px; background: rgba(0,0,0,0.8); border: 1px solid var(--neon); display: flex; justify-content: center; align-items: center; font-size: 1.8rem; box-shadow: 0 5px 10px #000; }
-        .label { font-size: 0.6rem; color: #fff; margin-top: 5px; font-weight: bold; text-align: center; }
+        /* العنوان الرئيسي */
+        .main-title {
+            text-align: center;
+            color: var(--hacker-green);
+            text-shadow: var(--glow-effect);
+            margin-top: 20px;
+        }
+        .main-title h1 { font-size: 1.5rem; margin-bottom: 5px; }
+        .main-title p { font-size: 0.8rem; margin: 0; }
 
-        /* نافذة العمليات */
-        .win { display: none; position: absolute; inset: 15px; background: rgba(0,0,0,0.95); border: 1px solid var(--neon); border-radius: 20px; z-index: 100; padding: 20px; animation: slideUp 0.3s; }
-        .win.active { display: flex; flex-direction: column; }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        /* شبكة الأيقونات (12 أيقونة) */
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
 
-        textarea { width: 100%; flex-grow: 1; background: #000; color: var(--neon); border: 1px solid #333; padding: 10px; font-family: monospace; font-size: 0.8rem; resize: none; margin-bottom: 10px; }
-        .btn { width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-bottom: 10px; }
+        .app-item {
+            display: flex; flex-direction: column; align-items: center;
+            cursor: pointer; transition: transform 0.2s ease-out;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .app-item:active { transform: scale(0.9); }
 
-        #splash { position: fixed; inset: 0; background: #000; z-index: 1000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .app-icon {
+            width: 60px; height: 60px;
+            border-radius: 15px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(8px); /* تأثير الزجاج */
+            border: 1px solid rgba(0,255,65,0.3);
+            display: flex; justify-content: center; align-items: center;
+            font-size: 1.8rem; color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+        .app-icon.active-green { color: var(--hacker-green); border-color: var(--hacker-green); }
+        .app-icon.active-red { color: var(--hacker-red); border-color: var(--hacker-red); }
+        .app-icon.inactive { opacity: 0.6; filter: grayscale(1); } /* الأيقونات غير المفعلة */
+
+        .app-label {
+            font-size: 0.7rem; color: #eee;
+            margin-top: 5px; font-weight: bold;
+            text-shadow: 1px 1px 3px #000;
+        }
+
+        /* نافذة التطبيق المنبثقة */
+        .app-window {
+            position: absolute; inset: 0;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(15px);
+            z-index: 100;
+            display: none; flex-direction: column;
+            padding: 30px 20px; box-sizing: border-box;
+            animation: slideInUp 0.3s ease-out;
+        }
+        .app-window.active { display: flex; }
+        @keyframes slideInUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+        .app-window h2 {
+            color: var(--hacker-green); text-align: center;
+            text-shadow: var(--glow-effect); margin-bottom: 20px;
+        }
+
+        .app-window textarea {
+            width: 100%; flex-grow: 1; /* لتأخذ المساحة المتاحة */
+            background: #050505; color: var(--hacker-green);
+            border: 1px solid var(--hacker-green); border-radius: 10px;
+            padding: 15px; font-family: monospace; font-size: 0.85rem;
+            resize: none; outline: none; margin-bottom: 15px;
+        }
+
+        .action-btn {
+            width: 100%; padding: 18px;
+            border: none; border-radius: 12px;
+            font-weight: bold; font-size: 1rem; cursor: pointer;
+            transition: background-color 0.2s;
+            margin-bottom: 10px;
+        }
+        .action-btn.green { background-color: var(--hacker-green); color: black; }
+        .action-btn.red { background-color: var(--hacker-red); color: white; }
+        .action-btn.back { background-color: #333; color: white; }
+
+        /* شاشة البداية */
+        #splash-screen {
+            position: absolute; inset: 0;
+            background: #000; z-index: 200;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+        #splash-screen h1 {
+            color: white; text-align: center;
+            text-shadow: var(--glow-effect); font-size: 1.8rem;
+        }
+        #splash-screen button {
+            padding: 15px 40px; border-radius: 25px;
+            background: var(--hacker-green); color: black;
+            border: none; font-weight: bold; font-size: 1.1rem;
+            cursor: pointer; margin-top: 30px;
+        }
     </style>
 </head>
 <body>
 
-<div id="splash">
-    <div style="font-size: 6rem; filter: drop-shadow(var(--glow));">🦅</div>
-    <h1 style="color:white; text-align:center;">مـنـظـومـة جيش التبليغ<br><small style="color:var(--neon)">بـقيادة الـجلاد الـجزائري</small></h1>
-    <button onclick="start()" style="padding: 15px 50px; border-radius: 30px; background: var(--neon); border: none; font-weight: bold; cursor: pointer;">دخـول الـجندي 🇩🇿</button>
-</div>
+<div class="phone-display">
+    <div class="background-image"></div>
+    <div class="content-overlay" id="main-content">
+        <div class="status-bar">
+            <span id="current-time">00:00</span>
+            <span>📶</span>
+            <span>🔋100%</span>
+        </div>
 
-<div class="phone">
-    <div class="overlay"></div>
-    <div class="content">
-        <div class="header">
-            <div id="time">00:00</div>
-            <div class="title-box">
-                <div style="font-size: 0.8rem; color: var(--neon);">جيش التبليغ الجزائري</div>
-                <div style="font-size: 0.6rem;">بـقيادة الـجلاد الـجزائري</div>
+        <div class="main-title">
+            <h1>منظومة جيش التبليغ الجزائري</h1>
+            <p>بـقـيـادة الـجـلاد الـجـزائـري</p>
+        </div>
+
+        <div class="icon-grid">
+            <div class="app-item" onclick="openApp('app-window-legal')">
+                <div class="app-icon active-green">🛡️</div>
+                <div class="app-label">بلاغ قانوني</div>
+            </div>
+            <div class="app-item" onclick="openApp('app-window-attack')">
+                <div class="app-icon active-red">🧨</div>
+                <div class="app-label">هجوم مباشر</div>
+            </div>
+            <div class="app-item" onclick="openApp('app-window-matrix')">
+                <div class="app-icon active-green">📡</div>
+                <div class="app-label">مولد المصفوفة</div>
+            </div>
+            <div class="app-item" onclick="location.reload()">
+                <div class="app-icon active-green">🔄</div>
+                <div class="app-label">إعادة تشغيل</div>
+            </div>
+            
+            <div class="app-item" onclick="alert('Module Offline')">
+                <div class="app-icon inactive">🛰️</div>
+                <div class="app-label">رادار الأهداف</div>
+            </div>
+            <div class="app-item" onclick="alert('Module Offline')">
+                <div class="app-icon inactive">🔐</div>
+                <div class="app-label">تشفير البيانات</div>
+            </div>
+            <div class="app-item" onclick="alert('Module Offline')">
+                <div class="app-icon inactive">🤖</div>
+                <div class="app-label">هجوم بوتات</div>
+            </div>
+            <div class="app-item" onclick="alert('Module Offline')">
+                <div class="app-icon inactive">⚙️</div>
+                <div class="app-label">الإعدادات</div>
+            </div>
+
+            <div class="app-item" onclick="alert('Module Offline')">
+                <div class="app-icon inactive">💬</div>
+                <div class="app-label">اتصالات مشفرة</div>
+            </div>
+            <div class="app-item" onclick="alert('Module Offline')">
+                <div class="app-icon inactive">📍</div>
+                <div class="app-label">تتبع</div>
+            </div>
+            <div class="app-item" onclick="alert('Module Offline')">
+                <div class="app-icon inactive">⚡</div>
+                <div class="app-label">اختراق سريع</div>
+            </div>
+            <div class="app-item" onclick="alert('Module Offline')">
+                <div class="app-icon inactive">📁</div>
+                <div class="app-label">سجل العمليات</div>
             </div>
         </div>
-
-        <div class="app-grid">
-            <div class="app" onclick="openW('w-report')"><div class="icon">🛡️</div><div class="label">بلاغ رسمي</div></div>
-            <div class="app" onclick="openW('w-attack')"><div class="icon">🧨</div><div class="label">اقتحام</div></div>
-            <div class="app" onclick="openW('w-report')"><div class="icon">📡</div><div class="label">المصفوفة</div></div>
-            <div class="app" onclick="location.reload()"><div class="icon">🔄</div><div class="label">تحديث</div></div>
-            <div class="app"><div class="icon" style="opacity:0.5">🛰️</div><div class="label">رادار</div></div>
-            <div class="app"><div class="icon" style="opacity:0.5">🔐</div><div class="label">تشفير</div></div>
-            <div class="app"><div class="icon" style="opacity:0.5">🤖</div><div class="label">بوتات</div></div>
-            <div class="app"><div class="icon" style="opacity:0.5">⚙️</div><div class="label">إعدادات</div></div>
-        </div>
     </div>
 
-    <div class="win" id="w-report">
-        <h3 style="color:var(--neon)">[ مصفوفة البلاغ الرسمي ]</h3>
-        <textarea id="txt-matrix" readonly></textarea>
-        <button class="btn" style="background:var(--neon)" onclick="strike('mailto')">🚀 إطـلاق الـقـنبلة</button>
-        <button class="btn" style="background:#333; color:red;" onclick="closeW()">🔙 خـروج</button>
+    <div id="splash-screen">
+        <div style="font-size: 6rem; filter: drop-shadow(var(--glow-effect));">🇩🇿</div>
+        <h1>مـنـظـومـة جـيـش الـتـبـلـيـغ<br><small style="color:var(--hacker-green)">بـقـيادة الـجـلاد الـجـزائـري</small></h1>
+        <button onclick="bootSystem()">دخـول الـقـائد 🛡️</button>
     </div>
 
-    <div class="win" id="w-attack">
-        <h3 style="color:red">[ هـجوم مـيداني ]</h3>
-        <div style="flex-grow:1; display:flex; align-items:center; justify-content:center; font-size:4rem;">💥</div>
-        <button class="btn" style="background:red; color:white;" onclick="strike('https://www.tiktok.com/')">🧨 تـدمـير الآن</button>
-        <button class="btn" style="background:#333; color:red;" onclick="closeW()">🔙 خـروج</button>
+    <div class="app-window" id="app-window-legal">
+        <h2>بـلاغ قـانـونـي رسـمـي</h2>
+        <textarea id="legal-matrix-output" readonly></textarea>
+        <button class="action-btn green" onclick="executeStrike('https://www.tiktok.com/legal/report/feedback')">🚀 تـنـفـيذ الـهـجـوم</button>
+        <button class="action-btn back" onclick="closeApp('app-window-legal')">🔙 عودة</button>
+    </div>
+
+    <div class="app-window" id="app-window-attack">
+        <h2>هـجـوم مـباشر</h2>
+        <p style="color:#aaa; text-align:center;">يتم توجيه الضربة مباشرة للهدف المحدد.</p>
+        <button class="action-btn red" onclick="executeStrike('https://www.tiktok.com/')">🧨 إطـلاق الـقـنبلة</button>
+        <button class="action-btn back" onclick="closeApp('app-window-attack')">🔙 عودة</button>
+    </div>
+
+    <div class="app-window" id="app-window-matrix">
+        <h2>مـولـد الـمـصـفـوفـة</h2>
+        <textarea id="matrix-generator-output" readonly></textarea>
+        <button class="action-btn green" onclick="generateHeavyMatrix()">🔄 تـولـيد مـصـفـوفـة جـديـدة</button>
+        <button class="action-btn back" onclick="closeApp('app-window-matrix')">🔙 عودة</button>
     </div>
 </div>
 
 <script>
-    const audio = new (window.AudioContext || window.webkitAudioContext)();
-    let music = null;
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    let backgroundMusicSource = null; // لتخزين مصدر الصوت الحالي
 
-    function playMusic() {
-        if(music) return;
-        const g = audio.createGain(); g.gain.setValueAtTime(0.05, audio.currentTime); g.connect(audio.destination);
-        const loop = () => {
-            const t = audio.currentTime;
-            [82, 103, 82, 123].forEach((f, i) => {
-                const o = audio.createOscillator(); o.type = 'sawtooth'; o.frequency.setValueAtTime(f, t + i*0.4);
-                const og = audio.createGain(); og.gain.setValueAtTime(0.1, t + i*0.4); og.gain.exponentialRampToValueAtTime(0.001, t + i*0.4 + 0.8);
-                o.connect(og); og.connect(g); o.start(t + i*0.4); o.stop(t + i*0.4 + 0.8);
-            });
+    // تحديث الوقت في شريط الحالة
+    function updateTime() {
+        const now = new Date();
+        document.getElementById('current-time').innerText = now.toLocaleTimeString('ar-DZ', { hour: '2-digit', minute: '2-digit', hour12: false });
+    }
+    setInterval(updateTime, 1000); // تحديث كل ثانية
+    updateTime(); // تشغيل فوري عند التحميل
+
+    // تشغيل الموسيقى الحماسية (Epic Battle Intro)
+    async function playEpicMusic() {
+        if (backgroundMusicSource) { // إذا كانت الموسيقى تعمل، لا تشغلها مرة أخرى
+            return;
+        }
+
+        // استخدام مولد نغمات لإنشاء صوت شبيه بالموسيقى الحماسية
+        const tempo = 120; // BPM
+        const quarterNote = 60 / tempo;
+        const instrument = (time, freq) => {
+            const osc = audioCtx.createOscillator();
+            osc.type = 'sawtooth'; // صوت قوي
+            osc.frequency.setValueAtTime(freq, time);
+            const gain = audioCtx.createGain();
+            gain.gain.setValueAtTime(0.3, time);
+            gain.gain.exponentialRampToValueAtTime(0.001, time + quarterNote * 0.8);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(time);
+            osc.stop(time + quarterNote * 0.8);
         };
-        music = setInterval(loop, 2000);
+
+        const melody = [
+            { freq: 110, duration: 1 }, // A2
+            { freq: 147, duration: 1 }, // D3
+            { freq: 110, duration: 0.5 },
+            { freq: 164, duration: 0.5 }, // E3
+            { freq: 196, duration: 1 }, // G3
+            { freq: 147, duration: 1 },
+            { freq: 164, duration: 0.5 },
+            { freq: 220, duration: 0.5 }  // A3
+        ];
+
+        let startTime = audioCtx.currentTime + 0.5; // بدء بعد نصف ثانية
+
+        melody.forEach(note => {
+            instrument(startTime, note.freq);
+            startTime += note.duration * quarterNote;
+        });
+
+        // لجعلها تتكرر
+        backgroundMusicSource = setInterval(() => {
+            let loopStartTime = audioCtx.currentTime + 0.1;
+            melody.forEach(note => {
+                instrument(loopStartTime, note.freq);
+                loopStartTime += note.duration * quarterNote;
+            });
+        }, startTime - (audioCtx.currentTime + 0.5)); // كرر بعد انتهاء اللحن
     }
 
-    function start() { audio.resume(); playMusic(); document.getElementById('splash').style.display = 'none'; }
-    function openW(id) { document.getElementById(id).classList.add('active'); if(id === 'w-report') gen(); }
-    function closeW() { document.querySelectorAll('.win').forEach(w => w.classList.remove('active')); }
-
-    function gen() {
-        const matrix = `OFFICIAL LEGAL REPORT - CASE ID: DZ-${Math.floor(Math.random()*999999)}\n------------------------------------------------\n` +
-            `SUBJECT: URGENT SAFETY VIOLATION COMPLAINT\n\n` +
-            `THIS IS A FORMAL LEGAL REPORT GENERATED BY THE ALGERIAN CYBER SECURITY UNIT. THE TARGET ACCOUNT HAS BEEN FLAGGED FOR REPEATED VIOLATIONS OF PLATFORM POLICIES. ` +
-            `OUR ANALYSIS DETECTED COORDINATED EFFORTS TO PROMOTE HARMFUL CONTENT AND CIRCUMVENT MODERATION FILTERS. ` +
-            `WE DEMAND AN IMMEDIATE REVIEW AND PERMANENT TERMINATION OF THIS PROFILE TO PROTECT THE INTEGRITY OF THE PLATFORM. ` +
-            `THIS COMPLAINT IS CLASSIFIED AS A PRIORITY LEVEL ONE BREACH REPORT.\n\n` +
-            `UNIT: ALGERIAN_CYBER_ARMY\nREPORT_ID: ${btoa(Math.random()).substring(0,12).toUpperCase()}`;
-        document.getElementById('txt-matrix').value = matrix;
-        navigator.clipboard.writeText(matrix);
+    // إيقاف الموسيقى
+    function stopMusic() {
+        if (backgroundMusicSource) {
+            clearInterval(backgroundMusicSource);
+            backgroundMusicSource = null;
+        }
     }
 
-    function strike(url) {
-        const o = audio.createOscillator(); const g = audio.createGain();
-        o.type = 'sine'; o.frequency.setValueAtTime(40, audio.currentTime);
-        o.connect(g); g.connect(audio.destination);
-        g.gain.setValueAtTime(1, audio.currentTime); g.gain.exponentialRampToValueAtTime(0.001, audio.currentTime + 1.2);
-        o.start(); o.stop(audio.currentTime + 1.2);
-        setTimeout(() => { window.location.href = url === 'mailto' ? 'mailto:legal@tiktok.com' : url; }, 800);
+    // صوت النقر على الأيقونات
+    function playClickSound() {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'square'; osc.frequency.setValueAtTime(1500, audioCtx.currentTime);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        gain.gain.setValueAtTime(0.02, audioCtx.currentTime); osc.start(); osc.stop(audioCtx.currentTime + 0.05);
     }
 
-    setInterval(() => { const n = new Date(); document.getElementById('time').innerText = n.getHours() + ":" + n.getMinutes().toString().padStart(2, '0'); }, 1000);
+    // صوت الانفجار عند إطلاق الهجوم
+    function playExplosionSound() {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine'; osc.frequency.setValueAtTime(50, audioCtx.currentTime);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        gain.gain.setValueAtTime(1, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.5);
+        osc.start(); osc.stop(audioCtx.currentTime + 1.5);
+        if (navigator.vibrate) navigator.vibrate(800); // اهتزاز أقوى
+    }
+
+    // بدء تشغيل النظام (بعد شاشة البداية)
+    function bootSystem() {
+        audioCtx.resume(); // استئناف سياق الصوت للمتصفحات
+        playEpicMusic();
+        document.getElementById('splash-screen').style.display = 'none';
+        // لا يوجد لوج للترمينال في هذه النسخة لأن الواجهة ممتلئة بالصورة
+    }
+
+    // فتح نافذة التطبيق
+    function openApp(appId) {
+        playClickSound();
+        stopMusic(); // إيقاف الموسيقى عند فتح تطبيق
+        document.getElementById(appId).classList.add('active');
+        if (appId === 'app-window-matrix' || appId === 'app-window-legal') {
+            generateHeavyMatrix(); // توليد المصفوفة تلقائياً
+        }
+    }
+
+    // إغلاق نافذة التطبيق
+    function closeApp(appId) {
+        playClickSound();
+        document.getElementById(appId).classList.remove('active');
+        playEpicMusic(); // إعادة تشغيل الموسيقى عند العودة للشاشة الرئيسية
+    }
+
+    // توليد مصفوفة البلاغ الرسمي
+    function generateHeavyMatrix() {
+        const targetURL = "TARGET_ACCOUNT_LINK_HERE"; // يمكن تحديدها لاحقاً
+        const matrixContent = `OFFICIAL PRIORITY CLASSIFIED REPORT - UNIT: ALGERIAN CYBER ARMY\n` +
+            `---------------------------------------------------------------------------\n` +
+            `ATTENTION: LEGAL COMPLIANCE AND SAFETY ENFORCEMENT TEAM.\n` +
+            `SUBJECT: CRITICAL VIOLATIONS ALERT - ACCOUNT BEHAVIOR ANALYSIS (${targetURL})\n\n` +
+            `هذا بلاغ قانوني رسمي تم إصداره بواسطة بروتوكول الذكاء الاصطناعي الخاص بمنظومة "الثقب الأسود الجزائري". ` +
+            `تم تحديد الحساب المشار إليه لانتهاكاته المتكررة لسياسات المنصة ومعايير السلوك الرقمي الدولية. ` +
+            `تظهر تحليلاتنا جهودًا منسقة لتعزيز المحتوى الضار، بما في ذلك: التحريض على العنف، نشر المعلومات المضللة، ` +
+            `وتجاوز آليات الإشراف عبر تقنيات التشفير المتقدمة واستغلال ثغرات الطرف الثالث. ` +
+            `تشكل هذه الإجراءات خطرًا كبيرًا على سلامة المستخدمين وسلامة الإطار التشغيلي للمنصة. ` +
+            `نطالب بمراجعة فورية وشاملة لجميع البيانات المرتبطة، مما يؤدي إلى التعليق الدائم للحساب وحظر الجهاز ` +
+            `على مستوى IMEI لمنع إعادة التسجيل. ` +
+            `عدم التصرف الفوري سيعتبر بمثابة نقص في الالتزام بمعايير الأمن الرقمي. ` +
+            `تم تصنيف هذا البلاغ على أنه "خرق أمني ذو أولوية قصوى".\n\n` +
+            `CASE_REFERENCE_ID: DZ-${Math.random().toString(36).substring(2, 10).toUpperCase()}-${Date.now()}\n` +
+            `REPORTING_ENTITY: ALGERIAN CYBER ARMY (الجلاد الجزائري)\n` +
+            `CONFIDENTIALITY: STRICTLY ENFORCED\n` +
+            `---------------------------------------------------------------------------\n`;
+
+        document.getElementById('legal-matrix-output').value = matrixContent;
+        document.getElementById('matrix-generator-output').value = matrixContent; // للتأكد من تحديثها في كلتا النافذتين
+        navigator.clipboard.writeText(matrixContent); // نسخها تلقائياً
+    }
+
+    // تنفيذ الهجوم (فتح رابط)
+    function executeStrike(url) {
+        playExplosionSound();
+        setTimeout(() => {
+            if (url === 'mailto') {
+                const body = encodeURIComponent(document.getElementById('legal-matrix-output').value);
+                window.location.href = `mailto:legal@tiktok.com?subject=URGENT_LEGAL_COMPLAINT_DZ&body=${body}`;
+            } else {
+                window.location.href = url; // لفتح TikTok أو أي رابط آخر
+            }
+        }, 1000); // تأخير بسيط للسماح بصوت الانفجار
+    }
 </script>
+
 </body>
 </html>
+```http://googleusercontent.com/image_generation_content/5
