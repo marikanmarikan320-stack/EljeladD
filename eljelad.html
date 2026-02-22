@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ترسانة الجلاد الجزائري | الإصدار النهائي</title>
+    <title>منظومة الجلاد الجزائري | الترسانة الحربية</title>
     <style>
-        :root { --main-glow: #00ff41; --danger: #ff0000; --ios-bg: rgba(0, 0, 0, 0.9); }
+        :root { --main-glow: #00ff41; --danger: #ff0000; --ios-bg: rgba(0, 0, 0, 0.95); }
         * { touch-action: manipulation; user-select: none; box-sizing: border-box; }
 
         body {
@@ -18,27 +18,12 @@
         @keyframes edgePulse { 0%, 100% { border-color: var(--main-glow); } 50% { border-color: var(--danger); } }
 
         /* تعليمات القيادة */
-        .cmd-note {
-            background: rgba(255, 0, 0, 0.2); border: 1px dashed var(--danger);
-            padding: 10px; font-size: 0.8rem; margin-bottom: 15px; color: #ffcccc;
-            border-radius: 5px; line-height: 1.4;
-        }
+        .cmd-header { color: var(--danger); font-weight: bold; border-bottom: 1px solid var(--danger); margin-bottom: 10px; padding-bottom: 5px; font-size: 1rem; }
+        .cmd-box { background: rgba(0, 255, 65, 0.1); border: 1px solid var(--main-glow); padding: 10px; font-size: 0.85rem; border-radius: 8px; margin-bottom: 15px; line-height: 1.5; color: #fff; }
 
-        /* تأثير الدخان */
-        #smoke-screen {
-            display: none; position: fixed; inset: 0; z-index: 9999;
-            background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
-            justify-content: center; align-items: center; flex-direction: column;
-        }
-        .smoke {
-            width: 200px; height: 200px; background: radial-gradient(circle, #555, transparent);
-            border-radius: 50%; animation: explode 2s infinite; opacity: 0.8;
-        }
-        @keyframes explode { 0% { transform: scale(0.5); opacity: 1; } 100% { transform: scale(3); opacity: 0; } }
-
-        /* الواجهة الرئيسية */
-        .system-branding { text-align: center; margin-top: 15px; animation: flicker 3s infinite; }
-        #clock { font-size: 3.5rem; text-align: center; text-shadow: 0 0 15px var(--main-glow); margin: 10px 0; }
+        /* الواجهة */
+        .system-branding { text-align: center; margin-top: 15px; }
+        #clock { font-size: 3.5rem; text-align: center; text-shadow: 0 0 15px var(--main-glow); margin: 10px 0; font-weight: 100; }
 
         .radar-container { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: -1; opacity: 0.3; }
         .radar { width: 250px; height: 250px; border: 2px solid var(--main-glow); border-radius: 50%; position: relative; }
@@ -51,78 +36,93 @@
             display: flex; justify-content: space-around; border: 1px solid var(--main-glow);
         }
         .icon-btn { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
-        .icon-circle { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; border: 1px solid var(--main-glow); background: #000; }
-        .icon-label { font-size: 0.7rem; margin-top: 5px; color: var(--main-glow); }
+        .icon-circle { width: 55px; height: 55px; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border: 1px solid var(--main-glow); background: #000; box-shadow: 0 0 10px rgba(0,255,65,0.3); }
+        .icon-label { font-size: 0.7rem; margin-top: 5px; color: var(--main-glow); font-weight: bold; }
 
-        /* شاشة القفل */
-        #lock-screen { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        #lock-screen { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        
+        .app-window { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 1000; padding: 25px; overflow-y: auto; }
+        .app-window.active { display: block; animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
-        /* نوافذ التطبيقات */
-        .app-window { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.96); z-index: 1000; padding: 30px 20px; overflow-y: auto; }
-        .app-window.active { display: block; }
-        textarea { width: 100%; height: 280px; background: #050505; color: var(--main-glow); border: 1px solid var(--main-glow); border-radius: 8px; padding: 10px; font-family: monospace; font-size: 0.75rem; }
-        .strike-btn { width: 100%; padding: 18px; background: var(--main-glow); color: #000; border: none; border-radius: 10px; font-weight: bold; margin-top: 15px; font-size: 1.1rem; }
-
-        @keyframes flicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+        textarea { width: 100%; height: 200px; background: #050505; color: var(--main-glow); border: 1px solid var(--main-glow); border-radius: 8px; padding: 10px; font-family: monospace; font-size: 0.75rem; margin-top: 10px; }
+        .strike-btn { width: 100%; padding: 18px; background: var(--main-glow); color: #000; border: none; border-radius: 10px; font-weight: bold; margin-top: 15px; font-size: 1.1rem; text-transform: uppercase; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<div id="smoke-screen">
-    <div class="smoke"></div>
-    <h2 style="color:var(--danger); text-shadow: 0 0 10px red;">جارٍ إطلاق القصف...</h2>
-</div>
-
 <div id="lock-screen">
-    <h1 style="text-align:center;">منظومة جيش التبليغ الجزائري<br><small style="color:var(--main-glow)">قيادة الجلاد</small></h1>
-    <div style="font-size: 5rem; cursor:pointer;" onclick="unlock()">🛡️</div>
-    <p>اضغط الدرع لتجهيز السلاح</p>
+    <h1 style="color:white;">منظومة جيش التبليغ الجزائري<br><span style="color:var(--main-glow); font-size: 1.2rem;">بقيادة الجلاد الجزائري</span></h1>
+    <div style="font-size: 6rem; filter: drop-shadow(0 0 20px var(--main-glow)); cursor: pointer;" onclick="unlock()">🛡️</div>
+    <p style="color: #888;">اضغط بصمة الجندي للدخول</p>
 </div>
 
 <div class="radar-container"><div class="radar"></div></div>
 
 <div class="system-branding">
-    <div style="font-size:1.2rem; font-weight:bold;">⚔️ ALGERIAN EXECUTIONER ⚔️</div>
-    <div style="color:var(--main-glow); font-size:0.8rem;">ترسانة الحرب السيبرانية</div>
+    <div style="font-size:1.1rem; font-weight:bold; letter-spacing: 2px;">ALGERIAN SYSTEM V1</div>
+    <div style="color:var(--main-glow); font-size:0.7rem;">قوة الجلاد الجزائري لا ترحم</div>
 </div>
 
 <div id="clock">00:00</div>
 
 <div class="dock">
-    <div class="icon-btn" onclick="openApp('w1')"><div class="icon-circle">📜</div><div class="icon-label">تعليمات</div></div>
-    <div class="icon-btn" onclick="openApp('w3')"><div class="icon-circle" style="border-color:cyan;">📡</div><div class="icon-label">المصفوفة</div></div>
-    <div class="icon-btn" onclick="openApp('w2')"><div class="icon-circle" style="border-color:red;">🧨</div><div class="icon-label">قصف</div></div>
-    <div class="icon-btn" onclick="location.reload()"><div class="icon-circle">🔄</div><div class="icon-label">تحديث</div></div>
+    <div class="icon-btn" onclick="openApp('w_form')">
+        <div class="icon-circle" style="border-color: #ffcc00;">📄</div>
+        <div class="icon-label">الاستمارة</div>
+    </div>
+    <div class="icon-btn" onclick="openApp('w_tiktok')">
+        <div class="icon-circle" style="border-color: #ff0050;">🎬</div>
+        <div class="icon-label">تيك توك</div>
+    </div>
+    <div class="icon-btn" onclick="openApp('w_gmail')">
+        <div class="icon-circle" style="border-color: #007aff;">📧</div>
+        <div class="icon-label">جيميل</div>
+    </div>
+    <div class="icon-btn" onclick="location.reload()">
+        <div class="icon-circle">🔄</div>
+        <div class="icon-label">إعادة</div>
+    </div>
 </div>
 
-<div class="app-window" id="w3">
-    <div class="cmd-note">
-        <strong>[ تعليمات القيادة ]</strong><br>
-        1. اضغط "توليد" لإنشاء المصفوفة المليونية.<br>
-        2. سيتم نسخ النص تلقائياً للذاكرة.<br>
-        3. اضغط "تنفيذ القصف" لبدء الهجوم الصاعق.
+<div class="app-window" id="w_form">
+    <div class="cmd-header">⚠️ تعليمات قيادة الاستمارة القانونية</div>
+    <div class="cmd-box">
+        1. اختر "انتهاك محتمل" ثم "انتهاك حساب" ثم "آخر".<br>
+        2. أدخل اسم مستخدم الهدف بدقة.<br>
+        3. ضع بريدك الإلكتروني للتواصل.<br>
+        4. أرفق رابط الحساب أو البث المسيء.<br>
+        5. انسخ وصف البلاغ من المصفوفة وضعه في الخانة.<br>
+        6. أرفق لقطات الشاشة ثم اضغط إرسال.
     </div>
-    <textarea id="heavy-matrix" readonly placeholder="المصفوفة الحربية ستظهر هنا..."></textarea>
-    <button class="strike-btn" onclick="generateHeavyMatrix()">🔄 تـولـيد الـمصفوفة الـمليونية (600+ حرف)</button>
-    <button class="strike-btn" style="background:#fff;" onclick="launchWithEffect('mailto')">🚀 تـنـفـيذ الـقصف الـجوي</button>
+    <button class="strike-btn" style="background:#ffcc00;" onclick="launchWithGun('https://www.tiktok.com/legal/report/feedback')">🚀 فتح استمارة التبليغ</button>
     <button onclick="closeApp()" style="width:100%; background:none; color:red; border:none; margin-top:20px;">خروج</button>
 </div>
 
-<div class="app-window" id="w1">
-    <div class="cmd-note"><strong>[ تقرير العمليات ]</strong><br>أهلاً بك يا جندي في منظومة الجلاد.</div>
-    <h3>بروتوكول التبليغ:</h3>
-    <ul>
-        <li>استخدم مصفوفة الموت لضرب الثغرات القانونية.</li>
-        <li>لا تغادر الموقع إلا بعد التأكد من وصول البلاغ.</li>
-        <li>المصفوفة مصممة لتجاوز الفلاتر الآلية.</li>
-    </ul>
-    <button onclick="closeApp()" class="strike-btn">فهمت الأمر</button>
+<div class="app-window" id="w_tiktok">
+    <div class="cmd-header">⚔️ تعليمات القصف المباشر (تطبيق تيك توك)</div>
+    <div class="cmd-box">
+        1. عند الدخول للحساب: اختر "إبلاغ" -> "إبلاغ عن حساب".<br>
+        2. اختر "نشر محتوى غير لائق" أو "محتوى يحرض على الكراهية".<br>
+        3. للتبليغ عن البث: اضغط مطولاً على الشاشة واختر "إبلاغ عن بث مباشر".<br>
+        4. كرر العملية من حسابات مختلفة لضمان الإغلاق.
+    </div>
+    <button class="strike-btn" style="background:#ff0050; color:white;" onclick="launchWithGun('snssdk1233://')">🧨 فتح تطبيق تيك توك فوراً</button>
+    <button onclick="closeApp()" style="width:100%; background:none; color:red; border:none; margin-top:20px;">خروج</button>
 </div>
 
-<div class="app-window" id="w2">
-    <div class="cmd-note"><strong>[ تنبيه عسكري ]</strong><br>هذا الزر مخصص للهجوم المباشر على رابط الموقع.</div>
-    <button class="strike-btn" style="background:red; color:white;" onclick="launchWithEffect('https://www.tiktok.com/legal/report/feedback')">🧨 إطـلاق الـصاروخ الـمدمر</button>
-    <button onclick="closeApp()" style="width:100%; background:none; color:red; border:none; margin-top:20px;">تراجع</button>
+<div class="app-window" id="w_gmail">
+    <div class="cmd-header">🛡️ تعليمات قصف الجيميل (المصفوفة المليونية)</div>
+    <div class="cmd-box">
+        1. اضغط "توليد المصفوفة" ليتم نسخ البلاغ المليوني تلقائياً.<br>
+        2. اضغط "فتح Gmail" ستجد البيانات ممتلئة تلقائياً.<br>
+        3. اضغط "إرسال" مباشرة.<br>
+        4. كرر العملية 5 مرات متتالية لضغط خوادم المراجعة.
+    </div>
+    <textarea id="heavy-matrix" readonly placeholder="المصفوفة ستظهر هنا..."></textarea>
+    <button class="strike-btn" onclick="generateHeavyMatrix()">🔄 تـولـيد الـمصفوفة (600+ حرف)</button>
+    <button class="strike-btn" style="background:#007aff; color:white;" onclick="launchWithGun('mailto')">📧 إرسال عبر Gmail</button>
+    <button onclick="closeApp()" style="width:100%; background:none; color:red; border:none; margin-top:20px;">خروج</button>
 </div>
 
 <script>
@@ -136,12 +136,11 @@
 
     function unlock() { 
         audioCtx.resume(); 
-        playDeepSound(200, 0.5); // صوت تفعيل
         document.getElementById('lock-screen').style.display = 'none'; 
     }
 
     function openApp(id) { 
-        playDeepSound(600, 0.1);
+        document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active'));
         document.getElementById(id).classList.add('active'); 
     }
     
@@ -149,49 +148,61 @@
         document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active')); 
     }
 
-    function playDeepSound(freq, dur) {
-        const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
-        o.type = 'sine'; o.frequency.setValueAtTime(freq, audioCtx.currentTime);
-        o.connect(g); g.connect(audioCtx.destination);
-        g.gain.setValueAtTime(dur, audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + dur);
-        o.start(); o.stop(audioCtx.currentTime + dur);
+    // وظيفة صوت الرصاص والاهتزاز
+    function playGunShot() {
+        if(navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 300]);
+        
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        
+        oscillator.type = 'square';
+        oscillator.frequency.setValueAtTime(150, audioCtx.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+        
+        gainNode.gain.setValueAtTime(1, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        
+        oscillator.start();
+        oscillator.stop(audioCtx.currentTime + 0.5);
     }
 
-    function launchWithEffect(url) {
-        // صوت انفجار
-        playDeepSound(50, 2);
-        document.getElementById('smoke-screen').style.display = 'flex';
-        
+    function launchWithGun(url) {
+        playGunShot();
         setTimeout(() => {
-            document.getElementById('smoke-screen').style.display = 'none';
             if(url === 'mailto') {
                 const body = encodeURIComponent(document.getElementById('heavy-matrix').value);
-                window.location.href = `mailto:legal@tiktok.com?subject=URGENT_LEGAL_VIOLATION_DZ_${Math.floor(Math.random()*9999)}&body=${body}`;
-            } else { window.location.href = url; }
-        }, 5000);
+                const mailUrl = `mailto:legal@tiktok.com?subject=CRITICAL_VIOLATION_REPORT_ID_${Math.floor(Math.random()*999999)}&body=${body}`;
+                window.location.href = mailUrl;
+            } else {
+                window.location.href = url;
+            }
+        }, 800);
     }
 
     function generateHeavyMatrix() {
-        // المصفوفة المليونية المطلوبة (أكثر من 600 حرف)
-        const longMatrix = `LEGAL_NOTICE_REF: DZ-ALGERIAN-EXECUTIONER-${Math.random().toString(36).toUpperCase()}\n` +
+        const matrix = `OFFICIAL LEGAL COMPLAINT - UNIT: ALGERIAN_CYBER_ARMY_OFFENSIVE\n` +
+            `REF_ID: DZ-EXECUTIONER-${Math.random().toString(36).toUpperCase()}-${Date.now()}\n` +
             `============================================================\n` +
-            `TO: TIKTOK TRUST & SAFETY / LEGAL COMPLIANCE DIVISION\n` +
-            `SUBJECT: MULTIPLE COMMUNITY GUIDELINE VIOLATIONS & SYSTEM EXPLOITATION\n\n` +
-            `I AM WRITING TO FORMALLY REPORT SEVERE BREACHES OF PLATFORM INTEGRITY BY THE TARGETED USER. OUR CYBER MONITORING UNIT HAS IDENTIFIED COORDINATED HARMFUL BEHAVIOR, INCLUDING BUT NOT LIMITED TO: EXTREMIST CONTENT PROPAGATION, SYSTEMATIC BYPASSING OF AUTOMATED MODERATION, AND DISSEMINATION OF HARASSING MATERIAL. THIS ACCOUNT POSES A DIRECT THREAT TO USER SAFETY AND THE DIGITAL ENVIRONMENT. UNDER INTERNATIONAL CYBER LAW AND PLATFORM TERMS OF SERVICE, WE DEMAND AN IMMEDIATE MANUAL AUDIT OF ALL LOGGED SESSIONS AND METADATA ASSOCIATED WITH THIS PROFILE.\n\n` +
-            `TECHNICAL DATA LOGS:\n` +
-            `- PROTOCOL_ID: 0xDZ_EXECUTIONER_STRIKE\n` +
-            `- ENCRYPTION_HASH: ${btoa(Math.random().toString()).repeat(2)}\n` +
-            `- SOURCE_UNIT: ALGERIAN_CYBER_ARMY_OFFENSIVE_UNIT\n\n` +
-            `FAILURE TO TAKE ACTION WILL BE LOGGED AS A NEGLIGENT OMISSION IN OUR QUARTERLY SAFETY REPORT. WE EXPECT PERMANENT TERMINATION OF THE SERVICE FOR THIS ENTITY TO PREVENT FURTHER MALICIOUS ACTIVITIES. THIS COMPLAINT IS BACKED BY COORDINATED EVIDENCE FROM MULTIPLE JURISDICTIONS.\n\n` +
-            `SIGNED: THE ALGERIAN EXECUTIONER (الجلاد الجزائري)\n` +
-            `DATE: ${new Date().toUTCString()}\n` +
+            `TO: TIKTOK LEGAL DEPARTMENT / MODERATION HEADQUARTERS\n` +
+            `SUBJECT: URGENT INVESTIGATION REQUIRED - SYSTEMIC VIOLATIONS\n\n` +
+            `WE ARE SUBMITTING THIS FORMAL COMPLAINT REGARDING A SEVERE BREACH OF COMMUNITY STANDARDS. OUR UNIT HAS TRACKED COORDINATED MALICIOUS ACTIVITIES ORIGINATING FROM THE TARGET ACCOUNT. THE CONTENT POSTED CONSTITUTES A DIRECT VIOLATION OF SAFETY PROTOCOLS, INCLUDING EXPLOITATION, HARASSMENT, AND THE DISSEMINATION OF HARMFUL INFORMATION THAT BYPASSES INITIAL AI FILTERS. UNDER THE CURRENT DIGITAL SERVICES ACT AND PLATFORM TERMS, WE DEMAND AN IMMEDIATE MANUAL REVIEW BY A SENIOR MODERATOR.\n\n` +
+            `DETAILED ANALYSIS LOGS:\n` +
+            `- SECURITY_THREAT_LEVEL: CRITICAL\n` +
+            `- COMPLIANCE_CODE: 0xDZ_EXEC_77\n` +
+            `- DATA_INTEGRITY_HASH: ${btoa(Math.random().toString()).repeat(3)}\n\n` +
+            `THIS ACCOUNT IS CURRENTLY UNDER SURVEILLANCE BY THE ALGERIAN CYBER ARMY (الجلاد الجزائري). WE EXPECT A RESPONSE AND PERMANENT DEACTIVATION OF THE SERVICE TO PROTECT THE PLATFORM'S ECOSYSTEM. FAILURE TO ADDRESS THIS COMPLAINT WILL RESULT IN FURTHER ESCALATION TO REGULATORY BODIES.\n\n` +
+            `SIGNED: THE ALGERIAN EXECUTIONER (قـيـادة الـجـلاد الـجـزائـري)\n` +
+            `COORDINATES: UNIT_DZ_NORTH_AFRICA\n` +
             `============================================================\n` +
-            `STATUS: [CRITICAL_STRIKE_ACTIVE]`;
+            `STATUS: [BOMBARDMENT_MODE_ENABLED]`;
 
-        document.getElementById('heavy-matrix').value = longMatrix;
-        navigator.clipboard.writeText(longMatrix);
-        alert("تم توليد المصفوفة المليونية ونسخها بنجاح!");
+        document.getElementById('heavy-matrix').value = matrix;
+        navigator.clipboard.writeText(matrix);
+        alert("تم توليد المصفوفة المليونية ونسخها! توجه الآن للجيميل.");
     }
 </script>
 </body>
-</html>
+    </html>
