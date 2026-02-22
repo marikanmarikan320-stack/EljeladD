@@ -3,19 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ترسانة الجلاد الجزائري | الإصدار النهائي</title>
+    <title>المنظومة الاحترافية | v9.0</title>
     <style>
         :root { --main-glow: #00ff41; --danger: #ff0000; --steel: #1a1a1a; }
         * { touch-action: manipulation; user-select: none; box-sizing: border-box; }
 
         body {
             background: #000 url('https://i.postimg.cc/j2fHMWGY/unnamed-3.jpg') no-repeat center center fixed;
-            background-size: cover; color: white; font-family: 'Courier New', Courier, monospace;
+            background-size: cover; color: white; font-family: sans-serif;
             margin: 0; overflow: hidden; height: 100vh; width: 100vw;
             border: 5px solid var(--main-glow);
         }
 
-        /* الرادار الهولوجرامي */
         .radar-hologram {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 400px; height: 400px; border-radius: 50%; border: 1px solid var(--main-glow);
@@ -28,13 +27,13 @@
         }
         @keyframes rotateRadar { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        /* صندوق الفولاذ (تم حذف النصوص المطلوبة) */
+        /* صندوق الفولاذ - صامت */
         .steel-frame {
             position: absolute; top: 5%; left: 50%; transform: translateX(-50%);
             width: 85%; z-index: 10;
         }
         .steel-box {
-            background: var(--steel); border: 3px solid #333; padding: 15px;
+            background: var(--steel); border: 3px solid #333; padding: 20px;
             text-align: center; border-radius: 5px; box-shadow: 0 0 15px #000;
             animation: steelGlow 3s infinite ease-in-out;
         }
@@ -42,11 +41,9 @@
             0%, 100% { border-color: #333; box-shadow: 0 0 5px #000; }
             50% { border-color: var(--main-glow); box-shadow: 0 0 20px var(--main-glow); }
         }
-        .shield-text { font-weight: 900; font-size: 1.1rem; color: #ffffff; letter-spacing: 1px; }
 
         #clock { font-size: 4rem; text-align: center; margin-top: 150px; text-shadow: 0 0 20px var(--main-glow); }
 
-        /* الأزرار السفلى */
         .dock {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
             width: 95%; background: rgba(0,0,0,0.9); border-radius: 20px; padding: 12px;
@@ -55,13 +52,11 @@
         .icon-btn { display: flex; flex-direction: column; align-items: center; cursor: pointer; color: var(--main-glow); }
         .icon-circle { width: 55px; height: 55px; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border: 1px solid var(--main-glow); background: #000; }
 
-        /* النوافذ */
         .app-window { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 2000; padding: 25px; }
         .app-window.active { display: block; }
         .war-logo { width: 90px; height: 90px; border-radius: 50%; border: 2px solid var(--main-glow); margin: 0 auto 10px; background: url('https://i.postimg.cc/vmdZn4vn/Screenshot-20260222-031125-Tik-Tok.jpg') no-repeat center center; background-size: cover; }
         
-        .info-box { background: rgba(0,255,65,0.05); border: 1px solid var(--main-glow); padding: 10px; font-size: 0.8rem; margin-bottom: 10px; border-radius: 5px; color: #fff; text-align: right; }
-        textarea { width: 100%; height: 220px; background: #050505; color: var(--main-glow); border: 1px solid var(--main-glow); padding: 10px; font-size: 0.75rem; font-family: monospace; }
+        textarea { width: 100%; height: 250px; background: #050505; color: #ccc; border: 1px solid #333; padding: 10px; font-size: 0.9rem; line-height: 1.4; border-radius: 5px; }
         
         .strike-btn { width: 100%; padding: 18px; background: var(--main-glow); color: #000; border: none; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; }
 
@@ -72,13 +67,13 @@
 
 <div id="lock-screen">
     <div class="war-logo" style="width:130px; height:130px;"></div>
-    <h2 style="color:white; text-align:center;">نظام الجلاد الجزائري</h2>
-    <button onclick="unlock()" style="padding:15px 50px; background:var(--main-glow); border:none; border-radius:30px; font-weight:bold;">فتح الترسانة ⚔️</button>
+    <h2 style="color:white; text-align:center;">نظام العمليات الموحد</h2>
+    <button onclick="unlock()" style="padding:15px 50px; background:var(--main-glow); border:none; border-radius:30px; font-weight:bold;">اتصال ⚔️</button>
 </div>
 
 <div class="steel-frame">
     <div class="steel-box">
-        <div class="shield-text">بقيادة الجلاد الجزائري</div>
+        <div style="color:white; font-weight:bold;">نظام التبليغ المباشر</div>
     </div>
 </div>
 
@@ -94,25 +89,22 @@
 
 <div class="app-window" id="w_form">
     <div class="war-logo"></div>
-    <div class="info-box">استخدم الرابط الرسمي وأرفق لقطات الشاشة لضمان الحظر الدائم للهدف.</div>
-    <button class="strike-btn" style="background:#ffcc00;" onclick="executeStrike('https://www.tiktok.com/legal/report/feedback')">🚀 قصف الاستمارة</button>
-    <button onclick="closeApp()" style="width:100%; background:none; color:red; border:none; margin-top:15px;">إلغاء</button>
+    <button class="strike-btn" style="background:#ffcc00;" onclick="executeStrike('https://www.tiktok.com/legal/report/feedback')">🚀 فتح الاستمارة</button>
+    <button onclick="closeApp()" style="width:100%; background:none; color:red; border:none; margin-top:15px;">إغلاق</button>
 </div>
 
 <div class="app-window" id="w_tiktok">
     <div class="war-logo"></div>
-    <div class="info-box">سيفتح التطبيق، ابلغ عن الحساب 5 مرات متتالية (تحرش/كراهية).</div>
-    <button class="strike-btn" style="background:#ff0050; color:white;" onclick="executeStrike('snssdk1233://')">🧨 قنص التيك توك</button>
-    <button onclick="closeApp()" style="width:100%; background:none; color:red; border:none; margin-top:15px;">إلغاء</button>
+    <button class="strike-btn" style="background:#ff0050; color:white;" onclick="executeStrike('snssdk1233://')">🧨 فتح التطبيق</button>
+    <button onclick="closeApp()" style="width:100%; background:none; color:red; border:none; margin-top:15px;">إغلاق</button>
 </div>
 
 <div class="app-window" id="w_gmail">
     <div class="war-logo"></div>
-    <div class="info-box">المصفوفة القانونية العملاقة (600+ حرف) مع إدراج رابط الهدف تلقائياً.</div>
-    <textarea id="legal-matrix" readonly></textarea>
-    <button class="strike-btn" onclick="generateMegaMatrix()">🔄 توليد المصفوفة المليونية</button>
-    <button class="strike-btn" style="background:#007aff; color:white;" onclick="executeStrike('mailto')">📧 إرسال القصف</button>
-    <button onclick="closeApp()" style="width:100%; background:none; color:red; border:none; margin-top:15px;">إلغاء</button>
+    <textarea id="legal-matrix" readonly placeholder="اضغط توليد للحصول على بلاغ فريد..."></textarea>
+    <button class="strike-btn" onclick="generateDynamicMatrix()">🔄 توليد بلاغ جديد فريد</button>
+    <button class="strike-btn" style="background:#007aff; color:white;" onclick="executeStrike('mailto')">📧 إرسال عبر الجيميل</button>
+    <button onclick="closeApp()" style="width:100%; background:none; color:red; border:none; margin-top:15px;">إغلاق</button>
 </div>
 
 <audio id="war-music" loop>
@@ -131,8 +123,8 @@
 
     function playClick() {
         const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
-        o.type = 'sine'; o.frequency.setValueAtTime(1000, audioCtx.currentTime);
-        g.gain.setValueAtTime(0.05, audioCtx.currentTime);
+        o.type = 'sine'; o.frequency.setValueAtTime(800, audioCtx.currentTime);
+        g.gain.setValueAtTime(0.03, audioCtx.currentTime);
         g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
         o.connect(g); g.connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime + 0.05);
     }
@@ -143,38 +135,53 @@
 
     function executeStrike(url) {
         playClick();
-        if(navigator.vibrate) navigator.vibrate(500);
+        if(navigator.vibrate) navigator.vibrate(400);
         setTimeout(() => {
             if(url === 'mailto') {
                 const emails = "legal@tiktok.com,feedback@tiktok.com,privacy@tiktok.com";
                 const body = encodeURIComponent(document.getElementById('legal-matrix').value);
-                window.location.href = `mailto:${emails}?subject=URGENT_LEGAL_COMPLAINT&body=${body}`;
+                window.location.href = `mailto:${emails}?subject=Report_Submission&body=${body}`;
             } else { window.location.href = url; }
         }, 300);
     }
 
-    // مصفوفة البلاغات العملاقة المتغيرة (600+ حرف مع الرابط)
-    function generateMegaMatrix() {
+    // محرك توليد البلاغات المتغيرة والفريدة (Anti-Spam)
+    function generateDynamicMatrix() {
         playClick();
-        const targetUrl = "https://www.tiktok.com/@TARGET_ACCOUNT"; // الرابط المدرج
-        const reportParts = [
-            `OFFICIAL LEGAL NOTICE - INTELLECTUAL PROPERTY & DIGITAL SAFETY DIVISION\n`,
-            `REFERENCE_ID: DZ-ALGERIA-${Math.floor(Math.random()*9999999)}\n`,
-            `----------------------------------------------------------------------\n`,
-            `DEAR TIKTOK LEGAL AND MODERATION TEAM,\n\n`,
-            `WE ARE FILING A HIGH-PRIORITY FORMAL COMPLAINT AGAINST THE USER ACCOUNT ACCESSIBLE VIA THIS LINK: ${targetUrl}. \n\n`,
-            `THIS ACCOUNT HAS BEEN IDENTIFIED BY OUR SECURITY DIVISION FOR MULTIPLE GRAVE VIOLATIONS OF YOUR COMMUNITY GUIDELINES. OUR LOGS INDICATE SYSTEMIC HARASSMENT, CYBER-BULLYING, AND THE DISSEMINATION OF HATE SPEECH DIRECTED AT SPECIFIC INDIVIDUALS AND GROUPS. THESE ACTIONS CONSTITUTE A DIRECT BREACH OF YOUR TERMS OF SERVICE, SPECIFICALLY SECTION 4 (SAFETY) AND SECTION 7 (CONDUCT). \n\n`,
-            `THE TARGETED BEHAVIOR FROM ${targetUrl} REPRESENTS A CONTINUOUS RISK TO PLATFORM INTEGRITY. WE DEMAND AN IMMEDIATE ADMINISTRATIVE AUDIT, DATA PRESERVATION, AND THE PERMANENT SUSPENSION OF THE ACCOUNT TO ENSURE A SAFE DIGITAL ENVIRONMENT. \n\n`,
-            `WE EXPECT THIS MATTER TO BE RESOLVED WITHIN THE LEGAL TIMEFRAME. FAILURE TO ACT MAY RESULT IN FURTHER ESCALATION TO GLOBAL DIGITAL OVERSIGHT BODIES. \n\n`,
-            `SINCERELY,\nADMINISTRATIVE COMPLIANCE UNIT - ALGERIAN DIVISION.\n`,
-            `----------------------------------------------------------------------\n`,
-            `[STATUS: MAXIMUM_STRIKE_ACTIVE]`
-        ];
+        const targetUrl = "https://www.tiktok.com/@TARGET_ACCOUNT";
         
-        const fullMatrix = reportParts.join("");
-        document.getElementById('legal-matrix').value = fullMatrix;
-        navigator.clipboard.writeText(fullMatrix);
-        alert("تم توليد ونسخ المصفوفة العملاقة مع الرابط بنجاح!");
+        const intros = [
+            "I am writing to formally report a serious violation of community standards regarding the following account: ",
+            "This message serves as a formal complaint against the user profile located at: ",
+            "I would like to bring to your immediate attention a breach of platform safety policies on the account: "
+        ];
+        const reasons = [
+            "The content shared by this user involves targeted harassment and repeated cyber-bullying against others. This behavior is a direct violation of safety guidelines. ",
+            "This account is persistently spreading hateful content and promoting prohibited ideologies, which negatively affects the community environment. ",
+            "The user in question is engaging in malicious conduct and systemic harassment that breaches the terms of service regarding user safety. "
+        ];
+        const demands = [
+            "I request a thorough review and immediate suspension of this account to prevent further harm. ",
+            "Please take the necessary administrative steps to deactivate this profile as it continues to violate platform rules. ",
+            "A permanent suspension is required to maintain the integrity and safety of the community. "
+        ];
+        const closings = [
+            "Thank you for your prompt attention to this safety matter.",
+            "I expect a quick resolution regarding this violation report.",
+            "Respectfully submitted for your compliance review."
+        ];
+
+        // اختيار عشوائي لضمان عدم التكرار
+        const randomIntro = intros[Math.floor(Math.random() * intros.length)];
+        const randomReason = reasons[Math.floor(Math.random() * reasons.length)];
+        const randomDemand = demands[Math.floor(Math.random() * demands.length)];
+        const randomClosing = closings[Math.floor(Math.random() * closings.length)];
+
+        const finalMatrix = `${randomIntro}${targetUrl}\n\n${randomReason}\n${randomDemand}\n\n${randomClosing}`;
+        
+        document.getElementById('legal-matrix').value = finalMatrix;
+        navigator.clipboard.writeText(finalMatrix);
+        alert("تم توليد بلاغ رسمي فريد ونقله لذاكرة النظام!");
     }
 </script>
 </body>
