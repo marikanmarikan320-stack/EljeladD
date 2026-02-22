@@ -3,411 +3,256 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>منظومة الاشتعال | الجلاد الجزائري</title>
+    <title>منظومة الجلاد | Cyber Phone OS</title>
     <style>
-        :root {
-            --hacker-green: #00ff41;
-            --hacker-red: #ff0041;
-            --hacker-blue: #00e0ff;
-            --glass-bg: rgba(0, 0, 0, 0.75);
-            --glow-light: 0 0 15px var(--hacker-green), 0 0 25px var(--hacker-green);
+        :root { 
+            --main-glow: #00ff41; 
+            --danger: #ff0000; 
+            --ios-bg: rgba(0, 0, 0, 0.85); 
         }
+
+        /* منع التكبير والتصغير وجعل الواجهة ثابتة كالهاتف */
+        * { touch-action: manipulation; user-select: none; }
 
         body {
-            background-color: #000;
-            margin: 0; padding: 0;
-            overflow: hidden; /* يمنع التمرير */
-            height: 100vh; width: 100vw;
-            display: flex; justify-content: center; align-items: center;
-            font-family: 'Segoe UI', sans-serif;
-            -webkit-touch-callout: none; -webkit-user-select: none;
-            -khtml-user-select: none; -moz-user-select: none;
-            -ms-user-select: none; user-select: none;
-        }
-
-        /* حاوية الهاتف الثابتة "iPhone Hacker Edition" */
-        .iphone-frame {
-            width: 380px; /* عرض iPhone ثابت */
-            height: 780px; /* ارتفاع iPhone ثابت */
-            background: #1a1a1a;
-            border-radius: 40px;
-            position: relative;
-            overflow: hidden;
-            border: 6px solid;
-            animation: rgbEdgeGlow 4s infinite linear; /* توهج الحواف RGB */
-        }
-
-        @keyframes rgbEdgeGlow {
-            0% { border-color: var(--hacker-green); box-shadow: 0 0 40px var(--hacker-green); }
-            33% { border-color: var(--hacker-blue); box-shadow: 0 0 40px var(--hacker-blue); }
-            66% { border-color: var(--hacker-red); box-shadow: 0 0 40px var(--hacker-red); }
-            100% { border-color: var(--hacker-green); box-shadow: 0 0 40px var(--hacker-green); }
-        }
-
-        /* الخلفية: صورتك الخاصة بالهاكر */
-        .background-hacker {
-            position: absolute;
-            inset: 0;
-            background-image: url('https://i.postimg.cc/j2fHMWGY/unnamed-(3).jpg');
-            background-size: cover;
-            background-position: center;
-            filter: brightness(0.6) contrast(1.2); /* لجعلها داكنة ومتباينة أكثر */
-            z-index: 1;
-        }
-
-        /* طبقة التراكب للمحتوى */
-        .content-layer {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 40%, rgba(0,0,0,0.85) 100%);
-            z-index: 2;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 25px;
+            background: #000 url('https://i.postimg.cc/j2fHMWGY/unnamed-3.jpg') no-repeat center center fixed;
+            background-size: cover; 
+            color: white; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0; 
+            overflow: hidden; 
+            height: 100vh;
+            width: 100vw;
+            border: 5px solid var(--main-glow); 
             box-sizing: border-box;
+            animation: edgePulse 2s infinite;
         }
 
-        /* الساعة الرقمية لشاشة الهاكر */
-        .hacker-clock {
+        @keyframes edgePulse { 
+            0%, 100% { border-color: var(--main-glow); box-shadow: inset 0 0 20px var(--main-glow); } 
+            50% { border-color: var(--danger); box-shadow: inset 0 0 20px var(--danger); } 
+        }
+
+        /* اسم المنظومة - تأثير احترافي */
+        .system-branding {
             text-align: center;
+            margin-top: 15px;
+            animation: flicker 3s infinite;
+        }
+        @keyframes flicker {
+            0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; text-shadow: 0 0 10px var(--main-glow); }
+            20%, 24%, 55% { opacity: 0; }
+        }
+
+        .title-top { font-size: 1.2rem; font-weight: bold; color: white; margin: 0; }
+        .sub-title { font-size: 0.8rem; color: var(--main-glow); letter-spacing: 1px; }
+
+        /* الساعة الرقمية */
+        #clock { 
+            font-size: 4rem; 
+            text-align: center; 
+            font-weight: 100; 
             margin-top: 20px;
-            color: var(--hacker-green);
-            font-size: 3.5rem;
-            font-weight: 200;
-            text-shadow: var(--glow-light);
-            letter-spacing: 2px;
-        }
-
-        /* اسم المنظومة والقائد */
-        .system-info {
-            text-align: center;
             color: white;
-            margin-top: 25px;
-            text-shadow: 0 0 10px rgba(0,255,65,0.7);
-        }
-        .system-info h1 {
-            font-size: 1.4rem;
-            margin-bottom: 5px;
-            color: var(--hacker-green);
-        }
-        .system-info p {
-            font-size: 0.8rem;
-            margin: 0;
-            font-style: italic;
+            text-shadow: 0 0 15px var(--main-glow);
         }
 
-        /* شبكة الأزرار الأربعة */
-        .button-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr); /* زرين في كل صف */
-            gap: 25px;
-            margin-bottom: 50px; /* مسافة من الأسفل */
+        /* الرادار الخلفي */
+        .radar-container {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            opacity: 0.4;
+        }
+        .radar {
+            width: 250px; height: 250px;
+            border: 2px solid var(--main-glow);
+            border-radius: 50%;
+            position: relative;
+        }
+        .radar::before {
+            content: ''; position: absolute; width: 50%; height: 2px;
+            background: linear-gradient(to right, transparent, var(--main-glow));
+            top: 50%; left: 50%; transform-origin: left;
+            animation: sweep 3s linear infinite;
+        }
+        @keyframes sweep { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        /* الأيقونات (Dock) */
+        .dock {
+            position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
+            width: 90%; background: var(--ios-bg); backdrop-filter: blur(15px);
+            border-radius: 25px; padding: 15px; display: flex; justify-content: space-around;
+            border: 1px solid var(--main-glow);
         }
 
-        .action-button-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-            transition: transform 0.2s ease-out;
-            -webkit-tap-highlight-color: transparent;
+        .icon-btn {
+            display: flex; flex-direction: column; align-items: center;
+            animation: iconGlow 2s infinite alternate;
         }
-        .action-button-item:active { transform: scale(0.9); }
-
-        .button-icon {
-            width: 80px; height: 80px; /* أيقونات أكبر */
-            border-radius: 20px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(0,255,65,0.4);
-            display: flex; justify-content: center; align-items: center;
-            font-size: 2.2rem; color: white;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-            margin-bottom: 10px;
-        }
-        .button-icon.green { color: var(--hacker-green); border-color: var(--hacker-green); }
-        .button-icon.red { color: var(--hacker-red); border-color: var(--hacker-red); }
-        .button-icon.blue { color: var(--hacker-blue); border-color: var(--hacker-blue); }
-
-        .button-label {
-            font-size: 0.85rem; color: #eee;
-            font-weight: bold; text-shadow: 1px 1px 3px #000;
+        @keyframes iconGlow { 
+            from { filter: drop-shadow(0 0 2px var(--main-glow)); } 
+            to { filter: drop-shadow(0 0 10px var(--main-glow)); } 
         }
 
-        /* نافذة العمليات */
-        .operation-window {
-            position: absolute; inset: 0;
-            background: rgba(0,0,0,0.95);
-            backdrop-filter: blur(15px);
-            z-index: 100;
-            display: none; flex-direction: column;
-            padding: 30px 20px; box-sizing: border-box;
-            animation: slideInFromTop 0.3s ease-out;
-        }
-        .operation-window.active { display: flex; }
-        @keyframes slideInFromTop { from { transform: translateY(-100%); } to { transform: translateY(0); } }
-
-        .operation-window h2 {
-            color: var(--hacker-green); text-align: center;
-            text-shadow: var(--glow-light); margin-bottom: 25px;
+        .icon-circle {
+            width: 55px; height: 55px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; background: rgba(0,0,0,0.6);
+            border: 1px solid var(--main-glow);
         }
 
-        .operation-window textarea {
-            width: 100%; flex-grow: 1;
-            background: #050505; color: var(--hacker-green);
-            border: 1px solid var(--hacker-green); border-radius: 12px;
-            padding: 15px; font-family: monospace; font-size: 0.9rem;
-            resize: none; outline: none; margin-bottom: 20px;
-        }
+        .icon-label { font-size: 0.65rem; margin-top: 5px; color: #fff; font-weight: bold; }
 
-        .op-btn {
-            width: 100%; padding: 18px;
-            border: none; border-radius: 12px;
-            font-weight: bold; font-size: 1.1rem; cursor: pointer;
-            transition: background-color 0.2s;
-            margin-bottom: 15px;
-        }
-        .op-btn.green { background-color: var(--hacker-green); color: black; }
-        .op-btn.red { background-color: var(--hacker-red); color: white; }
-        .op-btn.back { background-color: #333; color: white; }
-
-        /* شاشة البداية */
-        #boot-screen {
-            position: absolute; inset: 0;
-            background: #000; z-index: 200;
+        /* شاشة القفل والبصمة */
+        #lock-screen {
+            position: fixed; inset: 0; background: #000; z-index: 9999;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
-        #boot-screen h1 {
-            color: white; text-align: center;
-            text-shadow: var(--glow-light); font-size: 2rem;
+        .fingerprint {
+            font-size: 5rem; cursor: pointer; transition: 0.3s;
+            filter: drop-shadow(0 0 15px var(--main-glow));
         }
-        #boot-screen button {
-            padding: 18px 50px; border-radius: 30px;
-            background: var(--hacker-green); color: black;
-            border: none; font-weight: bold; font-size: 1.2rem;
-            cursor: pointer; margin-top: 40px;
+        .fingerprint:active { transform: scale(0.9); }
+
+        /* نوافذ العمليات */
+        .app-window {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95);
+            z-index: 1000; padding: 40px 20px; overflow-y: auto;
+        }
+        .app-window.active { display: block; animation: zoomIn 0.3s ease; }
+        textarea {
+            width: 100%; height: 250px; background: #050505; color: var(--main-glow);
+            border: 1px solid var(--main-glow); border-radius: 10px; padding: 10px; font-family: monospace; font-size: 0.8rem;
+        }
+        .strike-btn {
+            width: 100%; padding: 15px; background: var(--main-glow); color: #000;
+            border: none; border-radius: 10px; font-weight: bold; margin-top: 10px; cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-<div class="iphone-frame">
-    <div class="background-hacker"></div>
-    <div class="content-layer" id="main-interface">
-        <div class="hacker-clock" id="hacker-time">00:00</div>
-
-        <div class="system-info">
-            <h1>منظومة جيش التبليغ الجزائري</h1>
-            <p>بـقـيادة الـجـلاد الـجـزائـري</p>
-        </div>
-
-        <div class="button-grid">
-            <div class="action-button-item" onclick="openOperationWindow('op-window-legal')">
-                <div class="button-icon green">🛡️</div>
-                <div class="button-label">بلاغ قانوني</div>
-            </div>
-            <div class="action-button-item" onclick="openOperationWindow('op-window-attack')">
-                <div class="button-icon red">🧨</div>
-                <div class="button-label">هجوم مباشر</div>
-            </div>
-            <div class="action-button-item" onclick="openOperationWindow('op-window-matrix')">
-                <div class="button-icon blue">📡</div>
-                <div class="button-label">مولد المصفوفة</div>
-            </div>
-            <div class="action-button-item" onclick="rebootSystem()">
-                <div class="button-icon green">🔄</div>
-                <div class="button-label">إعادة تشغيل</div>
-            </div>
-        </div>
+<div id="lock-screen">
+    <div class="system-branding">
+        <h1 class="title-top">منظومة جيش التبليغ الجزائري</h1>
+        <div class="sub-title">بقيادة الجلاد الجزائري</div>
     </div>
+    <div class="fingerprint" onclick="unlock()">🛡️</div>
+    <p style="color: var(--main-glow); margin-top: 20px;">بصمة الجندي للتحقق</p>
+</div>
 
-    <div id="boot-screen">
-        <div style="font-size: 6rem; filter: drop-shadow(var(--glow-light));">🔥</div>
-        <h1>مـنـظـومـة الاشـتـعـال<br><small style="color:var(--hacker-green)">تـحـت قـيـادة الـجـلاد</small></h1>
-        <button onclick="startSystem()">دخـول الـنـظـام 🇩🇿</button>
+<div class="radar-container"><div class="radar"></div></div>
+
+<div class="system-branding">
+    <p class="title-top">الترسانة الحربية</p>
+    <p class="sub-title">UNIT: ALGERIAN_CYBER_ARMY</p>
+</div>
+
+<div id="clock">00:00</div>
+
+<div class="dock">
+    <div class="icon-btn" onclick="openApp('w1')">
+        <div class="icon-circle">🛡️</div>
+        <div class="icon-label">بلاغ</div>
     </div>
-
-    <div class="operation-window" id="op-window-legal">
-        <h2>بـلاغ قـانـونـي رسـمـي</h2>
-        <textarea id="legal-report-output" readonly></textarea>
-        <button class="op-btn green" onclick="executeAttack('https://www.tiktok.com/legal/report/feedback')">🚀 تـنـفـيذ الـبـلاغ</button>
-        <button class="op-btn back" onclick="closeOperationWindow()">🔙 عودة</button>
+    <div class="icon-btn" onclick="openApp('w2')">
+        <div class="icon-circle" style="border-color: red;">🧨</div>
+        <div class="icon-label">اقتحام</div>
     </div>
-
-    <div class="operation-window" id="op-window-attack">
-        <h2>هـجـوم مـباشر</h2>
-        <p style="color:#aaa; text-align:center;">يتم توجيه الضربة مباشرة للهدف المحدد.</p>
-        <button class="op-btn red" onclick="executeAttack('https://www.tiktok.com/')">🧨 إطـلاق الـقـنبلة</button>
-        <button class="op-btn back" onclick="closeOperationWindow()">🔙 عودة</button>
+    <div class="icon-btn" onclick="openApp('w3')">
+        <div class="icon-circle" style="border-color: #007aff;">📡</div>
+        <div class="icon-label">المصفوفة</div>
     </div>
-
-    <div class="operation-window" id="op-window-matrix">
-        <h2>مـولـد الـمـصـفـوفـة الـحـربية</h2>
-        <textarea id="matrix-generator-text" readonly></textarea>
-        <button class="op-btn green" onclick="generateMatrix()">🔄 تـولـيد مـصـفـوفـة جـديـدة</button>
-        <button class="op-btn back" onclick="closeOperationWindow()">🔙 عودة</button>
+    <div class="icon-btn" onclick="location.reload()">
+        <div class="icon-circle">🔄</div>
+        <div class="icon-label">إعادة</div>
     </div>
 </div>
 
+<div class="app-window" id="w3">
+    <h2 style="color:var(--main-glow)">[ مصفوفة الموت المليونية ]</h2>
+    <textarea id="heavy-matrix" readonly></textarea>
+    <button class="strike-btn" onclick="generateHeavyMatrix()">🔄 تـولـيد الـمصفوفة الـكبرى</button>
+    <button class="strike-btn" style="background:#fff;" onclick="launch('mailto')">🚀 تـنـفـيذ الـقصف</button>
+    <button onclick="closeApp()" style="width:100%; background:none; color:red; border:none; margin-top:20px;">خروج</button>
+</div>
+
+<div class="app-window" id="w1">
+    <h2 style="color:var(--main-glow)">[ البلاغ القانوني ]</h2>
+    <p>قم بنسخ المصفوفة ثم اضغط تنفيذ لفتح الموقع.</p>
+    <button class="strike-btn" onclick="launch('https://www.tiktok.com/legal/report/feedback')">🚀 بـدء الـقصف</button>
+    <button onclick="closeApp()" style="width:100%; background:none; color:red; border:none; margin-top:20px;">خروج</button>
+</div>
+
+<div class="app-window" id="w2">
+    <h2 style="color:red">[ هـجوم مـباشر ]</h2>
+    <button class="strike-btn" style="background:red; color:white;" id="direct-btn">🧨 إطـلاق الصاروخ</button>
+    <button onclick="closeApp()" style="width:100%; background:none; color:red; border:none; margin-top:20px;">خروج</button>
+</div>
+
 <script>
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    let cyberWarMusic = null; // مصدر صوت الموسيقى
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    let music = null;
 
-    // تحديث الساعة
-    function updateHackerTime() {
+    function updateClock() {
         const now = new Date();
-        document.getElementById('hacker-time').innerText = now.toLocaleTimeString('ar-DZ', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+        document.getElementById('clock').innerText = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
     }
-    setInterval(updateHackerTime, 1000);
-    updateHackerTime(); // عرض الوقت فورًا
+    setInterval(updateClock, 1000); updateClock();
 
-    // تشغيل موسيقى Cyber Attack War Music
-    async function playCyberWarMusic() {
-        if (cyberWarMusic) return; // إذا كانت الموسيقى تعمل بالفعل
-
-        const masterGain = audioContext.createGain();
-        masterGain.gain.setValueAtTime(0.04, audioContext.currentTime); // حجم منخفض
-        masterGain.connect(audioContext.destination);
-
-        // توليد نغمات Synthwave / Cyber War
-        const notes = [
-            { freq: 130.81, duration: 0.5 }, // C3
-            { freq: 164.81, duration: 0.5 }, // E3
-            { freq: 196.00, duration: 0.5 }, // G3
-            { freq: 261.63, duration: 0.5 }, // C4
-            { freq: 246.94, duration: 0.5 }, // B3
-            { freq: 220.00, duration: 0.5 }, // A3
-            { freq: 196.00, duration: 0.5 }, // G3
-            { freq: 164.81, duration: 0.5 }  // E3
-        ];
-
-        const playNote = (time, freq, duration) => {
-            const osc = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(freq, time);
-            osc.connect(gainNode);
-            gainNode.connect(masterGain);
-            gainNode.gain.setValueAtTime(0.2, time);
-            gainNode.gain.exponentialRampToValueAtTime(0.001, time + duration * 0.9);
-            osc.start(time);
-            osc.stop(time + duration);
-        };
-
-        const sequenceDuration = notes.reduce((sum, note) => sum + note.duration, 0);
-
-        const loopMusic = () => {
-            let currentTime = audioContext.currentTime;
-            notes.forEach(note => {
-                playNote(currentTime, note.freq, note.duration);
-                currentTime += note.duration;
+    function playWarMusic() {
+        if(music) return;
+        const master = audioCtx.createGain(); master.gain.setValueAtTime(0.05, audioCtx.currentTime); master.connect(audioCtx.destination);
+        const loop = () => {
+            const t = audioCtx.currentTime;
+            [110, 130, 110, 150].forEach((f, i) => {
+                const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+                o.type = 'sawtooth'; o.frequency.setValueAtTime(f, t + i*0.25);
+                o.connect(g); g.connect(master);
+                g.gain.setValueAtTime(0.2, t + i*0.25); g.gain.exponentialRampToValueAtTime(0.001, t + i*0.25 + 0.4);
+                o.start(t + i*0.25); o.stop(t + i*0.25 + 0.4);
             });
         };
-
-        cyberWarMusic = setInterval(loopMusic, sequenceDuration * 1000); // كرر اللحن بالكامل
-        loopMusic(); // تشغيل اللحن فوراً
+        music = setInterval(loop, 1000);
     }
 
-    // إيقاف الموسيقى
-    function stopCyberWarMusic() {
-        if (cyberWarMusic) {
-            clearInterval(cyberWarMusic);
-            cyberWarMusic = null;
-        }
+    function unlock() { 
+        audioCtx.resume(); 
+        playWarMusic(); 
+        document.getElementById('lock-screen').style.display = 'none'; 
+        if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
     }
 
-    // صوت نقرة الزر
-    function playButtonClickSound() {
-        const osc = audioContext.createOscillator();
-        const gain = audioContext.createGain();
-        osc.type = 'square'; osc.frequency.setValueAtTime(1800, audioContext.currentTime);
-        osc.connect(gain); gain.connect(audioContext.destination);
-        gain.gain.setValueAtTime(0.03, audioContext.currentTime); osc.start(); osc.stop(audioContext.currentTime + 0.06);
+    function openApp(id) { 
+        document.getElementById(id).classList.add('active'); 
+        if(id === 'w3') generateHeavyMatrix(); 
+    }
+    
+    function closeApp() { 
+        document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active')); 
     }
 
-    // صوت الانفجار مع الاهتزاز
-    function playExplosionVibration() {
-        const osc = audioContext.createOscillator();
-        const gain = audioContext.createGain();
-        osc.type = 'sine'; osc.frequency.setValueAtTime(40, audioContext.currentTime);
-        osc.connect(gain); gain.connect(audioContext.destination);
-        gain.gain.setValueAtTime(1, audioContext.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 1.5);
-        osc.start(); osc.stop(audioContext.currentTime + 1.5);
-        if (navigator.vibrate) navigator.vibrate(1000); // اهتزاز قوي لمدة ثانية
+    function launch(url) {
+        if(url === 'mailto') {
+            const body = encodeURIComponent(document.getElementById('heavy-matrix').value);
+            window.location.href = `mailto:legal@tiktok.com?subject=LEGAL_COMPLAINT_REF_DZ&body=${body}`;
+        } else { window.location.href = url; }
     }
 
-    // بدء تشغيل النظام (بعد شاشة البداية)
-    function startSystem() {
-        audioContext.resume();
-        playCyberWarMusic();
-        document.getElementById('boot-screen').style.display = 'none';
-    }
-
-    // فتح نافذة العملية
-    function openOperationWindow(windowId) {
-        playButtonClickSound();
-        stopCyberWarMusic(); // إيقاف الموسيقى عند فتح النافذة
-        document.getElementById(windowId).classList.add('active');
-        if (windowId === 'op-window-matrix' || windowId === 'op-window-legal') {
-            generateMatrix(); // توليد المصفوفة تلقائياً
-        }
-    }
-
-    // إغلاق نافذة العملية
-    function closeOperationWindow() {
-        playButtonClickSound();
-        document.querySelectorAll('.operation-window').forEach(win => win.classList.remove('active'));
-        playCyberWarMusic(); // إعادة تشغيل الموسيقى
-    }
-
-    // إعادة تشغيل النظام
-    function rebootSystem() {
-        playButtonClickSound();
-        alert('النظام قيد إعادة التشغيل... يرجى الانتظار.');
-        setTimeout(() => location.reload(), 1500); // إعادة تحميل الصفحة
-    }
-
-    // توليد مصفوفة البلاغ الرسمي
-    function generateMatrix() {
-        const targetPlaceholder = "TARGET_ACCOUNT_LINK_HERE";
-        const matrixContent = `OFFICIAL PRIORITY CLASSIFIED REPORT - UNIT: ALGERIAN CYBER ARMY\n` +
-            `---------------------------------------------------------------------------\n` +
-            `ATTENTION: LEGAL COMPLIANCE AND SAFETY ENFORCEMENT TEAM.\n` +
-            `SUBJECT: CRITICAL VIOLATIONS ALERT - ACCOUNT BEHAVIOR ANALYSIS (${targetPlaceholder})\n\n` +
-            `هذا بلاغ قانوني رسمي تم إصداره بواسطة بروتوكول الذكاء الاصطناعي الخاص بمنظومة "الثقب الأسود الجزائري". ` +
-            `تم تحديد الحساب المشار إليه لانتهاكاته المتكررة لسياسات المنصة ومعايير السلوك الرقمي الدولية. ` +
-            `تظهر تحليلاتنا جهودًا منسقة لتعزيز المحتوى الضار، بما في ذلك: التحريض على العنف، نشر المعلومات المضللة، ` +
-            `وتجاوز آليات الإشراف عبر تقنيات التشفير المتقدمة واستغلال ثغرات الطرف الثالث. ` +
-            `تشكل هذه الإجراءات خطرًا كبيرًا على سلامة المستخدمين وسلامة الإطار التشغيلي للمنصة. ` +
-            `نطالب بمراجعة فورية وشاملة لجميع البيانات المرتبطة، مما يؤدي إلى التعليق الدائم للحساب وحظر الجهاز ` +
-            `على مستوى IMEI لمنع إعادة التسجيل. ` +
-            `عدم التصرف الفوري سيعتبر بمثابة نقص في الالتزام بمعايير الأمن الرقمي. ` +
-            `تم تصنيف هذا البلاغ على أنه "خرق أمني ذو أولوية قصوى".\n\n` +
-            `CASE_REFERENCE_ID: DZ-${Math.random().toString(36).substring(2, 10).toUpperCase()}-${Date.now()}\n` +
-            `REPORTING_ENTITY: ALGERIAN CYBER ARMY (الجلاد الجزائري)\n` +
-            `CONFIDENTIALITY: STRICTLY ENFORCED\n` +
-            `---------------------------------------------------------------------------\n`;
-
-        document.getElementById('legal-report-output').value = matrixContent;
-        document.getElementById('matrix-generator-text').value = matrixContent;
-        navigator.clipboard.writeText(matrixContent);
-    }
-
-    // تنفيذ الهجوم (فتح رابط)
-    function executeAttack(url) {
-        playExplosionVibration();
-        setTimeout(() => {
-            if (url.includes('mailto:')) {
-                const body = encodeURIComponent(document.getElementById('legal-report-output').value);
-                window.location.href = `mailto:legal@tiktok.com?subject=URGENT_LEGAL_COMPLAINT_DZ&body=${body}`;
-            } else {
-                window.location.href = url; // لفتح TikTok أو أي رابط آخر
-            }
-        }, 1200); // تأخير للسماح بصوت الانفجار والاهتزاز
+    function generateHeavyMatrix() {
+        const target = "https://www.tiktok.com";
+        const matrix = `OFFICIAL PRIORITY COMPLAINT - UNIT: ALGERIAN_CYBER_ARMY\n` +
+            "-----------------------------------------------------------\n" +
+            `ATTN: LEGAL MODERATION TEAM. SUBJECT: ACCOUNT VIOLATION REPORT\n\n` +
+            "THIS IS A FORMAL LEGAL COMPLAINT REGARDING SERIOUS COMMUNITY VIOLATIONS... " +
+            "LOGGED_BY: THE_ALGERIAN_EXECUTIONER (الجلاد الجزائري)\n" +
+            "COORDINATES: UNIT_DZ_NORTH_AFRICA\n" +
+            "REPORT_HASH: " + btoa(Math.random()).substring(0, 32);
+        document.getElementById('heavy-matrix').value = matrix;
+        navigator.clipboard.writeText(matrix);
     }
 </script>
-
 </body>
 </html>
-```http://googleusercontent.com/image_generation_content/7
