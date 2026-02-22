@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>منظومة جيش التبليغ الجزائري - COMMANDER AL JALLAD</title>
+    <title>منظومة الاشتعال | الجلاد الجزائري</title>
     <style>
         :root {
             --hacker-green: #00ff41;
             --hacker-red: #ff0041;
-            --glass-bg: rgba(0, 0, 0, 0.7);
-            --glow-effect: 0 0 10px var(--hacker-green), 0 0 20px var(--hacker-green);
+            --hacker-blue: #00e0ff;
+            --glass-bg: rgba(0, 0, 0, 0.75);
+            --glow-light: 0 0 15px var(--hacker-green), 0 0 25px var(--hacker-green);
         }
 
         body {
@@ -19,385 +20,361 @@
             height: 100vh; width: 100vw;
             display: flex; justify-content: center; align-items: center;
             font-family: 'Segoe UI', sans-serif;
-            -webkit-touch-callout: none; /* لمنع ظهور قائمة الضغط المطول في iOS */
-            -webkit-user-select: none; /* لمنع تحديد النص في iOS */
-            -khtml-user-select: none; /* لمنع تحديد النص في Chrome/Safari */
-            -moz-user-select: none; /* لمنع تحديد النص في Firefox */
-            -ms-user-select: none; /* لمنع تحديد النص في IE/Edge */
-            user-select: none; /* لمنع تحديد النص */
+            -webkit-touch-callout: none; -webkit-user-select: none;
+            -khtml-user-select: none; -moz-user-select: none;
+            -ms-user-select: none; user-select: none;
         }
 
-        /* حاوية الهاتف الثابتة */
-        .phone-display {
-            width: 380px; /* عرض ثابت للهاتف */
-            height: 780px; /* ارتفاع ثابت للهاتف */
-            background: #111;
+        /* حاوية الهاتف الثابتة "iPhone Hacker Edition" */
+        .iphone-frame {
+            width: 380px; /* عرض iPhone ثابت */
+            height: 780px; /* ارتفاع iPhone ثابت */
+            background: #1a1a1a;
             border-radius: 40px;
-            box-shadow: 0 0 50px rgba(0,255,65,0.7), inset 0 0 30px rgba(0,255,65,0.5);
             position: relative;
             overflow: hidden;
-            border: 5px solid;
-            animation: borderGlow 3s infinite alternate; /* توهج الحواف */
+            border: 6px solid;
+            animation: rgbEdgeGlow 4s infinite linear; /* توهج الحواف RGB */
         }
 
-        @keyframes borderGlow {
-            0% { border-color: var(--hacker-green); box-shadow: 0 0 50px var(--hacker-green), inset 0 0 30px var(--hacker-green); }
-            50% { border-color: var(--hacker-red); box-shadow: 0 0 50px var(--hacker-red), inset 0 0 30px var(--hacker-red); }
-            100% { border-color: var(--hacker-green); box-shadow: 0 0 50px var(--hacker-green), inset 0 0 30px var(--hacker-green); }
+        @keyframes rgbEdgeGlow {
+            0% { border-color: var(--hacker-green); box-shadow: 0 0 40px var(--hacker-green); }
+            33% { border-color: var(--hacker-blue); box-shadow: 0 0 40px var(--hacker-blue); }
+            66% { border-color: var(--hacker-red); box-shadow: 0 0 40px var(--hacker-red); }
+            100% { border-color: var(--hacker-green); box-shadow: 0 0 40px var(--hacker-green); }
         }
 
-        /* الخلفية المخصصة (صورتك) */
-        .background-image {
+        /* الخلفية: صورتك الخاصة بالهاكر */
+        .background-hacker {
             position: absolute;
             inset: 0;
             background-image: url('https://i.postimg.cc/j2fHMWGY/unnamed-(3).jpg');
             background-size: cover;
             background-position: center;
-            filter: brightness(0.7) contrast(1.1); /* لجعلها تبدو أكثر قتامة ومناسبة */
+            filter: brightness(0.6) contrast(1.2); /* لجعلها داكنة ومتباينة أكثر */
             z-index: 1;
         }
 
-        /* طبقة تراكب لضمان وضوح النص والأيقونات */
-        .content-overlay {
+        /* طبقة التراكب للمحتوى */
+        .content-layer {
             position: absolute;
             inset: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.8) 100%);
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 40%, rgba(0,0,0,0.85) 100%);
             z-index: 2;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 20px;
+            padding: 25px;
             box-sizing: border-box;
         }
 
-        /* شريط الحالة العلوي */
-        .status-bar {
-            width: 100%; height: 30px;
-            display: flex; justify-content: space-between; align-items: center;
-            color: var(--hacker-green); font-size: 0.9rem;
-            text-shadow: var(--glow-effect);
-        }
-
-        /* العنوان الرئيسي */
-        .main-title {
+        /* الساعة الرقمية لشاشة الهاكر */
+        .hacker-clock {
             text-align: center;
-            color: var(--hacker-green);
-            text-shadow: var(--glow-effect);
             margin-top: 20px;
+            color: var(--hacker-green);
+            font-size: 3.5rem;
+            font-weight: 200;
+            text-shadow: var(--glow-light);
+            letter-spacing: 2px;
         }
-        .main-title h1 { font-size: 1.5rem; margin-bottom: 5px; }
-        .main-title p { font-size: 0.8rem; margin: 0; }
 
-        /* شبكة الأيقونات (12 أيقونة) */
-        .icon-grid {
+        /* اسم المنظومة والقائد */
+        .system-info {
+            text-align: center;
+            color: white;
+            margin-top: 25px;
+            text-shadow: 0 0 10px rgba(0,255,65,0.7);
+        }
+        .system-info h1 {
+            font-size: 1.4rem;
+            margin-bottom: 5px;
+            color: var(--hacker-green);
+        }
+        .system-info p {
+            font-size: 0.8rem;
+            margin: 0;
+            font-style: italic;
+        }
+
+        /* شبكة الأزرار الأربعة */
+        .button-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            margin-bottom: 20px;
+            grid-template-columns: repeat(2, 1fr); /* زرين في كل صف */
+            gap: 25px;
+            margin-bottom: 50px; /* مسافة من الأسفل */
         }
 
-        .app-item {
-            display: flex; flex-direction: column; align-items: center;
-            cursor: pointer; transition: transform 0.2s ease-out;
+        .action-button-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.2s ease-out;
             -webkit-tap-highlight-color: transparent;
         }
-        .app-item:active { transform: scale(0.9); }
+        .action-button-item:active { transform: scale(0.9); }
 
-        .app-icon {
-            width: 60px; height: 60px;
-            border-radius: 15px;
+        .button-icon {
+            width: 80px; height: 80px; /* أيقونات أكبر */
+            border-radius: 20px;
             background: var(--glass-bg);
-            backdrop-filter: blur(8px); /* تأثير الزجاج */
-            border: 1px solid rgba(0,255,65,0.3);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(0,255,65,0.4);
             display: flex; justify-content: center; align-items: center;
-            font-size: 1.8rem; color: white;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            font-size: 2.2rem; color: white;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+            margin-bottom: 10px;
         }
-        .app-icon.active-green { color: var(--hacker-green); border-color: var(--hacker-green); }
-        .app-icon.active-red { color: var(--hacker-red); border-color: var(--hacker-red); }
-        .app-icon.inactive { opacity: 0.6; filter: grayscale(1); } /* الأيقونات غير المفعلة */
+        .button-icon.green { color: var(--hacker-green); border-color: var(--hacker-green); }
+        .button-icon.red { color: var(--hacker-red); border-color: var(--hacker-red); }
+        .button-icon.blue { color: var(--hacker-blue); border-color: var(--hacker-blue); }
 
-        .app-label {
-            font-size: 0.7rem; color: #eee;
-            margin-top: 5px; font-weight: bold;
-            text-shadow: 1px 1px 3px #000;
+        .button-label {
+            font-size: 0.85rem; color: #eee;
+            font-weight: bold; text-shadow: 1px 1px 3px #000;
         }
 
-        /* نافذة التطبيق المنبثقة */
-        .app-window {
+        /* نافذة العمليات */
+        .operation-window {
             position: absolute; inset: 0;
             background: rgba(0,0,0,0.95);
             backdrop-filter: blur(15px);
             z-index: 100;
             display: none; flex-direction: column;
             padding: 30px 20px; box-sizing: border-box;
-            animation: slideInUp 0.3s ease-out;
+            animation: slideInFromTop 0.3s ease-out;
         }
-        .app-window.active { display: flex; }
-        @keyframes slideInUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .operation-window.active { display: flex; }
+        @keyframes slideInFromTop { from { transform: translateY(-100%); } to { transform: translateY(0); } }
 
-        .app-window h2 {
+        .operation-window h2 {
             color: var(--hacker-green); text-align: center;
-            text-shadow: var(--glow-effect); margin-bottom: 20px;
+            text-shadow: var(--glow-light); margin-bottom: 25px;
         }
 
-        .app-window textarea {
-            width: 100%; flex-grow: 1; /* لتأخذ المساحة المتاحة */
+        .operation-window textarea {
+            width: 100%; flex-grow: 1;
             background: #050505; color: var(--hacker-green);
-            border: 1px solid var(--hacker-green); border-radius: 10px;
-            padding: 15px; font-family: monospace; font-size: 0.85rem;
-            resize: none; outline: none; margin-bottom: 15px;
+            border: 1px solid var(--hacker-green); border-radius: 12px;
+            padding: 15px; font-family: monospace; font-size: 0.9rem;
+            resize: none; outline: none; margin-bottom: 20px;
         }
 
-        .action-btn {
+        .op-btn {
             width: 100%; padding: 18px;
             border: none; border-radius: 12px;
-            font-weight: bold; font-size: 1rem; cursor: pointer;
+            font-weight: bold; font-size: 1.1rem; cursor: pointer;
             transition: background-color 0.2s;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
-        .action-btn.green { background-color: var(--hacker-green); color: black; }
-        .action-btn.red { background-color: var(--hacker-red); color: white; }
-        .action-btn.back { background-color: #333; color: white; }
+        .op-btn.green { background-color: var(--hacker-green); color: black; }
+        .op-btn.red { background-color: var(--hacker-red); color: white; }
+        .op-btn.back { background-color: #333; color: white; }
 
         /* شاشة البداية */
-        #splash-screen {
+        #boot-screen {
             position: absolute; inset: 0;
             background: #000; z-index: 200;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
-        #splash-screen h1 {
+        #boot-screen h1 {
             color: white; text-align: center;
-            text-shadow: var(--glow-effect); font-size: 1.8rem;
+            text-shadow: var(--glow-light); font-size: 2rem;
         }
-        #splash-screen button {
-            padding: 15px 40px; border-radius: 25px;
+        #boot-screen button {
+            padding: 18px 50px; border-radius: 30px;
             background: var(--hacker-green); color: black;
-            border: none; font-weight: bold; font-size: 1.1rem;
-            cursor: pointer; margin-top: 30px;
+            border: none; font-weight: bold; font-size: 1.2rem;
+            cursor: pointer; margin-top: 40px;
         }
     </style>
 </head>
 <body>
 
-<div class="phone-display">
-    <div class="background-image"></div>
-    <div class="content-overlay" id="main-content">
-        <div class="status-bar">
-            <span id="current-time">00:00</span>
-            <span>📶</span>
-            <span>🔋100%</span>
-        </div>
+<div class="iphone-frame">
+    <div class="background-hacker"></div>
+    <div class="content-layer" id="main-interface">
+        <div class="hacker-clock" id="hacker-time">00:00</div>
 
-        <div class="main-title">
+        <div class="system-info">
             <h1>منظومة جيش التبليغ الجزائري</h1>
-            <p>بـقـيـادة الـجـلاد الـجـزائـري</p>
+            <p>بـقـيادة الـجـلاد الـجـزائـري</p>
         </div>
 
-        <div class="icon-grid">
-            <div class="app-item" onclick="openApp('app-window-legal')">
-                <div class="app-icon active-green">🛡️</div>
-                <div class="app-label">بلاغ قانوني</div>
+        <div class="button-grid">
+            <div class="action-button-item" onclick="openOperationWindow('op-window-legal')">
+                <div class="button-icon green">🛡️</div>
+                <div class="button-label">بلاغ قانوني</div>
             </div>
-            <div class="app-item" onclick="openApp('app-window-attack')">
-                <div class="app-icon active-red">🧨</div>
-                <div class="app-label">هجوم مباشر</div>
+            <div class="action-button-item" onclick="openOperationWindow('op-window-attack')">
+                <div class="button-icon red">🧨</div>
+                <div class="button-label">هجوم مباشر</div>
             </div>
-            <div class="app-item" onclick="openApp('app-window-matrix')">
-                <div class="app-icon active-green">📡</div>
-                <div class="app-label">مولد المصفوفة</div>
+            <div class="action-button-item" onclick="openOperationWindow('op-window-matrix')">
+                <div class="button-icon blue">📡</div>
+                <div class="button-label">مولد المصفوفة</div>
             </div>
-            <div class="app-item" onclick="location.reload()">
-                <div class="app-icon active-green">🔄</div>
-                <div class="app-label">إعادة تشغيل</div>
-            </div>
-            
-            <div class="app-item" onclick="alert('Module Offline')">
-                <div class="app-icon inactive">🛰️</div>
-                <div class="app-label">رادار الأهداف</div>
-            </div>
-            <div class="app-item" onclick="alert('Module Offline')">
-                <div class="app-icon inactive">🔐</div>
-                <div class="app-label">تشفير البيانات</div>
-            </div>
-            <div class="app-item" onclick="alert('Module Offline')">
-                <div class="app-icon inactive">🤖</div>
-                <div class="app-label">هجوم بوتات</div>
-            </div>
-            <div class="app-item" onclick="alert('Module Offline')">
-                <div class="app-icon inactive">⚙️</div>
-                <div class="app-label">الإعدادات</div>
-            </div>
-
-            <div class="app-item" onclick="alert('Module Offline')">
-                <div class="app-icon inactive">💬</div>
-                <div class="app-label">اتصالات مشفرة</div>
-            </div>
-            <div class="app-item" onclick="alert('Module Offline')">
-                <div class="app-icon inactive">📍</div>
-                <div class="app-label">تتبع</div>
-            </div>
-            <div class="app-item" onclick="alert('Module Offline')">
-                <div class="app-icon inactive">⚡</div>
-                <div class="app-label">اختراق سريع</div>
-            </div>
-            <div class="app-item" onclick="alert('Module Offline')">
-                <div class="app-icon inactive">📁</div>
-                <div class="app-label">سجل العمليات</div>
+            <div class="action-button-item" onclick="rebootSystem()">
+                <div class="button-icon green">🔄</div>
+                <div class="button-label">إعادة تشغيل</div>
             </div>
         </div>
     </div>
 
-    <div id="splash-screen">
-        <div style="font-size: 6rem; filter: drop-shadow(var(--glow-effect));">🇩🇿</div>
-        <h1>مـنـظـومـة جـيـش الـتـبـلـيـغ<br><small style="color:var(--hacker-green)">بـقـيادة الـجـلاد الـجـزائـري</small></h1>
-        <button onclick="bootSystem()">دخـول الـقـائد 🛡️</button>
+    <div id="boot-screen">
+        <div style="font-size: 6rem; filter: drop-shadow(var(--glow-light));">🔥</div>
+        <h1>مـنـظـومـة الاشـتـعـال<br><small style="color:var(--hacker-green)">تـحـت قـيـادة الـجـلاد</small></h1>
+        <button onclick="startSystem()">دخـول الـنـظـام 🇩🇿</button>
     </div>
 
-    <div class="app-window" id="app-window-legal">
+    <div class="operation-window" id="op-window-legal">
         <h2>بـلاغ قـانـونـي رسـمـي</h2>
-        <textarea id="legal-matrix-output" readonly></textarea>
-        <button class="action-btn green" onclick="executeStrike('https://www.tiktok.com/legal/report/feedback')">🚀 تـنـفـيذ الـهـجـوم</button>
-        <button class="action-btn back" onclick="closeApp('app-window-legal')">🔙 عودة</button>
+        <textarea id="legal-report-output" readonly></textarea>
+        <button class="op-btn green" onclick="executeAttack('https://www.tiktok.com/legal/report/feedback')">🚀 تـنـفـيذ الـبـلاغ</button>
+        <button class="op-btn back" onclick="closeOperationWindow()">🔙 عودة</button>
     </div>
 
-    <div class="app-window" id="app-window-attack">
+    <div class="operation-window" id="op-window-attack">
         <h2>هـجـوم مـباشر</h2>
         <p style="color:#aaa; text-align:center;">يتم توجيه الضربة مباشرة للهدف المحدد.</p>
-        <button class="action-btn red" onclick="executeStrike('https://www.tiktok.com/')">🧨 إطـلاق الـقـنبلة</button>
-        <button class="action-btn back" onclick="closeApp('app-window-attack')">🔙 عودة</button>
+        <button class="op-btn red" onclick="executeAttack('https://www.tiktok.com/')">🧨 إطـلاق الـقـنبلة</button>
+        <button class="op-btn back" onclick="closeOperationWindow()">🔙 عودة</button>
     </div>
 
-    <div class="app-window" id="app-window-matrix">
-        <h2>مـولـد الـمـصـفـوفـة</h2>
-        <textarea id="matrix-generator-output" readonly></textarea>
-        <button class="action-btn green" onclick="generateHeavyMatrix()">🔄 تـولـيد مـصـفـوفـة جـديـدة</button>
-        <button class="action-btn back" onclick="closeApp('app-window-matrix')">🔙 عودة</button>
+    <div class="operation-window" id="op-window-matrix">
+        <h2>مـولـد الـمـصـفـوفـة الـحـربية</h2>
+        <textarea id="matrix-generator-text" readonly></textarea>
+        <button class="op-btn green" onclick="generateMatrix()">🔄 تـولـيد مـصـفـوفـة جـديـدة</button>
+        <button class="op-btn back" onclick="closeOperationWindow()">🔙 عودة</button>
     </div>
 </div>
 
 <script>
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    let backgroundMusicSource = null; // لتخزين مصدر الصوت الحالي
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    let cyberWarMusic = null; // مصدر صوت الموسيقى
 
-    // تحديث الوقت في شريط الحالة
-    function updateTime() {
+    // تحديث الساعة
+    function updateHackerTime() {
         const now = new Date();
-        document.getElementById('current-time').innerText = now.toLocaleTimeString('ar-DZ', { hour: '2-digit', minute: '2-digit', hour12: false });
+        document.getElementById('hacker-time').innerText = now.toLocaleTimeString('ar-DZ', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
     }
-    setInterval(updateTime, 1000); // تحديث كل ثانية
-    updateTime(); // تشغيل فوري عند التحميل
+    setInterval(updateHackerTime, 1000);
+    updateHackerTime(); // عرض الوقت فورًا
 
-    // تشغيل الموسيقى الحماسية (Epic Battle Intro)
-    async function playEpicMusic() {
-        if (backgroundMusicSource) { // إذا كانت الموسيقى تعمل، لا تشغلها مرة أخرى
-            return;
-        }
+    // تشغيل موسيقى Cyber Attack War Music
+    async function playCyberWarMusic() {
+        if (cyberWarMusic) return; // إذا كانت الموسيقى تعمل بالفعل
 
-        // استخدام مولد نغمات لإنشاء صوت شبيه بالموسيقى الحماسية
-        const tempo = 120; // BPM
-        const quarterNote = 60 / tempo;
-        const instrument = (time, freq) => {
-            const osc = audioCtx.createOscillator();
-            osc.type = 'sawtooth'; // صوت قوي
-            osc.frequency.setValueAtTime(freq, time);
-            const gain = audioCtx.createGain();
-            gain.gain.setValueAtTime(0.3, time);
-            gain.gain.exponentialRampToValueAtTime(0.001, time + quarterNote * 0.8);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start(time);
-            osc.stop(time + quarterNote * 0.8);
-        };
+        const masterGain = audioContext.createGain();
+        masterGain.gain.setValueAtTime(0.04, audioContext.currentTime); // حجم منخفض
+        masterGain.connect(audioContext.destination);
 
-        const melody = [
-            { freq: 110, duration: 1 }, // A2
-            { freq: 147, duration: 1 }, // D3
-            { freq: 110, duration: 0.5 },
-            { freq: 164, duration: 0.5 }, // E3
-            { freq: 196, duration: 1 }, // G3
-            { freq: 147, duration: 1 },
-            { freq: 164, duration: 0.5 },
-            { freq: 220, duration: 0.5 }  // A3
+        // توليد نغمات Synthwave / Cyber War
+        const notes = [
+            { freq: 130.81, duration: 0.5 }, // C3
+            { freq: 164.81, duration: 0.5 }, // E3
+            { freq: 196.00, duration: 0.5 }, // G3
+            { freq: 261.63, duration: 0.5 }, // C4
+            { freq: 246.94, duration: 0.5 }, // B3
+            { freq: 220.00, duration: 0.5 }, // A3
+            { freq: 196.00, duration: 0.5 }, // G3
+            { freq: 164.81, duration: 0.5 }  // E3
         ];
 
-        let startTime = audioCtx.currentTime + 0.5; // بدء بعد نصف ثانية
+        const playNote = (time, freq, duration) => {
+            const osc = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(freq, time);
+            osc.connect(gainNode);
+            gainNode.connect(masterGain);
+            gainNode.gain.setValueAtTime(0.2, time);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, time + duration * 0.9);
+            osc.start(time);
+            osc.stop(time + duration);
+        };
 
-        melody.forEach(note => {
-            instrument(startTime, note.freq);
-            startTime += note.duration * quarterNote;
-        });
+        const sequenceDuration = notes.reduce((sum, note) => sum + note.duration, 0);
 
-        // لجعلها تتكرر
-        backgroundMusicSource = setInterval(() => {
-            let loopStartTime = audioCtx.currentTime + 0.1;
-            melody.forEach(note => {
-                instrument(loopStartTime, note.freq);
-                loopStartTime += note.duration * quarterNote;
+        const loopMusic = () => {
+            let currentTime = audioContext.currentTime;
+            notes.forEach(note => {
+                playNote(currentTime, note.freq, note.duration);
+                currentTime += note.duration;
             });
-        }, startTime - (audioCtx.currentTime + 0.5)); // كرر بعد انتهاء اللحن
+        };
+
+        cyberWarMusic = setInterval(loopMusic, sequenceDuration * 1000); // كرر اللحن بالكامل
+        loopMusic(); // تشغيل اللحن فوراً
     }
 
     // إيقاف الموسيقى
-    function stopMusic() {
-        if (backgroundMusicSource) {
-            clearInterval(backgroundMusicSource);
-            backgroundMusicSource = null;
+    function stopCyberWarMusic() {
+        if (cyberWarMusic) {
+            clearInterval(cyberWarMusic);
+            cyberWarMusic = null;
         }
     }
 
-    // صوت النقر على الأيقونات
-    function playClickSound() {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'square'; osc.frequency.setValueAtTime(1500, audioCtx.currentTime);
-        osc.connect(gain); gain.connect(audioCtx.destination);
-        gain.gain.setValueAtTime(0.02, audioCtx.currentTime); osc.start(); osc.stop(audioCtx.currentTime + 0.05);
+    // صوت نقرة الزر
+    function playButtonClickSound() {
+        const osc = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+        osc.type = 'square'; osc.frequency.setValueAtTime(1800, audioContext.currentTime);
+        osc.connect(gain); gain.connect(audioContext.destination);
+        gain.gain.setValueAtTime(0.03, audioContext.currentTime); osc.start(); osc.stop(audioContext.currentTime + 0.06);
     }
 
-    // صوت الانفجار عند إطلاق الهجوم
-    function playExplosionSound() {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'sine'; osc.frequency.setValueAtTime(50, audioCtx.currentTime);
-        osc.connect(gain); gain.connect(audioCtx.destination);
-        gain.gain.setValueAtTime(1, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.5);
-        osc.start(); osc.stop(audioCtx.currentTime + 1.5);
-        if (navigator.vibrate) navigator.vibrate(800); // اهتزاز أقوى
+    // صوت الانفجار مع الاهتزاز
+    function playExplosionVibration() {
+        const osc = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+        osc.type = 'sine'; osc.frequency.setValueAtTime(40, audioContext.currentTime);
+        osc.connect(gain); gain.connect(audioContext.destination);
+        gain.gain.setValueAtTime(1, audioContext.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 1.5);
+        osc.start(); osc.stop(audioContext.currentTime + 1.5);
+        if (navigator.vibrate) navigator.vibrate(1000); // اهتزاز قوي لمدة ثانية
     }
 
     // بدء تشغيل النظام (بعد شاشة البداية)
-    function bootSystem() {
-        audioCtx.resume(); // استئناف سياق الصوت للمتصفحات
-        playEpicMusic();
-        document.getElementById('splash-screen').style.display = 'none';
-        // لا يوجد لوج للترمينال في هذه النسخة لأن الواجهة ممتلئة بالصورة
+    function startSystem() {
+        audioContext.resume();
+        playCyberWarMusic();
+        document.getElementById('boot-screen').style.display = 'none';
     }
 
-    // فتح نافذة التطبيق
-    function openApp(appId) {
-        playClickSound();
-        stopMusic(); // إيقاف الموسيقى عند فتح تطبيق
-        document.getElementById(appId).classList.add('active');
-        if (appId === 'app-window-matrix' || appId === 'app-window-legal') {
-            generateHeavyMatrix(); // توليد المصفوفة تلقائياً
+    // فتح نافذة العملية
+    function openOperationWindow(windowId) {
+        playButtonClickSound();
+        stopCyberWarMusic(); // إيقاف الموسيقى عند فتح النافذة
+        document.getElementById(windowId).classList.add('active');
+        if (windowId === 'op-window-matrix' || windowId === 'op-window-legal') {
+            generateMatrix(); // توليد المصفوفة تلقائياً
         }
     }
 
-    // إغلاق نافذة التطبيق
-    function closeApp(appId) {
-        playClickSound();
-        document.getElementById(appId).classList.remove('active');
-        playEpicMusic(); // إعادة تشغيل الموسيقى عند العودة للشاشة الرئيسية
+    // إغلاق نافذة العملية
+    function closeOperationWindow() {
+        playButtonClickSound();
+        document.querySelectorAll('.operation-window').forEach(win => win.classList.remove('active'));
+        playCyberWarMusic(); // إعادة تشغيل الموسيقى
+    }
+
+    // إعادة تشغيل النظام
+    function rebootSystem() {
+        playButtonClickSound();
+        alert('النظام قيد إعادة التشغيل... يرجى الانتظار.');
+        setTimeout(() => location.reload(), 1500); // إعادة تحميل الصفحة
     }
 
     // توليد مصفوفة البلاغ الرسمي
-    function generateHeavyMatrix() {
-        const targetURL = "TARGET_ACCOUNT_LINK_HERE"; // يمكن تحديدها لاحقاً
+    function generateMatrix() {
+        const targetPlaceholder = "TARGET_ACCOUNT_LINK_HERE";
         const matrixContent = `OFFICIAL PRIORITY CLASSIFIED REPORT - UNIT: ALGERIAN CYBER ARMY\n` +
             `---------------------------------------------------------------------------\n` +
             `ATTENTION: LEGAL COMPLIANCE AND SAFETY ENFORCEMENT TEAM.\n` +
-            `SUBJECT: CRITICAL VIOLATIONS ALERT - ACCOUNT BEHAVIOR ANALYSIS (${targetURL})\n\n` +
+            `SUBJECT: CRITICAL VIOLATIONS ALERT - ACCOUNT BEHAVIOR ANALYSIS (${targetPlaceholder})\n\n` +
             `هذا بلاغ قانوني رسمي تم إصداره بواسطة بروتوكول الذكاء الاصطناعي الخاص بمنظومة "الثقب الأسود الجزائري". ` +
             `تم تحديد الحساب المشار إليه لانتهاكاته المتكررة لسياسات المنصة ومعايير السلوك الرقمي الدولية. ` +
             `تظهر تحليلاتنا جهودًا منسقة لتعزيز المحتوى الضار، بما في ذلك: التحريض على العنف، نشر المعلومات المضللة، ` +
@@ -412,25 +389,25 @@
             `CONFIDENTIALITY: STRICTLY ENFORCED\n` +
             `---------------------------------------------------------------------------\n`;
 
-        document.getElementById('legal-matrix-output').value = matrixContent;
-        document.getElementById('matrix-generator-output').value = matrixContent; // للتأكد من تحديثها في كلتا النافذتين
-        navigator.clipboard.writeText(matrixContent); // نسخها تلقائياً
+        document.getElementById('legal-report-output').value = matrixContent;
+        document.getElementById('matrix-generator-text').value = matrixContent;
+        navigator.clipboard.writeText(matrixContent);
     }
 
     // تنفيذ الهجوم (فتح رابط)
-    function executeStrike(url) {
-        playExplosionSound();
+    function executeAttack(url) {
+        playExplosionVibration();
         setTimeout(() => {
-            if (url === 'mailto') {
-                const body = encodeURIComponent(document.getElementById('legal-matrix-output').value);
+            if (url.includes('mailto:')) {
+                const body = encodeURIComponent(document.getElementById('legal-report-output').value);
                 window.location.href = `mailto:legal@tiktok.com?subject=URGENT_LEGAL_COMPLAINT_DZ&body=${body}`;
             } else {
                 window.location.href = url; // لفتح TikTok أو أي رابط آخر
             }
-        }, 1000); // تأخير بسيط للسماح بصوت الانفجار
+        }, 1200); // تأخير للسماح بصوت الانفجار والاهتزاز
     }
 </script>
 
 </body>
 </html>
-```http://googleusercontent.com/image_generation_content/5
+```http://googleusercontent.com/image_generation_content/7
