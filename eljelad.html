@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ترسانة الجلاد الجزائري | الإصدار الحربي</title>
+    <title>منظومة الجلاد الجزائري | الإصدار الرسمي</title>
     <style>
         :root { --main-glow: #00ff41; --danger: #ff0000; --blood: #8a0303; }
         * { touch-action: manipulation; user-select: none; box-sizing: border-box; }
@@ -17,65 +17,66 @@
 
         @keyframes edgePulse { 0%, 100% { border-color: var(--main-glow); } 50% { border-color: var(--danger); } }
 
-        /* الشعار الدموي المتوهج في الخلفية */
-        .blood-header {
-            position: absolute; width: 100%; text-align: center; top: 10%;
-            font-size: 1.6rem; font-weight: 900; color: var(--danger);
-            text-shadow: 0 0 15px var(--danger); z-index: 1; pointer-events: none;
-            animation: pulseText 2s infinite;
+        /* الإطار المزخرف المتوهج */
+        .decorated-frame {
+            position: absolute; top: 10%; left: 50%; transform: translateX(-50%);
+            border: 2px double var(--main-glow); padding: 15px 30px;
+            background: rgba(0, 0, 0, 0.7); border-radius: 50px 0 50px 0;
+            box-shadow: 0 0 20px var(--main-glow), inset 0 0 15px var(--main-glow);
+            z-index: 1; pointer-events: none; text-align: center;
+            animation: frameGlow 2s infinite alternate;
         }
-        @keyframes pulseText { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.6; } }
+        @keyframes frameGlow { from { box-shadow: 0 0 10px var(--main-glow); } to { box-shadow: 0 0 30px var(--danger); border-color: var(--danger); } }
+
+        .blood-header {
+            font-size: 1.4rem; font-weight: 900; color: white;
+            text-shadow: 2px 2px 5px #000; margin: 0;
+        }
 
         .drop {
-            position: absolute; background: var(--blood); width: 3px; height: 25px;
-            top: 15%; z-index: 0; animation: drip 3s infinite ease-in; opacity: 0.6;
+            position: absolute; background: var(--blood); width: 3px; height: 20px;
+            top: 15%; z-index: 0; animation: drip 3s infinite ease-in; opacity: 0.8;
         }
         @keyframes drip { to { transform: translateY(100vh); opacity: 0; } }
 
-        /* الرادار */
-        .radar-container {
+        /* الرادار 4D */
+        .radar-box {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 280px; height: 280px; border-radius: 50%; border: 1px solid var(--main-glow);
-            z-index: -1; opacity: 0.3; overflow: hidden;
+            width: 300px; height: 300px; border-radius: 50%; border: 1px solid var(--main-glow);
+            z-index: -1; opacity: 0.3;
         }
         .sweep {
-            width: 100%; height: 100%; background: conic-gradient(from 0deg, transparent, var(--main-glow));
-            animation: rotate 4s linear infinite;
+            width: 100%; height: 100%; border-radius: 50%;
+            background: conic-gradient(from 0deg, transparent, var(--main-glow));
+            animation: rotate 3s linear infinite;
         }
         @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        /* واجهة الساعة */
-        #clock { font-size: 4.5rem; text-align: center; margin-top: 100px; text-shadow: 0 0 20px var(--main-glow); position: relative; z-index: 2; }
+        #clock { font-size: 4rem; text-align: center; margin-top: 120px; text-shadow: 0 0 20px var(--main-glow); position: relative; z-index: 2; }
 
-        /* شريط التطبيقات (الأزرار) */
+        /* الأزرار الرسمية */
         .dock {
             position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-            width: 95%; background: rgba(0,0,0,0.85); border-radius: 25px; padding: 15px;
-            display: flex; justify-content: space-around; border: 1.5px solid var(--main-glow);
-            z-index: 100; box-shadow: 0 0 20px rgba(0,255,65,0.2);
+            width: 95%; background: rgba(0,0,0,0.9); border-radius: 20px; padding: 15px;
+            display: flex; justify-content: space-around; border: 1px solid var(--main-glow);
+            z-index: 100;
         }
-        .icon-btn { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: 0.2s; }
-        .icon-btn:active { transform: scale(0.9); }
-        .icon-circle { width: 60px; height: 60px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; border: 1px solid var(--main-glow); background: #111; margin-bottom: 5px; }
+        .icon-btn { display: flex; flex-direction: column; align-items: center; cursor: pointer; color: var(--main-glow); text-decoration: none; }
+        .icon-circle { width: 55px; height: 55px; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border: 1px solid var(--main-glow); background: #000; margin-bottom: 5px; }
 
-        /* النوافذ المنبثقة */
-        .app-window {
-            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95);
-            z-index: 2000; padding: 25px; overflow-y: auto; text-align: center;
-        }
-        .app-window.active { display: block; animation: slideUp 0.3s ease-out; }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        /* النوافذ والتعليمات */
+        .app-window { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 2000; padding: 25px; overflow-y: auto; }
+        .app-window.active { display: block; }
+        
+        .war-logo { width: 100px; height: 100px; border-radius: 50%; border: 2px solid var(--main-glow); margin: 0 auto 15px; background: url('https://i.postimg.cc/vmdZn4vn/Screenshot-20260222-031125-Tik-Tok.jpg') no-repeat center center; background-size: cover; }
+        
+        .info-panel { background: rgba(0,255,65,0.1); border: 1px solid var(--main-glow); padding: 12px; font-size: 0.8rem; border-radius: 8px; margin-bottom: 15px; color: #fff; text-align: right; }
+        
+        textarea { width: 100%; height: 180px; background: #050505; color: var(--main-glow); border: 1px solid var(--main-glow); padding: 10px; font-family: monospace; }
+        
+        .strike-btn { width: 100%; padding: 18px; background: var(--main-glow); color: #000; border: none; border-radius: 10px; font-weight: bold; margin-top: 10px; cursor: pointer; }
 
-        .war-logo { width: 90px; height: 90px; border-radius: 50%; border: 2px solid var(--main-glow); margin: 0 auto 15px; background: url('https://i.postimg.cc/vmdZn4vn/Screenshot-20260222-031125-Tik-Tok.jpg') no-repeat center center; background-size: cover; }
-        
-        .instruction-box { background: rgba(0,255,65,0.1); border: 1px solid var(--main-glow); padding: 15px; font-size: 0.85rem; border-radius: 10px; margin-bottom: 15px; line-height: 1.5; color: #dfdfdf; text-align: right; }
-        
-        textarea { width: 100%; height: 180px; background: #080808; color: var(--main-glow); border: 1px solid var(--main-glow); padding: 10px; font-family: monospace; border-radius: 8px; }
-        
-        .strike-btn { width: 100%; padding: 18px; border: none; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; margin-top: 10px; }
-
-        /* تأثير الدخان */
-        #smoke-screen { display: none; position: fixed; inset: 0; background: rgba(150,150,150,0.6); backdrop-filter: blur(10px); z-index: 9999; }
+        #smoke-screen { display: none; position: fixed; inset: 0; background: rgba(80,80,80,0.7); backdrop-filter: blur(10px); z-index: 9999; }
 
         #lock-screen { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
     </style>
@@ -85,13 +86,16 @@
 <div id="smoke-screen"></div>
 
 <div id="lock-screen">
-    <div class="war-logo" style="width:130px; height:130px;"></div>
-    <h1 style="color:white; text-align:center;">منظومة الجلاد الجزائري<br><small style="color:var(--main-glow)">الاستعداد للتبليغ</small></h1>
-    <button onclick="unlock()" style="padding:15px 60px; background:var(--main-glow); border:none; border-radius:30px; font-weight:bold; cursor:pointer;">دخول 🛡️</button>
+    <div class="war-logo" style="width:150px; height:150px;"></div>
+    <h2 style="color:white; text-align:center;">نظام جيش التبليغ الجزائري</h2>
+    <button onclick="unlock()" style="padding:15px 50px; background:var(--main-glow); border:none; border-radius:30px; font-weight:bold; cursor:pointer;">تفعيل البروتوكول ⚔️</button>
 </div>
 
-<div class="blood-header">منظومة جيش التبليغ الجزائري<br>بقيادة الجلاد الجزائري</div>
-<div class="radar-container"><div class="sweep"></div></div>
+<div class="decorated-frame">
+    <h1 class="blood-header">منظومة جيش التبليغ الجزائري<br>بقيادة الجلاد الجزائري</h1>
+</div>
+
+<div class="radar-box"><div class="sweep"></div></div>
 
 <div id="clock">00:00</div>
 
@@ -104,40 +108,25 @@
 
 <div class="app-window" id="w_form">
     <div class="war-logo"></div>
-    <div class="instruction-box">
-        <b>[ تعليمات القيادة ]</b><br>
-        1. توجه لرابط الاستمارة الرسمي.<br>
-        2. اختر "الإبلاغ عن انتهاك" ثم "حساب".<br>
-        3. ارفع لقطات الشاشة المسيئة لتعزيز البلاغ.
-    </div>
-    <button class="strike-btn" style="background:#ffcc00;" onclick="startFire('https://www.tiktok.com/legal/report/feedback')">🔫 إطلاق الرصاص نحو الاستمارة</button>
-    <button onclick="closeApp()" style="margin-top:20px; background:none; color:red; border:none; font-weight:bold;">× إغلاق النافذة</button>
+    <div class="info-panel"><b>[ تعليمات الاستمارة ]</b><br>استخدم الرابط الرسمي، اختر انتهاك خصوصية أو حساب، ارفع الدلائل واضغط إرسال.</div>
+    <button class="strike-btn" style="background:#ffcc00;" onclick="startAssault('https://www.tiktok.com/legal/report/feedback')">🧨 هجوم الاستمارة</button>
+    <button onclick="closeApp()" style="width:100%; background:none; color:red; border:none; margin-top:20px;">رجوع</button>
 </div>
 
 <div class="app-window" id="w_tiktok">
     <div class="war-logo"></div>
-    <div class="instruction-box">
-        <b>[ هجوم مباشر ]</b><br>
-        1. سيتم فتح التطبيق مباشرة.<br>
-        2. قم بالتبليغ عن "المحتوى" 3 مرات.<br>
-        3. ابلغ عن "الحساب" مرتين (هجوم شامل).
-    </div>
-    <button class="strike-btn" style="background:#ff0050; color:white;" onclick="startFire('snssdk1233://')">🧨 قصف تطبيق تيك توك</button>
-    <button onclick="closeApp()" style="margin-top:20px; background:none; color:red; border:none; font-weight:bold;">× إغلاق النافذة</button>
+    <div class="info-panel"><b>[ هجوم مباشر ]</b><br>قصف الحساب والبث المباشر بشكل متكرر لضمان الحظر.</div>
+    <button class="strike-btn" style="background:#ff0050; color:white;" onclick="startAssault('snssdk1233://')">🔫 قنص التطبيق</button>
+    <button onclick="closeApp()" style="width:100%; background:none; color:red; border:none; margin-top:20px;">رجوع</button>
 </div>
 
 <div class="app-window" id="w_gmail">
     <div class="war-logo"></div>
-    <div class="instruction-box">
-        <b>[ مصفوفة الموت ]</b><br>
-        1. اضغط توليد لنسخ النص القانوني.<br>
-        2. سيتم استهداف كافة الإيميلات الرسمية.<br>
-        3. أرسل الرسالة وكرر العملية من حسابات مختلفة.
-    </div>
-    <textarea id="heavy-matrix" readonly></textarea>
-    <button class="strike-btn" style="background:var(--main-glow);" onclick="generateMatrix()">🔄 توليد المصفوفة المليونية</button>
-    <button class="strike-btn" style="background:#007aff; color:white;" onclick="startFire('mailto')">📧 إرسال وابل الجيميل</button>
-    <button onclick="closeApp()" style="margin-top:20px; background:none; color:red; border:none; font-weight:bold;">× إغلاق النافذة</button>
+    <div class="info-panel"><b>[ مصفوفة الموت ]</b><br>اضغط توليد لنسخ الكود القانوني الشامل، ثم أرسل لجميع إيميلات الدعم.</div>
+    <textarea id="heavy-matrix" readonly placeholder="المصفوفة ستظهر هنا..."></textarea>
+    <button class="strike-btn" onclick="generateHeavyMatrix()">🔄 توليد المصفوفة المليونية</button>
+    <button class="strike-btn" style="background:#007aff; color:white;" onclick="startAssault('mailto')">📧 قصف الجيميل</button>
+    <button onclick="closeApp()" style="width:100%; background:none; color:red; border:none; margin-top:20px;">رجوع</button>
 </div>
 
 <audio id="war-music" loop>
@@ -156,8 +145,7 @@
 
     function createBlood() {
         const d = document.createElement('div');
-        d.className = 'drop';
-        d.style.left = Math.random() * 100 + 'vw';
+        d.className = 'drop'; d.style.left = Math.random() * 100 + 'vw';
         document.body.appendChild(d);
         setTimeout(() => d.remove(), 3000);
     }
@@ -170,39 +158,46 @@
         if(music.paused) music.play();
     }
 
-    function startFire(url) {
-        music.pause(); // صمت الموسيقى
+    // نظام الهجوم وصوت الاقتحام
+    function startAssault(url) {
+        music.pause();
         document.getElementById('smoke-screen').style.display = 'block';
         
-        // صوت رصاص حقيقي
-        for(let i=0; i<15; i++) {
+        // صوت هجوم حربي (رصاص وانفجارات)
+        for(let i=0; i<20; i++) {
             setTimeout(() => {
                 const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
-                o.type = 'square'; o.frequency.setValueAtTime(100+Math.random()*150, audioCtx.currentTime);
-                g.gain.setValueAtTime(0.3, audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime+0.1);
-                o.connect(g); g.connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime+0.1);
-                if(navigator.vibrate) navigator.vibrate(60);
+                o.type = (i % 3 === 0) ? 'triangle' : 'square'; 
+                o.frequency.setValueAtTime(80 + Math.random()*200, audioCtx.currentTime);
+                g.gain.setValueAtTime(0.4, audioCtx.currentTime); 
+                g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+                o.connect(g); g.connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime + 0.15);
+                if(navigator.vibrate) navigator.vibrate(i % 2 === 0 ? 80 : 30);
             }, i * 200);
         }
 
         setTimeout(() => {
             document.getElementById('smoke-screen').style.display = 'none';
             if(url === 'mailto') {
-                const emails = "legal@tiktok.com,feedback@tiktok.com,privacy@tiktok.com,business-ar@tiktok.com";
+                const emails = "legal@tiktok.com,feedback@tiktok.com,privacy@tiktok.com";
                 const body = encodeURIComponent(document.getElementById('heavy-matrix').value);
-                window.location.href = `mailto:${emails}?subject=CRITICAL_VIOLATION&body=${body}`;
+                window.location.href = `mailto:${emails}?subject=CRITICAL_REPORT_DZ&body=${body}`;
             } else { window.location.href = url; }
             setTimeout(() => { if(!document.querySelector('.app-window.active')) music.play(); }, 2000);
         }, 5000);
     }
 
-    function generateMatrix() {
-        const m = `OFFICIAL LEGAL STRIKE - UNIT: DZ_GLD\n==========================\n` + 
-                  `WE REPORT A CRITICAL VIOLATION ON THIS TARGET. TERMINATE IMMEDIATELY. `.repeat(10);
+    function generateHeavyMatrix() {
+        const m = `URGENT_LEGAL_MANDATE - UNIT: ALGERIAN_CYBER_ARMY\n` + 
+                  `CASE_ID: DZ-${Math.floor(Math.random()*999999)}\n` +
+                  `--------------------------------------------------\n` +
+                  `OFFICIAL REPORT BY THE ALGERIAN EXECUTIONER.\n` +
+                  `THE TARGET ACCOUNT IS IN SEVERE VIOLATION OF ALL TERMS.\n` +
+                  `WE DEMAND IMMEDIATE BAN AND DATA REVIEW.\n`.repeat(8);
         document.getElementById('heavy-matrix').value = m;
         navigator.clipboard.writeText(m);
-        alert("تم نسخ المصفوفة المليونية بنجاح!");
+        alert("تم توليد ونسخ المصفوفة المليونية!");
     }
 </script>
 </body>
-                                                                                                     </html>
+</html>
