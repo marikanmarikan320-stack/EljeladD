@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>تطبيق منظومة الجلاد v18.5 - المولد المصلح</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
     <style>
         :root { 
             --samsung-primary: #0355d0; --war-red: #ff3b30; --cyber-green: #00ff41;
@@ -18,21 +19,16 @@
             overflow: hidden; 
         }
 
-        /* فيديو الهاكر الجزائري */
-        #war-overlay {
-            position: fixed; inset: 0; background: #000; z-index: 999999;
-            display: none; align-items: center; justify-content: center;
+        /* أضواء حواف الهاتف */
+        .edge-lighting {
+            position: fixed; inset: 0; pointer-events: none; z-index: 10000;
+            box-shadow: inset 0 0 20px var(--cyber-green);
+            animation: pulse-edge 2s infinite;
         }
-        #war-overlay video { width: 100%; height: 100%; object-fit: cover; }
-
-        /* تأثير الدخان والاهتزاز */
-        #hacker-smoke {
-            position: fixed; inset: 0; background: rgba(0, 255, 65, 0.2);
-            backdrop-filter: blur(15px); z-index: 200000; display: none; pointer-events: none;
+        @keyframes pulse-edge {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
         }
-        
-        .shake { animation: shake-anim 0.1s infinite; }
-        @keyframes shake-anim { 0% {transform: translate(2px, 2px);} 50% {transform: translate(-2px, -2px);} 100% {transform: translate(0,0);} }
 
         .app-container {
             width: 100%; height: 100%;
@@ -45,11 +41,36 @@
             display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
 
+        .circular-logo {
+            width: 100px; height: 100px; border-radius: 50%;
+            border: 3px solid var(--cyber-green);
+            background: url('https://i.postimg.cc/vmdZn4vn/Screenshot-20260222-031125-Tik-Tok.jpg') center/cover;
+            margin: 0 auto 15px;
+            box-shadow: 0 0 15px var(--cyber-green);
+            animation: logo-glow 1.5s infinite ease-in-out;
+        }
+        @keyframes logo-glow {
+            0%, 100% { box-shadow: 0 0 10px var(--cyber-green); transform: scale(1); }
+            50% { box-shadow: 0 0 25px var(--cyber-green); transform: scale(1.05); }
+        }
+
         #digital-clock {
             position: absolute; top: 40px; width: 100%; text-align: center;
             color: var(--cyber-green); font-size: 3.5rem; font-weight: bold;
             text-shadow: 0 0 20px var(--cyber-green); z-index: 10;
         }
+
+        .radar-box {
+            position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%);
+            width: 280px; height: 280px; border: 1px solid rgba(0, 255, 65, 0.3);
+            border-radius: 50%; z-index: 5; pointer-events: none;
+        }
+        .radar-sweep {
+            width: 100%; height: 100%; border-radius: 50%;
+            background: conic-gradient(from 0deg, transparent, rgba(0, 255, 65, 0.2));
+            animation: sweep 4s linear infinite;
+        }
+        @keyframes sweep { to { transform: rotate(360deg); } }
 
         .bottom-dock {
             position: absolute; bottom: 30px; width: 100%;
@@ -66,12 +87,20 @@
         .modal-sheet {
             position: fixed; bottom: -100%; left: 0; right: 0; height: 85vh;
             background: var(--card-bg); 
+            background-image: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('https://i.postimg.cc/j2fHMWGY/unnamed-3.jpg');
+            background-size: cover; background-position: center;
             backdrop-filter: blur(20px);
             border-radius: 40px 40px 0 0; z-index: 1000;
-            padding: 30px 25px; transition: 0.5s;
+            padding: 30px 25px; transition: 0.5s cubic-bezier(0, 0, 0.2, 1);
             border-top: 2px solid var(--cyber-green);
         }
         .modal-sheet.active { bottom: 0; }
+        .sheet-handle { width: 40px; height: 5px; background: #444; border-radius: 10px; margin: -10px auto 20px; }
+
+        .instruction-frame {
+            background: rgba(0, 255, 65, 0.05); border: 1px dashed var(--cyber-green);
+            border-radius: 15px; padding: 15px; margin-bottom: 15px; text-align: right;
+        }
 
         .btn-action {
             width: 100%; padding: 18px; border-radius: 25px; border: none;
@@ -80,105 +109,99 @@
         textarea {
             width: 100%; height: 160px; background: #000;
             color: var(--cyber-green); border: 1px solid var(--cyber-green);
-            border-radius: 20px; padding: 15px; font-size: 12px;
+            border-radius: 20px; padding: 15px; font-family: monospace; font-size: 12px;
         }
+
+        #matrix-bg { position: fixed; inset: 0; z-index: -1; opacity: 0.1; }
     </style>
 </head>
-<body onclick="enableAudio()">
+<body>
 
-<div id="war-overlay">
-    <video id="hacker-vid" playsinline muted>
-        <source src="https://v1.nitrocdn.com/fMvCqyXyIqPzTqZlXzLzYvG/assets/static/optimized/rev-5e43c16/wp-content/uploads/2022/11/Hacker-Intro.mp4" type="video/mp4">
-    </video>
-</div>
-<div id="hacker-smoke"></div>
+<div class="edge-lighting"></div>
 
 <div id="splash-screen">
-    <div style="width:180px; height:180px; border-radius:50%; border:3px solid var(--cyber-green); background: url('https://i.postimg.cc/vmdZn4vn/Screenshot-20260222-031125-Tik-Tok.jpg') center/cover;"></div>
-    <h2 style="color: var(--cyber-green); margin-top:20px;">نظام الجلاد v18.5</h2>
-    <button id="entry-btn" style="display:none; background:var(--cyber-green); padding:15px 40px; border-radius:50px; font-weight:bold;" onclick="launchApp()">دخول النظام ⚔️</button>
+    <div style="width:180px; height:180px; border-radius:50%; border:3px solid var(--cyber-green); background: url('https://i.postimg.cc/vmdZn4vn/Screenshot-20260222-031125-Tik-Tok.jpg') center/cover; box-shadow: 0 0 40px var(--cyber-green);"></div>
+    <h2 id="status-text" style="margin-top:30px; color: var(--cyber-green);">جاري استرجاع المولد النووي...</h2>
+    <button id="entry-btn" style="display:none; background:var(--cyber-green); color:black; padding:15px 40px; border-radius:50px; font-weight:bold; border:none;" onclick="launchApp()">دخول النظام ⚔️</button>
 </div>
 
 <div class="app-container" id="main-app">
     <div id="digital-clock">00:00:00</div>
+    <div class="radar-box"><div class="radar-sweep"></div></div>
+    <canvas id="matrix-bg"></canvas>
+
     <div class="bottom-dock">
-        <div class="app-icon" onclick="openSheet('s1')"><div class="icon-shape" style="background:#0355d0;">🛡️</div></div>
-        <div class="app-icon" onclick="launchSearchRadar()"><div class="icon-shape" style="background:#00ff41;">🔍</div></div>
-        <div class="app-icon" onclick="openSheet('s2')"><div class="icon-shape" style="background:#ff3b30;">🎯</div></div>
-        <div class="app-icon" onclick="openSheet('s3')"><div class="icon-shape" style="background:#ffcc00;">☣️</div></div>
+        <div class="app-icon" onclick="openSheet('s1')">
+            <div class="icon-shape" style="background: linear-gradient(135deg, #0a74da, #0355d0);">🛡️</div>
+            <div class="app-name">البوابة</div>
+        </div>
+        <div class="app-icon" onclick="launchSearchRadar()">
+            <div class="icon-shape" style="background: linear-gradient(135deg, #00ff41, #008f11);">🔍</div>
+            <div class="app-name">الرادار</div>
+        </div>
+        <div class="app-icon" onclick="openSheet('s2')">
+            <div class="icon-shape" style="background: linear-gradient(135deg, #ff5e57, #ff3b30);">🎯</div>
+            <div class="app-name">اقتحام</div>
+        </div>
+        <div class="app-icon" onclick="openSheet('s3')">
+            <div class="icon-shape" style="background: linear-gradient(135deg, #ffcc00, #ff9500);">☣️</div>
+            <div class="app-name">المولد</div>
+        </div>
     </div>
 </div>
 
 <div class="modal-sheet" id="s1">
-    <button class="btn-action" style="background: var(--samsung-primary); color: white;" onclick="triggerWar('https://www.tiktok.com/legal/report/feedback')">إطلاق القذيفة</button>
+    <div class="sheet-handle"></div>
+    <div class="circular-logo"></div>
+    <div class="instruction-frame">
+        <span style="color:var(--cyber-green); font-weight:bold;">تعليمات القيادة:</span><br>
+        أرسل القذيفة القانونية الآن. الرابط المستهدف مدمج في النظام.
+    </div>
+    <button class="btn-action" style="background: var(--samsung-primary); color: white;" onclick="strikeAction('https://www.tiktok.com/legal/report/feedback')">إطلاق القذيفة</button>
     <button onclick="closeSheet()" style="width:100%; background:none; border:none; color:grey;">إلغاء</button>
 </div>
 
 <div class="modal-sheet" id="s2">
-    <button class="btn-action" style="background: var(--war-red); color: white;" onclick="triggerWar('https://www.tiktok.com/@ELJELAD_DZ')">بدء الاقتحام</button>
+    <div class="sheet-handle"></div>
+    <div class="circular-logo"></div>
+    <div class="instruction-frame">
+        <span style="color:var(--war-red); font-weight:bold;">تعليمات القيادة:</span><br>
+        سيتم توجيهك للحساب. ابدأ الهجوم اليدوي فوراً.
+    </div>
+    <button class="btn-action" style="background: var(--war-red); color: white;" onclick="launchNativeTikTok()">بدء الاقتحام</button>
     <button onclick="closeSheet()" style="width:100%; background:none; border:none; color:grey;">إلغاء</button>
 </div>
 
 <div class="modal-sheet" id="s3">
-    <textarea id="mail-text" readonly></textarea>
-    <button class="btn-action" style="background: var(--gold);" onclick="generateMassiveReport()">🔄 توليد ونسخ (600 حرف)</button>
-    <button class="btn-action" style="background: white;" onclick="triggerWar('mailto:legal@tiktok.com')">🚀 قصف الجيميلات</button>
+    <div class="sheet-handle"></div>
+    <div class="circular-logo"></div>
+    <textarea id="mail-text" readonly placeholder="الشفرة النووية ستولد هنا..."></textarea>
+    <button class="btn-action" style="background: var(--gold); color: black;" onclick="generateMassiveReport()">🔄 توليد ونسخ شفرة (600 حرف)</button>
+    <button class="btn-action" style="background: white; color: black;" onclick="sendFinalEmail()">🚀 قصف الجيميلات</button>
     <button onclick="closeSheet()" style="width:100%; background:none; border:none; color:grey;">رجوع</button>
 </div>
 
 <script>
-    // نظام الصوت
-    const bgMusic = new Audio('https://archive.org/download/boyka-music-remix/boyka.mp3');
-    bgMusic.loop = true;
-    const gunSnd = new Audio('https://www.soundjay.com/mechanical/gun-shot-01.mp3');
+    // الأصوات الحربية الميكانيكية + بويكا
     const clickSnd = new Audio('https://www.soundjay.com/mechanical/mechanical-clunk-1.mp3');
+    const reloadSnd = new Audio('https://www.soundjay.com/mechanical/gun-cocking-01.mp3');
+    const boomSnd = new Audio('https://www.soundjay.com/mechanical/gun-shot-01.mp3');
+    const bgMusic = new Audio('https://archive.org/download/boyka-music-remix/boyka.mp3'); 
+    bgMusic.loop = true; bgMusic.volume = 0.3;
 
-    function enableAudio() { 
-        // لفتح صلاحية الصوت في المتصفح
-        if(bgMusic.paused) bgMusic.play().catch(()=>{}); 
-    }
+    const tiktokAdmins = ["legal@tiktok.com", "feedback@tiktok.com", "communitymanager.mena@tiktok.com", "privacy@tiktok.com", "info@tiktok.com"];
+
+    let finalTarget = "https://www.tiktok.com/@ELJELAD_DZ";
+
+    setTimeout(() => { document.getElementById('entry-btn').style.display = 'block'; }, 2000);
 
     function launchApp() {
-        if(navigator.vibrate) navigator.vibrate(100);
-        bgMusic.play();
+        clickSnd.play(); bgMusic.play();
+        const urlParams = new URLSearchParams(window.location.search);
+        let captured = urlParams.get('target') || urlParams.get('url');
+        if (captured) finalTarget = captured;
         document.getElementById('splash-screen').style.display = 'none';
-        updateClock();
-    }
-
-    function triggerWar(url) {
-        gunSnd.play();
-        if(navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 2000]);
-        
-        document.getElementById('war-overlay').style.display = 'flex';
-        document.getElementById('hacker-vid').play();
-        document.getElementById('hacker-smoke').style.display = 'block';
-        document.body.classList.add('shake');
-
-        setTimeout(() => {
-            window.location.href = url;
-        }, 3000);
-    }
-
-    function openSheet(id) { 
-        clickSnd.play();
-        if(navigator.vibrate) navigator.vibrate(50);
-        document.getElementById(id).classList.add('active'); 
-    }
-
-    function closeSheet() { 
-        document.querySelectorAll('.modal-sheet').forEach(s => s.classList.remove('active')); 
-    }
-
-    function generateMassiveReport() {
-        if(navigator.vibrate) navigator.vibrate(50);
-        let r = "URGENT_REPORT: Illegal activities detected on account. ";
-        while(r.length < 600) { r += "This user violates community standards and legal terms. "; }
-        document.getElementById('mail-text').value = r;
-        navigator.clipboard.writeText(r);
-    }
-
-    function launchSearchRadar() {
-        triggerWar('https://www.tiktok.com/search?q=ELJELAD_DZ');
+        initMatrix(); updateClock();
     }
 
     function updateClock() {
@@ -186,7 +209,85 @@
         setTimeout(updateClock, 1000);
     }
 
-    setTimeout(() => { document.getElementById('entry-btn').style.display = 'block'; }, 1500);
+    // --- دالة الرادار المعدلة لفتح "تطبيق تيك توك" حصراً في وضع البحث ---
+    function launchSearchRadar() {
+        boomSnd.play();
+        // سحب اسم المستخدم بدقة
+        const username = finalTarget.includes('@') ? finalTarget.split('@')[1].split('/')[0] : "ELJELAD_DZ";
+        
+        // استخدام بروتوكول Intent لإجبار فتح التطبيق وليس المتصفح
+        const searchURL = `snssdk1233://search?keyword=${username}`; // رابط خاص بتطبيق تيك توك
+        const fallbackURL = `https://www.tiktok.com/search?q=${username}`;
+
+        // محاولة الفتح في التطبيق، وإذا لم ينجح يفتح في المتصفح
+        window.location.href = `intent://search?keyword=${username}#Intent;package=com.zhiliaoapp.musically;scheme=snssdk1233;end`;
+        
+        // تأكيد احتياطي إذا كان الجهاز لا يدعم الـ Intent
+        setTimeout(() => {
+            if (!document.hidden) window.location.href = fallbackURL;
+        }, 500);
+    }
+
+    function openSheet(id) {
+        clickSnd.play();
+        document.getElementById(id).classList.add('active');
+        document.getElementById('main-app').style.filter = 'blur(15px)';
+        if(id === 's3') generateMassiveReport();
+    }
+
+    function closeSheet() {
+        clickSnd.play();
+        document.querySelectorAll('.modal-sheet').forEach(s => s.classList.remove('active'));
+        document.getElementById('main-app').style.filter = 'none';
+    }
+
+    function launchNativeTikTok() {
+        boomSnd.play();
+        const cleanURL = finalTarget.replace('https://', '').replace('http://', '');
+        window.location.href = `intent://${cleanURL}#Intent;package=com.zhiliaoapp.musically;scheme=https;end`;
+    }
+
+    function generateMassiveReport() {
+        reloadSnd.play();
+        const intro = ["URGENT: Community Safety Violation Report.", "OFFICIAL NOTICE: Illegal Activity Detected on Platform.", "LEGAL COMPLIANCE: Request for Immediate Account Suspension."];
+        const core = [`The account identified as (${finalTarget}) is actively participating in organized criminal promotion and violent incitement.`, `We have detected that the user (${finalTarget}) is using sophisticated modded applications to bypass TikTok security filters.`, `Detailed monitoring of (${finalTarget}) reveals a systematic violation of hate speech and coordinated harassment policies.`];
+        const technical = [" Our cyber-intelligence indicates the use of emulators and automated scripts to manipulate live-stream engagement metrics.", " Internal logs suggest the profile is part of a larger coordinated network of policy-violating entities."];
+        const closing = " We demand an immediate permanent ban and hardware-level (IMEI/UUID) blacklisting. Report_Token: " + Math.random().toString(36).substring(2, 12).toUpperCase();
+
+        let fullReport = intro[Math.floor(Math.random()*intro.length)] + "\n\n" + core[Math.floor(Math.random()*core.length)] + "\n\n" + technical[Math.floor(Math.random()*technical.length)] + "\n\n" + closing;
+        const filler = " This report is filed under the Digital Safety Act and TikTok’s global terms of service agreement. ";
+        while(fullReport.length < 600) { fullReport += filler; }
+        document.getElementById('mail-text').value = fullReport;
+        navigator.clipboard.writeText(fullReport);
+    }
+
+    function sendFinalEmail() {
+        boomSnd.play();
+        const body = encodeURIComponent(document.getElementById('mail-text').value);
+        window.location.href = `mailto:${tiktokAdmins.join(',')}?subject=URGENT_POLICY_VIOLATION_REPORT&body=${body}`;
+    }
+
+    function strikeAction(url) {
+        boomSnd.play();
+        setTimeout(() => { window.location.href = url; }, 500);
+    }
+
+    function initMatrix() {
+        const canvas = document.getElementById('matrix-bg');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        const drops = Array(Math.floor(canvas.width / 15)).fill(1);
+        function draw() {
+            ctx.fillStyle = "rgba(0,0,0,0.05)"; ctx.fillRect(0,0,canvas.width,canvas.height);
+            ctx.fillStyle = "#0f0"; ctx.font = "15px monospace";
+            drops.forEach((y, i) => {
+                ctx.fillText(Math.floor(Math.random()*2), i*15, y*15);
+                if(y*15 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            });
+        }
+        setInterval(draw, 33);
+    }
 </script>
 </body>
 </html>
