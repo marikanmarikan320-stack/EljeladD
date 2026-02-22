@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>منظومة الجلاد الجزائري | الإصدار النهائي</title>
+    <title>منظومة الجلاد الجزائري | الإصدار v15.0</title>
     <style>
         :root { --glow: #00ff41; --danger: #ff0000; --accent: #00ccff; }
         * { touch-action: manipulation; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -11,10 +11,10 @@
         body {
             background: #000; color: white; font-family: 'Courier New', monospace;
             margin: 0; overflow: hidden; height: 100vh;
-            border: 4px solid var(--glow); animation: borderPulse 2s infinite;
+            border: 5px solid var(--glow); animation: borderPulse 2s infinite;
         }
 
-        @keyframes borderPulse { 0%, 100% { border-color: var(--glow); } 50% { border-color: #008000; } }
+        @keyframes borderPulse { 0%, 100% { border-color: var(--glow); box-shadow: inset 0 0 15px var(--glow); } 50% { border-color: #008000; box-shadow: inset 0 0 30px #008000; } }
 
         /* غلاف الدخول */
         #splash-screen {
@@ -25,165 +25,182 @@
         }
 
         .hologram-overlay {
-            position: absolute; width: 300px; height: 300px; border-radius: 50%;
-            border: 2px solid var(--glow); border-top-color: transparent;
-            animation: spin 2s linear infinite; opacity: 0.5;
+            position: absolute; width: 350px; height: 350px; border-radius: 50%;
+            border: 3px solid var(--glow); border-top-color: transparent;
+            animation: spin 3s linear infinite; opacity: 0.6;
         }
 
         .glowing-text {
-            color: var(--glow); font-size: 1.5rem; text-align: center; font-weight: bold;
-            text-shadow: 0 0 20px var(--glow); margin: 20px; z-index: 10;
+            color: var(--glow); font-size: 1.8rem; text-align: center; font-weight: bold;
+            text-shadow: 0 0 20px var(--glow); margin: 30px; z-index: 10;
+            animation: textFlicker 1.5s infinite;
         }
+        @keyframes textFlicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
 
-        /* تأثير الدخان */
-        #smoke-container {
+        /* تأثير الدخان الكثيف */
+        #smoke-overlay {
             position: fixed; inset: 0; pointer-events: none; z-index: 11000; display: none;
-            background: rgba(255,255,255,0.4); filter: blur(20px); animation: smokeFade 1s forwards;
+            background: rgba(200, 200, 200, 0.6); filter: blur(30px); animation: smokeEffect 1.2s ease-out forwards;
         }
-        @keyframes smokeFade { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes smokeEffect { 0% { opacity: 0; transform: scale(0.8); } 50% { opacity: 1; } 100% { opacity: 0; transform: scale(1.5); } }
 
         /* الواجهة الرئيسية */
-        #main-interface { display: none; height: 100vh; position: relative; padding: 20px; }
+        #main-interface { display: none; height: 100vh; position: relative; padding: 20px; overflow: hidden; }
+        
         .radar-bg {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 500px; height: 500px; border: 1px solid var(--glow); border-radius: 50%;
-            z-index: -1; opacity: 0.2; animation: spin 5s linear infinite;
+            width: 600px; height: 600px; border: 2px solid var(--glow); border-radius: 50%;
+            z-index: -1; opacity: 0.15; animation: spin 8s linear infinite;
         }
 
         .dock {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            width: 95%; background: rgba(0,0,0,0.9); border-radius: 20px; padding: 12px;
-            display: flex; justify-content: space-around; border: 1px solid var(--glow);
+            width: 95%; background: rgba(0,0,0,0.95); border-radius: 25px; padding: 15px;
+            display: flex; justify-content: space-around; border: 2px solid var(--glow); box-shadow: 0 -10px 20px rgba(0,255,65,0.2);
         }
+
+        .icon-btn { cursor: pointer; text-align: center; color: var(--glow); transition: 0.3s; }
+        .icon-btn:active { transform: scale(0.9); }
+        .icon-circle { width: 60px; height: 60px; border-radius: 18px; border: 1px solid var(--glow); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; background: #111; margin-bottom: 5px; }
 
         .app-window { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 2000; padding: 25px; overflow-y: auto; }
         .active { display: block; }
-        .strike-btn { width: 100%; padding: 20px; border: none; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; margin-top: 15px; color: #000; background: var(--glow); }
 
-        /* شعار دائري في النوافذ */
-        .window-logo {
-            width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 15px;
-            border: 2px solid var(--glow); background: url('https://i.postimg.cc/vmdZn4vn/Screenshot-20260222-031125-Tik-Tok.jpg') center/cover;
-            animation: pulse 1s infinite;
+        .instruction-panel {
+            background: rgba(0, 255, 65, 0.05); border-right: 4px solid var(--glow);
+            padding: 15px; margin-bottom: 20px; font-size: 0.85rem; color: #adffad; line-height: 1.6;
         }
 
-        @keyframes spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
-        @keyframes pulse { 0% { box-shadow: 0 0 5px var(--glow); } 100% { box-shadow: 0 0 20px var(--glow); } }
+        .window-logo {
+            width: 90px; height: 90px; border-radius: 50%; margin: 0 auto 20px;
+            border: 3px solid var(--glow); background: url('https://i.postimg.cc/vmdZn4vn/Screenshot-20260222-031125-Tik-Tok.jpg') center/cover;
+            animation: pulseGlow 1.5s infinite alternate;
+        }
+        @keyframes pulseGlow { from { box-shadow: 0 0 10px var(--glow); } to { box-shadow: 0 0 30px var(--accent); } }
+
+        textarea { width: 100%; height: 220px; background: #050505; color: var(--glow); border: 1px solid #333; padding: 15px; border-radius: 10px; font-size: 0.9rem; resize: none; }
+        
+        .strike-btn { width: 100%; padding: 18px; border: none; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; margin-top: 15px; color: #000; background: var(--glow); box-shadow: 0 5px 15px rgba(0,255,65,0.4); }
+
+        @keyframes spin { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
     </style>
 </head>
 <body>
 
-<audio id="btn-sound"><source src="https://www.myinstants.com/media/sounds/m1-garand-ping.mp3" type="audio/mpeg"></audio>
-<iframe id="bg-music" style="display:none" width="560" height="315" src="https://www.youtube.com/embed/hvJ2VES1fjU?autoplay=1&loop=1&playlist=hvJ2VES1fjU" allow="autoplay"></iframe>
+<audio id="btn-sound-click"><source src="https://www.myinstants.com/media/sounds/m1-garand-ping.mp3" type="audio/mpeg"></audio>
+<iframe id="bg-music-frame" style="display:none" width="560" height="315" src="https://www.youtube.com/embed/hvJ2VES1fjU?autoplay=1&loop=1&playlist=hvJ2VES1fjU" allow="autoplay"></iframe>
 
-<div id="smoke-container"></div>
+<div id="smoke-overlay"></div>
 
 <div id="splash-screen">
     <div class="hologram-overlay"></div>
     <div class="glowing-text">
         منظومة جيش التبليغ الجزائري<br>بقيادة الجلاد الجزائري
     </div>
-    <button onclick="enterOperationRoom()" style="z-index:100; padding:15px 40px; background:var(--glow); border:none; border-radius:30px; font-weight:bold; cursor:pointer; box-shadow: 0 0 20px var(--glow);">دخول غرفة العمليات ⚔️</button>
+    <button onclick="activateSystem()" style="z-index:100; padding:18px 50px; background:var(--glow); border:none; border-radius:40px; font-weight:bold; cursor:pointer; font-size:1.2rem;">دخول غرفة العمليات ⚔️</button>
 </div>
 
 <div id="main-interface">
     <div class="radar-bg"></div>
-    <h1 style="text-align:center; color:var(--glow); margin-top:100px; text-shadow:0 0 10px var(--glow);">القصف جاري...</h1>
+    <div style="text-align:center; margin-top:80px;">
+        <div class="window-logo" style="width:120px; height:120px;"></div>
+        <h2 style="color:var(--glow); text-shadow: 0 0 10px var(--glow);">نظام القصف السيبراني</h2>
+    </div>
     
     <div class="dock">
-        <div onclick="openApp('w_form')" style="text-align:center;"><div style="font-size:1.5rem;">📋</div><span>الاستمارة</span></div>
-        <div onclick="openApp('w_tiktok')" style="text-align:center;"><div style="font-size:1.5rem;">🎬</div><span>تيك توك</span></div>
-        <div onclick="openApp('w_vpn')" style="text-align:center;"><div style="font-size:1.5rem;">🌐</div><span>VPN</span></div>
-        <div onclick="openApp('w_gmail')" style="text-align:center;"><div style="font-size:1.5rem;">📧</div><span>جيميل</span></div>
+        <div class="icon-btn" onclick="openApp('w_form')"><div class="icon-circle">📋</div><span>الاستمارة</span></div>
+        <div class="icon-btn" onclick="openApp('w_tiktok')"><div class="icon-circle">🎬</div><span>تيك توك</span></div>
+        <div class="icon-btn" onclick="openApp('w_vpn')"><div class="icon-circle">🌐</div><span>VPN</span></div>
+        <div class="icon-btn" onclick="openApp('w_gmail')"><div class="icon-circle">📧</div><span>جيميل</span></div>
     </div>
 </div>
 
 <div class="app-window" id="w_tiktok">
     <div class="window-logo"></div>
-    <p style="color:var(--glow);">📍 تعليمات: سيتم فتح رابط الهدف مباشرة داخل تطبيق تيك توك. ابدأ بالتبليغ فوراً عن "تحرش" أو "محتوى عنيف".</p>
-    <button class="strike-btn" onclick="executeStrike(targetFromBot)">🚀 اقتحام الحساب الآن</button>
-    <button onclick="closeApp()" style="width:100%; background:none; color:red; border:none; margin-top:20px;">تراجع</button>
+    <div class="instruction-panel">
+        <strong>⚠️ بروتوكول الاقتحام:</strong> سيتم فتح رابط الحساب المستهدف مباشرة. قم بالتبليغ عن (تطرف عنيف) أو (تحرش) وكرر العملية.
+    </div>
+    <button class="strike-btn" style="background:#ff0050; color:#fff;" onclick="launchAction(targetFromBot)">🧨 اقتحام الحساب الآن</button>
+    <button onclick="closeApp()" style="width:100%; background:none; color:red; border:none; margin-top:20px;">إغلاق</button>
 </div>
 
 <div class="app-window" id="w_vpn">
     <div class="window-logo"></div>
-    <p style="color:var(--accent);">📍 تمويه الهوية: اضغط لتفعيل البروتوكول الحقيقي وتغيير IP جهازك.</p>
-    <button class="strike-btn" style="background:var(--accent);" onclick="activateRealVPN()">⚡ تفعيل VPN العالمي</button>
-    <button onclick="closeApp()" style="width:100%; background:none; color:red; border:none; margin-top:20px;">تراجع</button>
+    <div class="instruction-panel">
+        <strong>⚠️ تمويه الموقع:</strong> اختر دولة السيرفر لتغيير هوية جهازك. سيتم محاولة فتح إعدادات النظام لتفعيل التشفير الحقيقي.
+    </div>
+    <select id="vpn-selector" style="width:100%; padding:15px; background:#111; color:var(--glow); border:1px solid var(--glow); border-radius:10px; margin-bottom:15px;">
+        <option value="US">الولايات المتحدة</option>
+        <option value="DE">ألمانيا</option>
+        <option value="RU">روسيا</option>
+        <option value="JP">اليابان</option>
+    </select>
+    <button class="strike-btn" style="background:var(--accent);" onclick="startRealVPN()">⚡ تفعيل اتصال VPN حقيقي</button>
+    <button onclick="closeApp()" style="width:100%; background:none; color:red; border:none; margin-top:20px;">إغلاق</button>
 </div>
 
 <div class="app-window" id="w_gmail">
-    <div class="window-logo"></div>
-    <textarea id="legal-matrix" readonly placeholder="في انتظار التوليد..."></textarea>
-    <button class="strike-btn" onclick="generateMatrix()">🔄 توليد بلاغ مرعب (600 حرف)</button>
-    <button class="strike-btn" style="background:#007aff; color:#fff;" onclick="executeStrike('mailto')">📧 إرسال الصاروخ</button>
-    <button onclick="closeApp()" style="width:100%; background:none; color:red; border:none; margin-top:20px;">تراجع</button>
+    <div class="war-logo"></div>
+    <div class="instruction-panel">
+        <strong>⚠️ المولد القانوني:</strong> بلاغ رسمي (+600 حرف) بدون تكرار. النظام يدمج رابط الهدف تلقائياً. انسخ النص وأرسله فوراً.
+    </div>
+    <textarea id="legal-matrix" readonly placeholder="في انتظار الأوامر..."></textarea>
+    <button class="strike-btn" onclick="generateMassiveReport()">🔄 توليد بلاغ رسمي فريد</button>
+    <button class="strike-btn" style="background:#007aff; color:#fff;" onclick="launchAction('mailto')">📧 قصف عبر الجيميل</button>
+    <button onclick="closeApp()" style="width:100%; background:none; color:red; border:none; margin-top:20px;">إغلاق</button>
 </div>
 
 <script>
     const urlParams = new URLSearchParams(window.location.search);
-    const targetFromBot = urlParams.get('target') || "https://www.tiktok.com/@ELJELAD_DZ";
-    const btnSound = document.getElementById('btn-sound');
-    const bgMusic = document.getElementById('bg-music');
+    const targetFromBot = urlParams.get('target') || "https://www.tiktok.com/@TARGET_USER";
+    const clickSound = document.getElementById('btn-sound-click');
+    const bgMusic = document.getElementById('bg-music-frame');
 
-    function enterOperationRoom() {
-        triggerVibration([200, 100, 200]);
-        document.getElementById('smoke-container').style.display = 'block';
-        btnSound.play();
+    function activateSystem() {
+        if(navigator.vibrate) navigator.vibrate([200, 100, 200]);
+        clickSound.play();
+        document.getElementById('smoke-overlay').style.display = 'block';
         setTimeout(() => {
             document.getElementById('splash-screen').style.display = 'none';
             document.getElementById('main-interface').style.display = 'block';
-            document.getElementById('smoke-container').style.display = 'none';
-        }, 800);
+            document.getElementById('smoke-overlay').style.display = 'none';
+        }, 1000);
     }
 
-    function triggerVibration(pattern) { if(navigator.vibrate) navigator.vibrate(pattern); }
+    function openApp(id) { clickSound.play(); if(navigator.vibrate) navigator.vibrate(50); document.getElementById(id).classList.add('active'); }
+    function closeApp() { if(navigator.vibrate) navigator.vibrate(30); document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active')); }
 
-    function openApp(id) { 
-        btnSound.play(); 
-        triggerVibration(50); 
-        document.getElementById(id).classList.add('active'); 
-    }
-
-    function closeApp() { 
-        triggerVibration(30); 
-        document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active')); 
-    }
-
-    function activateRealVPN() {
-        triggerVibration([500, 200, 500]);
-        alert("جاري تحويلك لإعدادات الـ VPN الحقيقية في هاتفك... تأكد من تفعيل السيرفر.");
-        // محاولة فتح إعدادات الـ VPN في الأندرويد
+    function startRealVPN() {
+        if(navigator.vibrate) navigator.vibrate(500);
+        alert("جاري محاولة فتح إعدادات VPN النظام لتأمين اتصالك...");
         window.location.href = "intent://settings/vpn#Intent;scheme=android_intent;end";
     }
 
-    function generateMatrix() {
-        btnSound.play();
-        let text = "🚨 OFFICIAL SAFETY REPORT 🚨\nTarget: " + targetFromBot + "\n\nViolation: Systematic harassment, cyber-bullying, and promoting illegal activities. The content violates TikTok's global safety policy regarding violent extremism. Immediate manual review is requested for permanent suspension.\n";
-        while(text.length < 600) { text += " This report is legally binding and submitted by the Global Security Enforcement team."; }
-        document.getElementById('legal-matrix').value = text;
-        navigator.clipboard.writeText(text);
-        alert("تم توليد ونسخ البلاغ بنجاح!");
+    function generateMassiveReport() {
+        clickSound.play();
+        let report = "OFFICIAL COMPLIANCE NOTIFICATION\nTarget: " + targetFromBot + "\n\nViolation: The profile is engaged in severe targeted harassment, extremist propaganda, and repeated cyber-bullying in direct violation of platform safety policies. We demand an immediate manual review of all media content and interactions associated with this ID. Persistent breaches of community standards require a permanent account suspension to protect the global user base.\n";
+        while(report.length < 650) { report += " This safety report is legally cross-referenced with international digital protection acts."; }
+        document.getElementById('legal-matrix').value = report;
+        navigator.clipboard.writeText(report);
+        alert("🚀 تم توليد الصاروخ (600+ حرف) ونسخه!");
     }
 
-    function executeStrike(url) {
-        btnSound.play();
-        triggerVibration(300);
+    function launchAction(url) {
+        clickSound.play();
+        if(navigator.vibrate) navigator.vibrate(300);
         if(url === 'mailto') {
-            const emails = "legal@tiktok.com,feedback@tiktok.com,community@tiktok.com";
+            const emails = "legal@tiktok.com,feedback@tiktok.com,safety@tiktok.com";
             const body = encodeURIComponent(document.getElementById('legal-matrix').value);
-            window.location.href = `mailto:${emails}?subject=Urgent_Report&body=${body}`;
+            window.location.href = `mailto:${emails}?subject=Urgent_Safety_Violation_Report&body=${body}`;
         } else {
-            // فتح رابط الهدف الذي أرسله البوت مباشرة
-            window.location.href = url;
+            window.location.href = url; // فتح رابط البوت مباشرة
         }
     }
 
-    // إدارة الموسيقى عند الخروج والعودة
+    // إدارة الموسيقى الذكية
     document.addEventListener("visibilitychange", () => {
-        const iframe = document.getElementById('bg-music');
-        if (document.hidden) iframe.src = "";
-        else iframe.src = "https://www.youtube.com/embed/hvJ2VES1fjU?autoplay=1&loop=1&playlist=hvJ2VES1fjU";
+        if (document.hidden) bgMusic.src = "";
+        else bgMusic.src = "https://www.youtube.com/embed/hvJ2VES1fjU?autoplay=1&loop=1&playlist=hvJ2VES1fjU";
     });
 </script>
 </body>
