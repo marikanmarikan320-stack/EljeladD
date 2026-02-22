@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>تطبيق منظومة الجلاد v17.5</title>
+    <title>تطبيق منظومة الجلاد v18.0 - النسخة المحفوظة</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
     <style>
         :root { 
             --samsung-primary: #0355d0; --war-red: #ff3b30; --cyber-green: #00ff41;
-            --gold: #ffcc00; --bg: #000000; --card-bg: rgba(20, 20, 20, 0.95);
+            --gold: #ffcc00; --bg: #000000; --card-bg: rgba(10, 10, 10, 0.98);
         }
         
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; } 
@@ -19,20 +19,42 @@
             overflow: hidden; 
         }
 
+        /* أضواء حواف الهاتف المشتعلة */
+        .edge-lighting {
+            position: fixed; inset: 0; pointer-events: none; z-index: 10000;
+            box-shadow: inset 0 0 20px var(--cyber-green);
+            animation: pulse-edge 2s infinite;
+        }
+        @keyframes pulse-edge {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
         .app-container {
             width: 100%; height: 100%;
             background: url('https://i.postimg.cc/j2fHMWGY/unnamed-3.jpg') no-repeat center/cover;
             position: relative; transition: filter 0.5s ease;
         }
 
+        /* شاشة التحميل */
         #splash-screen {
             position: fixed; inset: 0; z-index: 99999; background: #000;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
 
-        .loading-bar { width: 200px; height: 4px; background: #222; border-radius: 10px; margin-top: 20px; overflow: hidden; }
-        .loading-progress { width: 0%; height: 100%; background: var(--cyber-green); animation: load 2.5s forwards; }
-        @keyframes load { to { width: 100%; } }
+        /* شعار دائري مضيء في النوافذ */
+        .circular-logo {
+            width: 100px; height: 100px; border-radius: 50%;
+            border: 3px solid var(--cyber-green);
+            background: url('https://i.postimg.cc/vmdZn4vn/Screenshot-20260222-031125-Tik-Tok.jpg') center/cover;
+            margin: 0 auto 15px;
+            box-shadow: 0 0 15px var(--cyber-green);
+            animation: logo-glow 1.5s infinite ease-in-out;
+        }
+        @keyframes logo-glow {
+            0%, 100% { box-shadow: 0 0 10px var(--cyber-green); transform: scale(1); }
+            50% { box-shadow: 0 0 25px var(--cyber-green); transform: scale(1.05); }
+        }
 
         #digital-clock {
             position: absolute; top: 40px; width: 100%; text-align: center;
@@ -63,46 +85,47 @@
             font-size: 1.8rem; margin-bottom: 5px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);
         }
-        .app-name { font-size: 0.75rem; color: #ccc; }
 
+        /* تطوير النوافذ المنبثقة */
         .modal-sheet {
             position: fixed; bottom: -100%; left: 0; right: 0; height: 85vh;
-            background: var(--card-bg); backdrop-filter: blur(30px);
+            background: var(--card-bg); 
+            background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://i.postimg.cc/j2fHMWGY/unnamed-3.jpg');
+            background-size: cover; background-position: center;
+            backdrop-filter: blur(20px);
             border-radius: 40px 40px 0 0; z-index: 1000;
-            padding: 40px 25px; transition: 0.5s cubic-bezier(0, 0, 0.2, 1);
+            padding: 30px 25px; transition: 0.5s cubic-bezier(0, 0, 0.2, 1);
             border-top: 2px solid var(--cyber-green);
         }
         .modal-sheet.active { bottom: 0; }
-        .sheet-handle { width: 40px; height: 5px; background: #444; border-radius: 10px; margin: -20px auto 30px; }
+        .sheet-handle { width: 40px; height: 5px; background: #444; border-radius: 10px; margin: -10px auto 20px; }
 
-        /* إطار تعليمات القيادة */
         .instruction-frame {
-            background: rgba(0, 255, 65, 0.05); border: 1px dashed var(--cyber-green);
-            border-radius: 15px; padding: 15px; margin-bottom: 20px; text-align: right;
+            background: rgba(0, 0, 0, 0.7); border: 1px solid var(--cyber-green);
+            border-radius: 15px; padding: 15px; margin-bottom: 15px; text-align: right;
         }
-        .instruction-title { color: var(--cyber-green); font-weight: bold; font-size: 0.9rem; display: block; margin-bottom: 5px; }
-        .instruction-text { font-size: 0.85rem; color: #ddd; line-height: 1.4; }
 
         .btn-action {
-            width: 100%; padding: 20px; border-radius: 25px; border: none;
-            font-size: 1.2rem; font-weight: bold; margin-bottom: 15px; cursor: pointer;
+            width: 100%; padding: 18px; border-radius: 25px; border: none;
+            font-size: 1.2rem; font-weight: bold; margin-bottom: 10px; cursor: pointer;
         }
         textarea {
-            width: 100%; height: 180px; background: #000;
+            width: 100%; height: 160px; background: #000;
             color: var(--cyber-green); border: 1px solid var(--cyber-green);
-            border-radius: 20px; padding: 15px; font-family: monospace; font-size: 13px; margin-bottom: 10px;
+            border-radius: 20px; padding: 15px; font-family: monospace;
         }
 
-        #matrix-bg { position: fixed; inset: 0; z-index: -1; opacity: 0.1; pointer-events: none; }
+        #matrix-bg { position: fixed; inset: 0; z-index: -1; opacity: 0.1; }
     </style>
 </head>
 <body>
 
+<div class="edge-lighting"></div>
+
 <div id="splash-screen">
     <div style="width:180px; height:180px; border-radius:50%; border:3px solid var(--cyber-green); background: url('https://i.postimg.cc/vmdZn4vn/Screenshot-20260222-031125-Tik-Tok.jpg') center/cover; box-shadow: 0 0 40px var(--cyber-green);"></div>
-    <h2 id="status-text" style="margin-top:30px; letter-spacing: 3px; color: var(--cyber-green);">جاري تهيئة النظام...</h2>
-    <div class="loading-bar"><div class="loading-progress"></div></div>
-    <button id="entry-btn" style="display:none; margin-top:30px; background:var(--cyber-green); color:black; padding:15px 40px; border-radius:50px; font-weight:bold; border:none;" onclick="launchApp()">فتح النظام ⚔️</button>
+    <h2 id="status-text" style="margin-top:30px; color: var(--cyber-green);">جاري استحضار النسخة v18...</h2>
+    <button id="entry-btn" style="display:none; background:var(--cyber-green); color:black; padding:15px 40px; border-radius:50px; font-weight:bold; border:none;" onclick="launchApp()">دخول الترسانة ⚔️</button>
 </div>
 
 <div class="app-container" id="main-app">
@@ -128,80 +151,67 @@
 
 <div class="modal-sheet" id="s1">
     <div class="sheet-handle"></div>
+    <div class="circular-logo"></div>
     <div class="instruction-frame">
-        <span class="instruction-title">⚠️ تعليمات القيادة [بروتوكول 01]:</span>
-        <span class="instruction-text">توجه للبوابة، اختر بلاغ "آخر"، ثم قم بلصق الشفرة النووية المولدة من الترسانة.</span>
+        <span style="color:var(--cyber-green); font-weight:bold;">تعليمات القيادة:</span><br>
+        استخدم الرابط المحدث لضرب بوابة البلاغات الرسمية.
     </div>
     <button class="btn-action" style="background: var(--samsung-primary); color: white;" onclick="strikeAction('https://www.tiktok.com/legal/report/feedback')">إطلاق القذيفة</button>
-    <button onclick="closeSheet()" style="width:100%; background:none; border:none; color:grey;">تراجع</button>
 </div>
 
 <div class="modal-sheet" id="s2">
     <div class="sheet-handle"></div>
+    <div class="circular-logo"></div>
     <div class="instruction-frame">
-        <span class="instruction-title">⚠️ تعليمات القيادة [بروتوكول 02]:</span>
-        <span class="instruction-text">سيتم فتح الحساب مباشرة. كرر البلاغات اليدوية داخل التطبيق لضمان السقوط.</span>
+        <span style="color:var(--war-red); font-weight:bold;">تعليمات القيادة:</span><br>
+        هجوم مباشر داخل التطبيق. كرر الضربات حتى السقوط.
     </div>
-    <button class="btn-action" style="background: var(--war-red); color: white;" onclick="launchNativeTikTok()">بدء الاقتحام الآن</button>
-    <button onclick="closeSheet()" style="width:100%; background:none; border:none; color:grey;">تراجع</button>
+    <button class="btn-action" style="background: var(--war-red); color: white;" onclick="launchNativeTikTok()">بدء الاقتحام</button>
 </div>
 
 <div class="modal-sheet" id="s3">
     <div class="sheet-handle"></div>
-    <div class="instruction-frame">
-        <span class="instruction-title">⚠️ تعليمات القيادة [بروتوكول 03]:</span>
-        <span class="instruction-text">شفرة 600 حرف تتضمن رابط الهدف أوتوماتيكياً. انسخ، أرسل، ثم كرر العملية.</span>
-    </div>
+    <div class="circular-logo"></div>
     <textarea id="mail-text" readonly></textarea>
     <button class="btn-action" style="background: var(--gold); color: black;" onclick="generateMassiveReport()">🔄 توليد شفرة نووية</button>
     <button class="btn-action" style="background: white; color: black;" onclick="sendFinalEmail()">🚀 قصف الجيميل</button>
-    <button onclick="closeSheet()" style="width:100%; background:none; border:none; color:grey;">إغلاق</button>
 </div>
 
 <script>
-    // نظام الصوت
-    const clickSnd = new Howl({ src: ['https://www.soundjay.com/buttons/button-19.mp3'], volume: 0.5 });
-    const boomSnd = new Howl({ src: ['https://www.soundjay.com/sci-fi/sci-fi-03.mp3'], volume: 0.6 });
-    // موسيقى الخلفية (Cyber Ambient)
-    const bgMusic = new Howl({ 
-        src: ['https://www.soundjay.com/sci-fi/sci-fi-hum-01.mp3'], 
-        loop: true, 
-        volume: 0.3 
-    });
+    // أصوات حربية ميكانيكية
+    const clickSnd = new Howl({ src: ['https://www.soundjay.com/mechanical/mechanical-clunk-1.mp3'], volume: 0.6 });
+    const boomSnd = new Howl({ src: ['https://www.soundjay.com/mechanical/gun-shot-01.mp3'], volume: 0.7 });
+    const bgMusic = new Howl({ src: ['https://www.soundjay.com/sci-fi/sci-fi-hum-01.mp3'], loop: true, volume: 0.3 });
 
     let finalTarget = "https://www.tiktok.com/@ELJELAD_DZ";
 
     setTimeout(() => {
         document.getElementById('entry-btn').style.display = 'block';
-        document.getElementById('status-text').innerText = "النظام جاهز للعمل";
-    }, 2500);
+    }, 2000);
 
     function launchApp() {
-        clickSnd.play();
-        bgMusic.play();
+        clickSnd.play(); bgMusic.play();
         const urlParams = new URLSearchParams(window.location.search);
         let captured = urlParams.get('target') || urlParams.get('url');
         if (captured) finalTarget = captured;
         document.getElementById('splash-screen').style.display = 'none';
-        initMatrix();
-        updateClock();
+        initMatrix(); updateClock();
     }
 
     function updateClock() {
         const now = new Date();
-        document.getElementById('digital-clock').innerText = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0') + ":" + now.getSeconds().toString().padStart(2,'0');
+        document.getElementById('digital-clock').innerText = now.toLocaleTimeString('en-GB');
         setTimeout(updateClock, 1000);
     }
 
     function openSheet(id) {
         clickSnd.play();
         document.getElementById(id).classList.add('active');
-        document.getElementById('main-app').style.filter = 'blur(10px)';
+        document.getElementById('main-app').style.filter = 'blur(15px)';
         if(id === 's3') generateMassiveReport();
     }
 
     function closeSheet() {
-        clickSnd.play();
         document.querySelectorAll('.modal-sheet').forEach(s => s.classList.remove('active'));
         document.getElementById('main-app').style.filter = 'none';
     }
@@ -214,24 +224,16 @@
 
     function generateMassiveReport() {
         clickSnd.play();
-        const intros = ["Dear TikTok Safety Team,", "Official Violation Notice:", "To Legal Compliance Dept:"];
-        const violations = [
-            `Account (${finalTarget}) is promoting extremist violence via live-streams.`,
-            `User (${finalTarget}) is bypassing security protocols with modded apps.`,
-            `Profile (${finalTarget}) is engaging in severe hate speech and harassment.`
-        ];
-        let report = intros[Math.floor(Math.random()*3)] + "\n\n" + violations[Math.floor(Math.random()*3)];
-        const filler = " We demand a manual review for community guideline 4.2. This account poses a direct threat to platform safety and user integrity. A hardware ban (IMEI) is strongly requested. ";
+        let report = "Dear TikTok Safety Team, Urgent violation report for account (" + finalTarget + "). ";
+        const filler = "This user is promoting extreme violence and bypassing security rules. We request immediate suspension of this ID. ";
         while(report.length < 600) { report += filler; }
-        report += "\n\nID: #" + Math.random().toString(36).substring(2, 10).toUpperCase();
         document.getElementById('mail-text').value = report;
         navigator.clipboard.writeText(report);
     }
 
     function sendFinalEmail() {
         boomSnd.play();
-        const body = encodeURIComponent(document.getElementById('mail-text').value);
-        window.location.href = `mailto:legal@tiktok.com,feedback@tiktok.com?subject=URGENT_REPORT&body=${body}`;
+        window.location.href = `mailto:legal@tiktok.com?subject=REPORT&body=${encodeURIComponent(document.getElementById('mail-text').value)}`;
     }
 
     function strikeAction(url) {
@@ -243,18 +245,4 @@
         const canvas = document.getElementById('matrix-bg');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        const drops = Array(Math.floor(canvas.width / 15)).fill(1);
-        function draw() {
-            ctx.fillStyle = "rgba(0,0,0,0.05)"; ctx.fillRect(0,0,canvas.width,canvas.height);
-            ctx.fillStyle = "#0f0"; ctx.font = "15px monospace";
-            drops.forEach((y, i) => {
-                ctx.fillText(Math.floor(Math.random()*2), i*15, y*15);
-                if(y*15 > canvas.height && Math.random() > 0.975) drops[i] = 0;
-                drops[i]++;
-            });
-        }
-        setInterval(draw, 33);
-    }
-</script>
-</body>
-</html>
+        const drops = Array(Math
