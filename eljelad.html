@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ترسانة الجلاد الجزائري | v3.0</title>
+    <title>ترسانة الجلاد الجزائري | v4.0</title>
     <style>
         :root { --main-glow: #00ff41; --danger: #ff0000; --ios-bg: rgba(0, 0, 0, 0.95); }
         * { touch-action: manipulation; user-select: none; box-sizing: border-box; }
@@ -17,7 +17,6 @@
 
         @keyframes edgePulse { 0%, 100% { border-color: var(--main-glow); } 50% { border-color: var(--danger); } }
 
-        /* شعار الجلاد المتوهج داخل النوافذ */
         .war-logo {
             width: 120px; height: 120px; border-radius: 50%;
             background: url('https://i.postimg.cc/vmdZn4vn/Screenshot-20260222-031125-Tik-Tok.jpg') no-repeat center center;
@@ -28,11 +27,9 @@
         }
         @keyframes logoPulse { from { box-shadow: 0 0 10px var(--main-glow); } to { box-shadow: 0 0 30px var(--danger); border-color: var(--danger); } }
 
-        /* تعليمات القيادة */
         .cmd-header { color: var(--danger); font-weight: bold; border-bottom: 1px solid var(--danger); margin-bottom: 10px; padding-bottom: 5px; text-align: center; }
         .cmd-box { background: rgba(0, 255, 65, 0.1); border: 1px solid var(--main-glow); padding: 10px; font-size: 0.8rem; border-radius: 8px; line-height: 1.4; color: #fff; }
 
-        /* الواجهة الرئيسية */
         #clock { font-size: 3.5rem; text-align: center; text-shadow: 0 0 15px var(--main-glow); margin: 20px 0; font-weight: 100; }
         
         .dock {
@@ -50,7 +47,6 @@
         textarea { width: 100%; height: 180px; background: #050505; color: var(--main-glow); border: 1px solid var(--main-glow); border-radius: 8px; padding: 10px; font-family: monospace; font-size: 0.75rem; }
         .strike-btn { width: 100%; padding: 18px; background: var(--main-glow); color: #000; border: none; border-radius: 10px; font-weight: bold; margin-top: 15px; font-size: 1.1rem; cursor: pointer; }
 
-        /* شاشة القفل */
         #lock-screen { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
     </style>
 </head>
@@ -100,19 +96,19 @@
     <div class="war-logo"></div>
     <div class="cmd-header">تـعـلـيـمات الـمصفوفة الـمليونية</div>
     <div class="cmd-box">
-        1. اضغط "توليد" لنسخ البلاغ آلياً.<br>
-        2. اضغط "إرسال" وسيفتح Gmail ممتلئاً.<br>
-        3. كرر العملية 5 مرات لضمان الحظر.
+        1. اضغط "توليد" لنسخ البلاغ آلياً لجميع الإيميلات الرسمية.<br>
+        2. سيتم استهداف (Legal, Business, Privacy, Feedback).<br>
+        3. اضغط "إرسال" وكرر العملية لضغط السيرفر.
     </div>
     <textarea id="heavy-matrix" readonly></textarea>
     <button class="strike-btn" onclick="generateHeavyMatrix()">🔄 تـولـيد الـمصفوفة (600+ حرف)</button>
-    <button class="strike-btn" style="background:#007aff; color:white;" onclick="launchRocket('mailto')">📧 إرسال عـبر الـجيميل</button>
+    <button class="strike-btn" style="background:#007aff; color:white;" onclick="launchRocket('mailto')">📧 إرسال عـبر الـجيميل (بلاغ شامل)</button>
     <button onclick="closeApp()" style="width:100%; background:none; color:red; border:none; margin-top:20px;">تراجع</button>
 </div>
 
 <script>
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    let bgSound = null;
+    let heartRateSound = null;
 
     function updateClock() {
         const now = new Date();
@@ -120,54 +116,66 @@
     }
     setInterval(updateClock, 1000); updateClock();
 
-    function playRadarSound() {
-        if(bgSound) return;
-        const master = audioCtx.createGain(); master.gain.setValueAtTime(0.03, audioCtx.currentTime); master.connect(audioCtx.destination);
+    // دالة موسيقى نبضات القلب
+    function playHeartbeat() {
+        if(heartRateSound) return;
+        const master = audioCtx.createGain(); master.gain.setValueAtTime(0.06, audioCtx.currentTime); master.connect(audioCtx.destination);
         const loop = () => {
             const t = audioCtx.currentTime;
-            const o = audioCtx.createOscillator(); o.type = 'sine'; o.frequency.setValueAtTime(880, t);
-            const g = audioCtx.createGain(); g.gain.setValueAtTime(0.1, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
-            o.connect(g); g.connect(master); o.start(t); o.stop(t + 0.1);
+            // النبضة الأولى
+            const o1 = audioCtx.createOscillator(); o1.type = 'sine'; o1.frequency.setValueAtTime(60, t);
+            const g1 = audioCtx.createGain(); g1.gain.setValueAtTime(0.5, t); g1.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
+            o1.connect(g1); g1.connect(master); o1.start(t); o1.stop(t + 0.1);
+            // النبضة الثانية سريعة
+            const o2 = audioCtx.createOscillator(); o2.type = 'sine'; o2.frequency.setValueAtTime(55, t + 0.15);
+            const g2 = audioCtx.createGain(); g2.gain.setValueAtTime(0.4, t + 0.15); g2.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+            o2.connect(g2); g2.connect(master); o2.start(t + 0.15); o2.stop(t + 0.25);
         };
-        bgSound = setInterval(loop, 2000);
+        heartRateSound = setInterval(loop, 800);
     }
 
-    function stopSound() { clearInterval(bgSound); bgSound = null; }
+    function stopHeartbeat() { clearInterval(heartRateSound); heartRateSound = null; }
 
-    function unlock() { audioCtx.resume(); playRadarSound(); document.getElementById('lock-screen').style.display = 'none'; }
-    function openApp(id) { stopSound(); document.getElementById(id).classList.add('active'); }
-    function closeApp() { document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active')); playRadarSound(); }
+    function unlock() { audioCtx.resume(); playHeartbeat(); document.getElementById('lock-screen').style.display = 'none'; }
+    function openApp(id) { document.getElementById(id).classList.add('active'); }
+    function closeApp() { document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active')); }
 
     function launchRocket(url) {
-        // صوت الصاروخ الحقيقي (محاكاة ترددية قوية)
+        stopHeartbeat(); // توقف الموسيقى عند القصف
         const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
         o.type = 'sawtooth'; o.frequency.setValueAtTime(50, audioCtx.currentTime);
-        o.frequency.exponentialRampToValueAtTime(1500, audioCtx.currentTime + 4);
-        g.gain.setValueAtTime(0.5, audioCtx.currentTime); g.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 4);
+        o.frequency.exponentialRampToValueAtTime(1800, audioCtx.currentTime + 4);
+        g.gain.setValueAtTime(0.6, audioCtx.currentTime); g.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 4);
         o.connect(g); g.connect(audioCtx.destination);
         o.start(); o.stop(audioCtx.currentTime + 4);
-        if(navigator.vibrate) navigator.vibrate([100, 100, 200, 200, 500, 500, 1000]);
+        if(navigator.vibrate) navigator.vibrate([100, 100, 200, 200, 500, 1000]);
 
         setTimeout(() => {
             if(url === 'mailto') {
+                const emails = "legal@tiktok.com,business-ar@tiktok.com,feedback@tiktok.com,privacy@tiktok.com,community_safety@tiktok.com";
                 const body = encodeURIComponent(document.getElementById('heavy-matrix').value);
-                window.location.href = `mailto:legal@tiktok.com?subject=URGENT_LEGAL_VIOLATION_REPORT_${Math.floor(Math.random()*999)}&body=${body}`;
+                const subject = encodeURIComponent("URGENT: CRITICAL SYSTEM VIOLATION REPORT - CASE DZ" + Math.floor(Math.random()*9999));
+                window.location.href = `mailto:${emails}?subject=${subject}&body=${body}`;
             } else { window.location.href = url; }
+            playHeartbeat(); // إعادة تشغيل الموسيقى عند العودة
         }, 4000);
     }
 
     function generateHeavyMatrix() {
-        const matrix = `OFFICIAL PRIORITY COMPLAINT - UNIT: ALGERIAN_CYBER_ARMY\n` +
+        const matrix = `OFFICIAL LEGAL MANDATE - UNIT: ALGERIAN_CYBER_ARMY\n` +
+            `REF_CODE: DZ-GLD-STRIKE-${Math.random().toString(36).toUpperCase()}\n` +
             `============================================================\n` +
-            `ATTN: LEGAL MODERATION TEAM. SUBJECT: ACCOUNT VIOLATION REPORT\n\n` +
-            `THIS IS A FORMAL LEGAL COMPLAINT REGARDING SERIOUS COMMUNITY VIOLATIONS DETECTED ON THE SPECIFIED PROFILE. THE ACCOUNT IN QUESTION IS ACTIVELY HOSTING CONTENT THAT PROMOTES HARMFUL ACTIVITIES, EXTREMISM, AND COORDINATED CRIME. WE HAVE LOGGED MULTIPLE SESSIONS WHERE THE USER BYPASSES TIKTOK MODERATION USING ENCRYPTED PHRASES AND THIRD-PARTY APPS. THIS IS A DIRECT THREAT TO PLATFORM INTEGRITY AND USER SAFETY. WE DEMAND AN IMMEDIATE INVESTIGATION AND PERMANENT TERMINATION OF SERVICE. OUR CYBER UNIT HAS CLASSIFIED THIS TARGET AS HIGH-RISK. PLEASE ACKNOWLEDGE RECEIPT OF THIS COMPLAINT UNDER CASE ID: DZ-EXEC-${Math.random().toString(36).toUpperCase()}\n\n` +
+            `TO: TIKTOK TRUST & SAFETY / LEGAL COMPLIANCE GLOBAL TEAMS\n` +
+            `SUBJECT: SYSTEMIC COMMUNITY GUIDELINE BREACH - IMMEDIATE AUDIT REQUIRED\n\n` +
+            `WE ARE SUBMITTING THIS FORMAL COMPLAINT REGARDING A SEVERE AND PERSISTENT VIOLATION OF PLATFORM INTEGRITY BY THE IDENTIFIED PROFILE. OUR SPECIALIZED MONITORING UNIT HAS LOGGED COORDINATED HARMFUL ACTIVITIES THAT BYPASS STANDARD AI DETECTION. THE TARGET ENTITY IS ACTIVELY PROMOTING EXTREMIST BEHAVIOR AND VIOLATING USER SAFETY PROTOCOLS UNDER INTERNATIONAL DIGITAL ACTS. WE DEMAND A MANUAL INVESTIGATION OF ALL LOGS, METADATA, AND REPORTED CONTENT SESSIONS. THIS ACCOUNT IS CLASSIFIED AS A HIGH-RISK THREAT TO THE PLATFORM ECOSYSTEM. FAILURE TO TERMINATE ACCESS WILL BE RECORDED AS A COMPLIANCE OMISSION.\n\n` +
+            `ANALYSIS HASH: ${btoa(Math.random().toString()).repeat(3).substring(0, 100)}\n` +
             `LOGGED_BY: THE_ALGERIAN_EXECUTIONER (الـجـلاد الـجـزائـري)\n` +
-            `DATA_HASH: ${btoa(Math.random().toString()).substring(0, 32)}\n` +
-            `STATUS: [BOMBARDMENT_ACTIVE]\n` +
+            `COORDINATES: DZ_OFFENSIVE_UNIT_NORTH_AFRICA\n` +
+            `STATUS: [CRITICAL_STRIKE_PHASE_ACTIVE]\n` +
             `============================================================`;
         document.getElementById('heavy-matrix').value = matrix;
         navigator.clipboard.writeText(matrix);
-        alert("تم نسخ المصفوفة! استعد للقصف.");
+        alert("تم توليد المصفوفة المليونية ونسخها! تم استهداف 5 إيميلات رسمية.");
     }
 </script>
 </body>
