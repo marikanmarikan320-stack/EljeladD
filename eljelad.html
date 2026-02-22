@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>تطبيق منظومة الجلاد v18.0 - النسخة المحفوظة</title>
+    <title>تطبيق منظومة الجلاد v18.5 - المولد المصلح</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
     <style>
         :root { 
@@ -19,15 +19,15 @@
             overflow: hidden; 
         }
 
-        /* أضواء حواف الهاتف المشتعلة */
+        /* أضواء حواف الهاتف */
         .edge-lighting {
             position: fixed; inset: 0; pointer-events: none; z-index: 10000;
             box-shadow: inset 0 0 20px var(--cyber-green);
             animation: pulse-edge 2s infinite;
         }
         @keyframes pulse-edge {
-            0%, 100% { opacity: 0.3; box-shadow: inset 0 0 15px var(--cyber-green); }
-            50% { opacity: 1; box-shadow: inset 0 0 30px var(--cyber-green); }
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
         }
 
         .app-container {
@@ -36,13 +36,11 @@
             position: relative; transition: filter 0.5s ease;
         }
 
-        /* شاشة التحميل */
         #splash-screen {
             position: fixed; inset: 0; z-index: 99999; background: #000;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
 
-        /* شعار دائري مضيء في النوافذ */
         .circular-logo {
             width: 100px; height: 100px; border-radius: 50%;
             border: 3px solid var(--cyber-green);
@@ -111,7 +109,7 @@
         textarea {
             width: 100%; height: 160px; background: #000;
             color: var(--cyber-green); border: 1px solid var(--cyber-green);
-            border-radius: 20px; padding: 15px; font-family: monospace;
+            border-radius: 20px; padding: 15px; font-family: monospace; font-size: 12px;
         }
 
         #matrix-bg { position: fixed; inset: 0; z-index: -1; opacity: 0.1; }
@@ -123,7 +121,7 @@
 
 <div id="splash-screen">
     <div style="width:180px; height:180px; border-radius:50%; border:3px solid var(--cyber-green); background: url('https://i.postimg.cc/vmdZn4vn/Screenshot-20260222-031125-Tik-Tok.jpg') center/cover; box-shadow: 0 0 40px var(--cyber-green);"></div>
-    <h2 id="status-text" style="margin-top:30px; color: var(--cyber-green);">جاري مزامنة الترسانة...</h2>
+    <h2 id="status-text" style="margin-top:30px; color: var(--cyber-green);">جاري استرجاع المولد النووي...</h2>
     <button id="entry-btn" style="display:none; background:var(--cyber-green); color:black; padding:15px 40px; border-radius:50px; font-weight:bold; border:none;" onclick="launchApp()">دخول النظام ⚔️</button>
 </div>
 
@@ -152,8 +150,8 @@
     <div class="sheet-handle"></div>
     <div class="circular-logo"></div>
     <div class="instruction-frame">
-        <span style="color:var(--cyber-green); font-weight:bold;">تعليمات القيادة [01]:</span><br>
-        سيتم توجيهك للبوابة. انسخ شفرة المولد أولاً ثم اضرب هنا.
+        <span style="color:var(--cyber-green); font-weight:bold;">تعليمات القيادة:</span><br>
+        أرسل القذيفة القانونية الآن. الرابط المستهدف مدمج في النظام.
     </div>
     <button class="btn-action" style="background: var(--samsung-primary); color: white;" onclick="strikeAction('https://www.tiktok.com/legal/report/feedback')">إطلاق القذيفة</button>
     <button onclick="closeSheet()" style="width:100%; background:none; border:none; color:grey;">إلغاء</button>
@@ -163,8 +161,8 @@
     <div class="sheet-handle"></div>
     <div class="circular-logo"></div>
     <div class="instruction-frame">
-        <span style="color:var(--war-red); font-weight:bold;">تعليمات القيادة [02]:</span><br>
-        اقتحام ميداني. افتح الحساب ونفذ البلاغات اليدوية بكثافة.
+        <span style="color:var(--war-red); font-weight:bold;">تعليمات القيادة:</span><br>
+        سيتم توجيهك للحساب. ابدأ الهجوم اليدوي فوراً.
     </div>
     <button class="btn-action" style="background: var(--war-red); color: white;" onclick="launchNativeTikTok()">بدء الاقتحام</button>
     <button onclick="closeSheet()" style="width:100%; background:none; border:none; color:grey;">إلغاء</button>
@@ -173,16 +171,18 @@
 <div class="modal-sheet" id="s3">
     <div class="sheet-handle"></div>
     <div class="circular-logo"></div>
-    <textarea id="mail-text" readonly></textarea>
-    <button class="btn-action" style="background: var(--gold); color: black;" onclick="generateMassiveReport()">🔄 توليد شفرة نووية (600 حرف)</button>
+    <textarea id="mail-text" readonly placeholder="الشفرة النووية ستولد هنا..."></textarea>
+    <button class="btn-action" style="background: var(--gold); color: black;" onclick="generateMassiveReport()">🔄 توليد ونسخ شفرة (600 حرف)</button>
     <button class="btn-action" style="background: white; color: black;" onclick="sendFinalEmail()">🚀 قصف الجيميل</button>
     <button onclick="closeSheet()" style="width:100%; background:none; border:none; color:grey;">رجوع</button>
 </div>
 
 <script>
+    // الأصوات الحربية الميكانيكية
     const clickSnd = new Howl({ src: ['https://www.soundjay.com/mechanical/mechanical-clunk-1.mp3'], volume: 0.6 });
+    const reloadSnd = new Howl({ src: ['https://www.soundjay.com/mechanical/gun-cocking-01.mp3'], volume: 0.8 });
     const boomSnd = new Howl({ src: ['https://www.soundjay.com/mechanical/gun-shot-01.mp3'], volume: 0.7 });
-    const bgMusic = new Howl({ src: ['https://www.soundjay.com/sci-fi/sci-fi-hum-01.mp3'], loop: true, volume: 0.3 });
+    const bgMusic = new Howl({ src: ['https://www.soundjay.com/sci-fi/sci-fi-hum-01.mp3'], loop: true, volume: 0.2 });
 
     let finalTarget = "https://www.tiktok.com/@ELJELAD_DZ";
 
@@ -211,6 +211,7 @@
     }
 
     function closeSheet() {
+        clickSnd.play();
         document.querySelectorAll('.modal-sheet').forEach(s => s.classList.remove('active'));
         document.getElementById('main-app').style.filter = 'none';
     }
@@ -221,18 +222,53 @@
         window.location.href = `intent://${cleanURL}#Intent;package=com.zhiliaoapp.musically;scheme=https;end`;
     }
 
+    // المولد النووي المصلح (ملايين الاحتمالات + 600 حرف + نسخ تلقائي)
     function generateMassiveReport() {
-        clickSnd.play();
-        let report = "Dear TikTok Support, This is an official report against account (" + finalTarget + "). ";
-        const filler = "The user violates security standards and uses illegal automation. Immediate action is required for safety. ";
-        while(report.length < 600) { report += filler; }
-        document.getElementById('mail-text').value = report;
-        navigator.clipboard.writeText(report);
+        reloadSnd.play();
+        
+        const intro = [
+            "URGENT: Community Safety Violation Report.",
+            "OFFICIAL NOTICE: Illegal Activity Detected on Platform.",
+            "LEGAL COMPLIANCE: Request for Immediate Account Suspension."
+        ];
+        
+        const core = [
+            `The account identified as (${finalTarget}) is actively participating in organized criminal promotion and violent incitement.`,
+            `We have detected that the user (${finalTarget}) is using sophisticated modded applications to bypass TikTok security filters.`,
+            `Detailed monitoring of (${finalTarget}) reveals a systematic violation of hate speech and coordinated harassment policies.`
+        ];
+        
+        const technical = [
+            " Our cyber-intelligence indicates the use of emulators and automated scripts to manipulate live-stream engagement metrics.",
+            " This user is bypassing geographical restrictions to spread harmful content to vulnerable audiences.",
+            " Internal logs suggest the profile is part of a larger coordinated network of policy-violating entities."
+        ];
+        
+        const closing = " We demand an immediate permanent ban and hardware-level (IMEI/UUID) blacklisting. Failure to act may compromise platform integrity. Report_Token: " + Math.random().toString(36).substring(2, 12).toUpperCase();
+
+        let fullReport = intro[Math.floor(Math.random()*intro.length)] + "\n\n" + 
+                         core[Math.floor(Math.random()*core.length)] + "\n\n" + 
+                         technical[Math.floor(Math.random()*technical.length)] + "\n\n" + 
+                         closing;
+
+        // إكمال النص ليتجاوز 600 حرف بدقة
+        const filler = " This report is filed under the Digital Safety Act and TikTok’s global terms of service agreement. We expect a response within 24 hours regarding the status of this investigation. ";
+        while(fullReport.length < 600) {
+            fullReport += filler;
+        }
+
+        document.getElementById('mail-text').value = fullReport;
+        
+        // النسخ التلقائي للذاكرة
+        navigator.clipboard.writeText(fullReport).then(() => {
+            console.log('Report Copied!');
+        });
     }
 
     function sendFinalEmail() {
         boomSnd.play();
-        window.location.href = `mailto:legal@tiktok.com?subject=POLICY_VIOLATION&body=${encodeURIComponent(document.getElementById('mail-text').value)}`;
+        const body = encodeURIComponent(document.getElementById('mail-text').value);
+        window.location.href = `mailto:legal@tiktok.com,feedback@tiktok.com?subject=POLICY_VIOLATION_REPORT&body=${body}`;
     }
 
     function strikeAction(url) {
