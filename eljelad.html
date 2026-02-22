@@ -3,17 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>منظومة الجلاد v15.2 - الاحترافية</title>
+    <title>منظومة الجلاد v15.3 | المولد المطور</title>
     <style>
         :root { --glow: #00ff41; --dz-red: #ff3131; --glass: rgba(0, 20, 0, 0.85); }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
 
-        body, html { 
-            margin: 0; padding: 0; width: 100%; height: 100%; 
-            background: #000; overflow: hidden;
-        }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; overflow: hidden; }
 
-        /* حاوية الهاتف */
         #phone-shell {
             width: 100%; height: 100%; position: relative;
             border: 4px solid var(--glow); box-shadow: inset 0 0 20px var(--glow);
@@ -21,7 +17,6 @@
             background-size: cover;
         }
 
-        /* الساعة الرقمية الاحترافية */
         #clock {
             position: absolute; top: 12%; width: 100%; text-align: center;
             color: var(--glow); font-size: 3.5rem; font-weight: bold;
@@ -29,7 +24,6 @@
             font-family: 'Courier New', Courier, monospace;
         }
 
-        /* الرادار الهولوجرامي */
         .radar {
             position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%);
             width: 280px; height: 280px; border-radius: 50%; border: 1px solid rgba(0,255,65,0.3);
@@ -38,31 +32,17 @@
         }
         @keyframes spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
 
-        /* أزرار التطبيقات الناعمة */
-        .app-grid {
-            position: absolute; bottom: 30px; width: 100%;
-            display: grid; grid-template-columns: repeat(4, 1fr);
-            gap: 15px; padding: 0 20px;
-        }
-
-        .app-item {
-            display: flex; flex-direction: column; align-items: center; cursor: pointer;
-        }
-
+        .app-grid { position: absolute; bottom: 30px; width: 100%; display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 0 20px; }
+        .app-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
         .app-icon {
-            width: 60px; height: 60px; border-radius: 15px;
-            background: rgba(0,0,0,0.7); border: 1.5px solid var(--glow);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.8rem; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            transition: transform 0.2s, box-shadow 0.2s;
+            width: 60px; height: 60px; border-radius: 15px; background: rgba(0,0,0,0.7); border: 1.5px solid var(--glow);
+            display: flex; align-items: center; justify-content: center; font-size: 1.8rem; transition: 0.2s;
         }
         .app-item:active .app-icon { transform: scale(0.9); box-shadow: 0 0 20px var(--glow); }
-        .app-label { color: #fff; font-size: 0.65rem; margin-top: 8px; font-weight: bold; text-shadow: 1px 1px 3px #000; }
+        .app-label { color: #fff; font-size: 0.65rem; margin-top: 8px; font-weight: bold; }
 
-        /* النوافذ العائمة (Glassmorphism) */
         .window {
-            display: none; position: absolute; inset: 0;
-            background: var(--glass); backdrop-filter: blur(10px);
+            display: none; position: absolute; inset: 0; background: var(--glass); backdrop-filter: blur(10px);
             z-index: 5000; padding: 30px 20px; animation: slideUp 0.3s ease-out;
         }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
@@ -73,44 +53,24 @@
             box-shadow: 0 0 20px var(--glow);
         }
 
-        .command-text {
-            color: #fff; border-right: 3px solid var(--glow); background: rgba(0,255,65,0.1);
-            padding: 15px; font-size: 0.85rem; line-height: 1.6; border-radius: 0 10px 10px 0;
-        }
+        .command-text { color: #fff; border-right: 3px solid var(--glow); background: rgba(0,255,65,0.1); padding: 15px; font-size: 0.85rem; line-height: 1.6; }
+        .action-btn { width: 100%; padding: 18px; border: none; border-radius: 12px; font-weight: bold; font-size: 1rem; margin-top: 20px; cursor: pointer; }
 
-        .action-btn {
-            width: 100%; padding: 18px; border: none; border-radius: 12px;
-            font-weight: bold; font-size: 1rem; margin-top: 20px; cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-
-        /* غلاف الدخول الجزائري */
         #splash {
-            position: fixed; inset: 0; z-index: 10000; background: #000;
-            display: flex; flex-direction: column; justify-content: space-between; align-items: center;
-            padding: 50px 0; background-image: url('https://i.postimg.cc/vmdZn4vn/Screenshot-20260222-031125-Tik-Tok.jpg');
-            background-size: contain; background-repeat: no-repeat; background-position: center;
+            position: fixed; inset: 0; z-index: 10000; background: #000 url('https://i.postimg.cc/vmdZn4vn/Screenshot-20260222-031125-Tik-Tok.jpg') no-repeat center;
+            background-size: contain; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 50px 0;
         }
-
-        .dz-title {
-            font-size: 1.5rem; font-weight: bold; text-align: center;
-            animation: colors 2s infinite; line-height: 1.8;
-        }
-        @keyframes colors {
-            0%, 100% { color: #fff; text-shadow: 0 0 10px #006633; }
-            50% { color: #006633; text-shadow: 0 0 20px #d21034; }
-        }
-
-        #smoke-overlay {
-            position: fixed; inset: 0; z-index: 11000; pointer-events: none; display: none;
-            background: rgba(255,255,255,0.3); filter: blur(40px); animation: smoke 1.5s forwards;
-        }
-        @keyframes smoke { 0% { opacity: 0; transform: scale(1); } 50% { opacity: 1; } 100% { opacity: 0; transform: scale(2); } }
+        .dz-title { font-size: 1.5rem; font-weight: bold; text-align: center; animation: colors 2s infinite; }
+        @keyframes colors { 0%, 100% { color: #fff; text-shadow: 0 0 10px #006633; } 50% { color: #006633; text-shadow: 0 0 20px #d21034; } }
+        #smoke-overlay { position: fixed; inset: 0; z-index: 11000; pointer-events: none; display: none; background: rgba(255,255,255,0.3); filter: blur(40px); animation: smoke 1.5s forwards; }
+        @keyframes smoke { 0% { opacity: 0; transform: scale(1); } 100% { opacity: 0; transform: scale(2); } }
     </style>
 </head>
 <body>
 
-<iframe id="bg-music" style="display:none" src="https://www.youtube.com/embed/hvJ2VES1fjU?autoplay=1&loop=1&playlist=hvJ2VES1fjU" allow="autoplay"></iframe>
+<div id="music-container">
+    <iframe id="bg-music" style="display:none" src="about:blank" allow="autoplay"></iframe>
+</div>
 
 <div id="smoke-overlay"></div>
 
@@ -124,36 +84,24 @@
     <div class="radar"></div>
 
     <div class="app-grid">
-        <div class="app-item" onclick="openApp('w1')">
-            <div class="app-icon">📋</div>
-            <div class="app-label">الاستمارة</div>
-        </div>
-        <div class="app-item" onclick="openApp('w2')">
-            <div class="app-icon" style="border-color: #ff0050;">🎬</div>
-            <div class="app-label">تيك توك</div>
-        </div>
-        <div class="app-item" onclick="openApp('w3')">
-            <div class="app-icon" style="border-color: #ffcc00;">📧</div>
-            <div class="app-label">الجيميل</div>
-        </div>
-        <div class="app-item" onclick="playSound(100)">
-            <div class="app-icon" style="border-color: #007aff;">🔒</div>
-            <div class="app-label">مشفر</div>
-        </div>
+        <div class="app-item" onclick="openApp('w1')"><div class="app-icon">📋</div><div class="app-label">الاستمارة</div></div>
+        <div class="app-item" onclick="openApp('w2')"><div class="app-icon" style="border-color: #ff0050;">🎬</div><div class="app-label">تيك توك</div></div>
+        <div class="app-item" onclick="openApp('w3')"><div class="app-icon" style="border-color: #ffcc00;">📧</div><div class="app-label">الجيميل</div></div>
+        <div class="app-item" onclick="vibrate(100)"><div class="app-icon" style="border-color: #007aff;">🔒</div><div class="app-label">مشفر</div></div>
     </div>
 
     <div class="window" id="w1">
         <div class="window-header-logo"></div>
         <div class="command-text">📜 أوامر القيادة: افتح مركز المساعدة، اختر التبليغ عن حساب، ضع الرابط المستهدف والبيانات المطلوبة بدقة.</div>
         <button class="action-btn" style="background: #ffcc00;" onclick="triggerAction('https://www.tiktok.com/legal/report/feedback')">فتح الاستمارة الآن</button>
-        <button onclick="closeApp()" style="width:100%; background:none; color:red; border:none; margin-top:20px;">إغلاق النافذة</button>
+        <button onclick="closeApp()" style="width:100%; background:none; color:red; border:none; margin-top:20px;">إغلاق</button>
     </div>
 
     <div class="window" id="w2">
         <div class="window-header-logo"></div>
         <div class="command-text">📜 أوامر القيادة: سيتم توجيهك للحساب. قم بالتبليغ المكثف على الحساب والبث المباشر (محتوى غير لائق).</div>
         <button class="action-btn" style="background: #ff0050; color: #fff;" onclick="triggerAction(targetLink)">بدء الهجوم المباشر</button>
-        <button onclick="closeApp()" style="width:100%; background:none; color:red; border:none; margin-top:20px;">إغلاق النافذة</button>
+        <button onclick="closeApp()" style="width:100%; background:none; color:red; border:none; margin-top:20px;">إغلاق</button>
     </div>
 
     <div class="window" id="w3">
@@ -162,31 +110,17 @@
         <textarea id="report-box" style="width:100%; height:120px; background:#000; color:var(--glow); border:1px solid var(--glow); margin-top:10px; font-size:0.75rem;" readonly></textarea>
         <button class="action-btn" style="background: var(--glow);" onclick="generateAndCopy()">🔄 توليد ونسخ البلاغ</button>
         <button class="action-btn" style="background: #007aff; color: #fff;" onclick="triggerAction('mailto')">📧 إرسال عبر الجيميل</button>
-        <button onclick="closeApp()" style="width:100%; background:none; color:red; border:none; margin-top:20px;">إغلاق النافذة</button>
+        <button onclick="closeApp()" style="width:100%; background:none; color:red; border:none; margin-top:20px;">إغلاق</button>
     </div>
 </div>
 
 <script>
     const urlParams = new URLSearchParams(window.location.search);
     const targetLink = urlParams.get('target') || "https://www.tiktok.com/@ELJELAD_DZ";
-
-    // نظام الصوت المتقدم
-    function playSound(freq) {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const oscillator = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-        oscillator.type = 'square';
-        oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime);
-        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        oscillator.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-        oscillator.start();
-        oscillator.stop(audioCtx.currentTime + 0.1);
-    }
+    const musicUrl = "https://www.youtube.com/embed/hvJ2VES1fjU?autoplay=1&loop=1&playlist=hvJ2VES1fjU";
 
     function enterSystem() {
-        playSound(400);
-        if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
+        document.getElementById('bg-music').src = musicUrl;
         document.getElementById('smoke-overlay').style.display = 'block';
         setTimeout(() => {
             document.getElementById('splash').style.display = 'none';
@@ -194,39 +128,44 @@
         }, 1500);
     }
 
-    function openApp(id) {
-        playSound(600);
-        if(navigator.vibrate) navigator.vibrate(50);
-        document.getElementById(id).style.display = 'block';
-    }
-
-    function closeApp() {
-        playSound(300);
-        document.querySelectorAll('.window').forEach(w => w.style.display = 'none');
-    }
+    function openApp(id) { if(navigator.vibrate) navigator.vibrate(50); document.getElementById(id).style.display = 'block'; }
+    function closeApp() { document.querySelectorAll('.window').forEach(w => w.style.display = 'none'); }
+    function vibrate(ms) { if(navigator.vibrate) navigator.vibrate(ms); }
 
     function triggerAction(url) {
-        playSound(800);
-        if(navigator.vibrate) navigator.vibrate(200);
+        vibrate(200);
         document.getElementById('smoke-overlay').style.display = 'block';
         setTimeout(() => {
             if(url === 'mailto') {
                 const emails = "legal@tiktok.com,feedback@tiktok.com,privacy@tiktok.com,reports@tiktok.com";
                 const body = encodeURIComponent(document.getElementById('report-box').value);
                 window.location.href = `mailto:${emails}?subject=Urgent_Report&body=${body}`;
-            } else {
-                window.location.href = url;
-            }
+            } else { window.location.href = url; }
         }, 1200);
     }
 
     function generateAndCopy() {
-        playSound(500);
-        let r = "FORMAL SAFETY COMPLIANCE REPORT\nTarget: " + targetLink + "\n\nViolation: Persistent harassment, extremist propaganda, and community standard violations. This account poses a risk to user safety and digital integrity. We demand a manual review and immediate suspension.\n";
-        while(r.length < 600) { r += " Evidence suggests systematic policy breaches against platform safety regulations."; }
+        const intros = ["URGENT SECURITY ALERT: ", "OFFICIAL POLICY VIOLATION REPORT: ", "LEGAL COMPLIANCE ESCALATION: "];
+        const cores = [
+            "This profile is actively promoting extremist ideologies and engaging in systematic cyber-bullying. ",
+            "We have identified severe breaches of community safety standards including harassment and prohibited media sharing. ",
+            "The account is involved in malicious activities that threaten the safety and integrity of the user community. "
+        ];
+        const actions = [
+            "Immediate manual review and permanent account suspension are required to prevent further damage. ",
+            "We demand an instant deactivation of this ID following TikTok's strict safety regulations. ",
+            "Our security team requests a total block on all interactions from this user due to high-risk behavior. "
+        ];
+        
+        let r = intros[Math.floor(Math.random()*intros.length)] + targetLink + "\n\n" + 
+                cores[Math.floor(Math.random()*cores.length)] + 
+                actions[Math.floor(Math.random()*actions.length)] + "\n";
+
+        while(r.length < 600) { r += " This documentation serves as a formal safety submission under international digital protection acts. "; }
+        
         document.getElementById('report-box').value = r;
         navigator.clipboard.writeText(r);
-        alert("تم توليد الصاروخ ونسخه!");
+        alert("🚀 تم توليد صاروخ فريد ونسخه بنجاح!");
     }
 
     function updateTime() {
@@ -235,11 +174,10 @@
     }
     setInterval(updateTime, 1000); updateTime();
 
-    // تشغيل الموسيقى عند العودة
     document.addEventListener("visibilitychange", () => {
         const music = document.getElementById('bg-music');
         if (document.hidden) music.src = "";
-        else music.src = "https://www.youtube.com/embed/hvJ2VES1fjU?autoplay=1&loop=1&playlist=hvJ2VES1fjU";
+        else music.src = musicUrl;
     });
 </script>
 </body>
