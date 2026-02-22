@@ -3,621 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ALGERIAN BLACK HOLE SYSTEM</title>
+    <title>منظومة الجلاد | V8 FINAL PRO</title>
     <style>
-        :root {
-            --hacker-green: #00ff41;
-            --hacker-red: #ff0041;
-            --hacker-blue: #00e0ff;
-            --main-bg-color: #000;
-            --text-color: #fff;
-            --glass-effect: rgba(255, 255, 255, 0.08);
-            --blur-effect: blur(10px);
+        :root { --neon: #00ff41; --glow: 0 0 15px #00ff41; }
+
+        body, html {
+            margin: 0; padding: 0; height: 100vh; width: 100vw;
+            background: #000; display: flex; justify-content: center; align-items: center;
+            overflow: hidden; font-family: sans-serif;
         }
 
-        /* --- Global Styles --- */
-        body {
-            background-color: var(--main-bg-color);
-            color: var(--text-color);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            overflow: hidden; /* Prevent scrolling */
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* --- Phone Frame Simulation --- */
-        .phone-frame {
-            width: 380px; /* Standard phone width */
-            height: 800px; /* Standard phone height */
-            background-color: #111;
-            border-radius: 40px;
-            box-shadow: 0 0 50px rgba(0, 255, 65, 0.5), inset 0 0 20px rgba(0, 255, 65, 0.3);
+        /* الإطار الخارجي المتوهج */
+        .phone {
+            width: 370px; height: 780px;
+            border: 4px solid var(--neon);
+            border-radius: 45px;
             position: relative;
-            overflow: hidden;
-            border: 6px solid;
-            animation: rgbEdgePulse 4s infinite linear;
-        }
-
-        @keyframes rgbEdgePulse {
-            0% { border-color: var(--hacker-green); }
-            33% { border-color: var(--hacker-blue); }
-            66% { border-color: var(--hacker-red); }
-            100% { border-color: var(--hacker-green); }
-        }
-
-        .screen-content {
-            position: absolute;
-            inset: 0;
-            background: url('https://e0.pxfuel.com/wallpapers/18/422/desktop-wallpaper-hacker-mask-neon-hacker-thumbnail.jpg') no-repeat center center;
+            background: url('https://i.postimg.cc/j2fHMWGY/unnamed-(3).jpg') no-repeat center center;
             background-size: cover;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
+            box-shadow: var(--glow), inset 0 0 20px #000;
+            animation: borderPulse 3s infinite;
         }
 
-        /* --- Top Bar (Time, Status) --- */
-        .status-bar {
-            width: 100%;
-            height: 40px;
-            background: rgba(0,0,0,0.6);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            color: var(--hacker-green);
-        }
+        @keyframes borderPulse { 0%, 100% { border-color: var(--neon); } 50% { border-color: #ff0041; } }
 
-        .status-bar .time {
-            font-size: 1.1rem;
-            color: var(--hacker-green);
-            text-shadow: 0 0 5px var(--hacker-green);
-        }
+        .overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.4); border-radius: 40px; z-index: 1; }
 
-        /* --- Main Title & Commander --- */
-        .header-info {
-            text-align: center;
-            margin-top: 20px;
-            text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
-        }
-        .header-info h1 {
-            font-size: 1.3rem;
-            color: var(--hacker-green);
-            margin-bottom: 5px;
-            letter-spacing: 1px;
-        }
-        .header-info p {
-            font-size: 0.8rem;
-            color: #ccc;
-            margin-top: 0;
-            font-style: italic;
-        }
+        .content { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; padding: 25px; box-sizing: border-box; }
 
-        /* --- Main Desktop Icons (8 icons) --- */
-        .icon-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr); /* 4 columns */
-            gap: 15px;
-            padding: 20px 25px 25px; /* Adjust padding to make it look like a real phone */
-            width: 100%;
-            box-sizing: border-box;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); /* Gradient at bottom */
-        }
+        /* الساعة والاسم */
+        .header { text-align: center; color: white; margin-top: 30px; }
+        #time { font-size: 3.5rem; font-weight: 100; text-shadow: var(--glow); }
+        .title-box { border: 1px double var(--neon); padding: 8px; margin-top: 15px; background: rgba(0,0,0,0.7); }
 
-        .app-icon-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-            transition: transform 0.2s ease-out;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .app-icon-item:active { transform: scale(0.9); }
+        /* شبكة الـ 8 أزرار */
+        .app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: auto; margin-bottom: 30px; }
+        .app { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: 0.2s; }
+        .app:active { transform: scale(0.8); }
+        .icon { width: 60px; height: 60px; border-radius: 16px; background: rgba(0,0,0,0.8); border: 1px solid var(--neon); display: flex; justify-content: center; align-items: center; font-size: 1.8rem; box-shadow: 0 5px 10px #000; }
+        .label { font-size: 0.6rem; color: #fff; margin-top: 5px; font-weight: bold; text-align: center; }
 
-        .icon-box {
-            width: 60px;
-            height: 60px;
-            border-radius: 15px;
-            background: var(--glass-effect);
-            backdrop-filter: var(--blur-effect);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.7rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
-            margin-bottom: 8px;
-        }
-        .icon-box.green { color: var(--hacker-green); border-color: var(--hacker-green); }
-        .icon-box.red { color: var(--hacker-red); border-color: var(--hacker-red); }
-        .icon-box.blue { color: var(--hacker-blue); border-color: var(--hacker-blue); }
-        .icon-box.grey { color: #aaa; border-color: #666; }
+        /* نافذة العمليات */
+        .win { display: none; position: absolute; inset: 15px; background: rgba(0,0,0,0.95); border: 1px solid var(--neon); border-radius: 20px; z-index: 100; padding: 20px; animation: slideUp 0.3s; }
+        .win.active { display: flex; flex-direction: column; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
-        .icon-label {
-            font-size: 0.7rem;
-            color: #eee;
-            text-shadow: 1px 1px 3px #000;
-        }
+        textarea { width: 100%; flex-grow: 1; background: #000; color: var(--neon); border: 1px solid #333; padding: 10px; font-family: monospace; font-size: 0.8rem; resize: none; margin-bottom: 10px; }
+        .btn { width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-bottom: 10px; }
 
-        /* --- Radar Overlay Window --- */
-        .radar-overlay-window {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 85%;
-            height: 300px;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: var(--blur-effect);
-            border: 2px solid var(--hacker-green);
-            border-radius: 20px;
-            box-shadow: 0 0 30px var(--hacker-green);
-            display: none; /* Hidden by default */
-            flex-direction: column;
-            justify-content: space-around;
-            align-items: center;
-            padding: 20px;
-            box-sizing: border-box;
-            animation: fadeInScale 0.3s ease-out;
-            z-index: 100; /* Ensure it's above other elements */
-        }
-
-        @keyframes fadeInScale {
-            from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
-            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-        }
-
-        .radar-display {
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            border: 2px solid var(--hacker-green);
-            position: relative;
-            background: radial-gradient(circle, rgba(0,255,65,0.1) 0%, rgba(0,0,0,0) 70%);
-            overflow: hidden;
-        }
-        .radar-display::before { /* Center Dot */
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background-color: var(--hacker-green);
-            z-index: 2;
-        }
-        .radar-line {
-            position: absolute;
-            width: 50%;
-            height: 2px;
-            background-color: var(--hacker-green);
-            top: 50%;
-            left: 50%;
-            transform-origin: left;
-            animation: radarSweep 2s linear infinite;
-        }
-        .target-dot {
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            background-color: var(--hacker-red);
-            border-radius: 50%;
-            box-shadow: 0 0 5px var(--hacker-red);
-            animation: targetBlink 1s infinite alternate;
-        }
-        .target-dot:nth-child(1) { top: 20%; left: 70%; }
-        .target-dot:nth-child(2) { top: 80%; left: 30%; }
-        .target-dot:nth-child(3) { top: 40%; left: 15%; }
-
-        @keyframes radarSweep {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        @keyframes targetBlink {
-            0% { opacity: 1; }
-            100% { opacity: 0.5; }
-        }
-
-        .close-radar-btn {
-            background-color: var(--hacker-red);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: bold;
-            margin-top: 15px;
-            transition: background-color 0.2s;
-        }
-        .close-radar-btn:active { background-color: darkred; }
-
-
-        /* --- Terminal Output at Bottom --- */
-        .terminal-output {
-            width: 100%;
-            height: 150px;
-            background: rgba(0,0,0,0.7);
-            backdrop-filter: var(--blur-effect);
-            border-top: 1px solid var(--hacker-green);
-            padding: 10px;
-            box-sizing: border-box;
-            font-size: 0.7rem;
-            overflow-y: scroll;
-            white-space: pre-wrap;
-            color: var(--hacker-green);
-            text-shadow: 0 0 3px var(--hacker-green);
-        }
-        .terminal-output::-webkit-scrollbar { display: none; } /* Hide scrollbar */
-
-
-        /* --- App Windows (Overlay for detailed actions) --- */
-        .app-window {
-            position: absolute;
-            inset: 0;
-            background: rgba(0,0,0,0.95);
-            backdrop-filter: var(--blur-effect);
-            display: none;
-            flex-direction: column;
-            padding: 40px 20px;
-            box-sizing: border-box;
-            z-index: 200; /* Above radar overlay */
-            animation: slideInFromRight 0.3s ease-out;
-        }
-
-        @keyframes slideInFromRight {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        .app-window h2 {
-            text-align: center;
-            color: var(--hacker-green);
-            text-shadow: 0 0 10px var(--hacker-green);
-            margin-bottom: 20px;
-        }
-
-        .app-window textarea {
-            width: 100%;
-            height: 300px;
-            background: #000;
-            border: 1px solid var(--hacker-green);
-            color: var(--hacker-green);
-            padding: 15px;
-            font-family: monospace;
-            font-size: 0.8rem;
-            border-radius: 10px;
-            resize: none;
-            outline: none;
-        }
-
-        .action-button {
-            width: 100%;
-            padding: 15px;
-            margin-top: 15px;
-            border-radius: 10px;
-            border: none;
-            font-weight: bold;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .action-button.green { background-color: var(--hacker-green); color: black; }
-        .action-button.red { background-color: var(--hacker-red); color: white; }
-        .action-button.blue { background-color: var(--hacker-blue); color: black; }
-        .action-button.back { background-color: #333; color: white; }
-
-        .action-button:active { transform: scale(0.98); }
-
-        /* --- Splash Screen --- */
-        #splash-screen {
-            position: absolute;
-            inset: 0;
-            background-color: var(--main-bg-color);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        #splash-screen h1 {
-            color: var(--hacker-green);
-            text-shadow: 0 0 20px var(--hacker-green);
-            font-size: 1.8rem;
-            text-align: center;
-        }
-        #splash-screen button {
-            background-color: var(--hacker-green);
-            color: black;
-            border: none;
-            padding: 15px 40px;
-            border-radius: 25px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 30px;
-        }
-
+        #splash { position: fixed; inset: 0; background: #000; z-index: 1000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
     </style>
 </head>
 <body>
 
-<div class="phone-frame">
-    <div id="splash-screen">
-        <h1>ALGERIAN BLACK HOLE SYSTEM<br><small style="color:#ccc;">COMMANDER AL JALLAD</small></h1>
-        <button onclick="bootSystem()">ENTER THE GRID</button>
-    </div>
+<div id="splash">
+    <div style="font-size: 6rem; filter: drop-shadow(var(--glow));">🦅</div>
+    <h1 style="color:white; text-align:center;">مـنـظـومـة جيش التبليغ<br><small style="color:var(--neon)">بـقيادة الـجلاد الـجزائري</small></h1>
+    <button onclick="start()" style="padding: 15px 50px; border-radius: 30px; background: var(--neon); border: none; font-weight: bold; cursor: pointer;">دخـول الـجندي 🇩🇿</button>
+</div>
 
-    <div class="screen-content" id="main-screen">
-        <div class="status-bar">
-            <span class="signal">📶</span>
-            <span class="time" id="current-time">10:30 AM</span>
-            <span class="battery">🔋100%</span>
-        </div>
-
-        <div class="header-info">
-            <h1>ALGERIAN BLACK HOLE SYSTEM</h1>
-            <p>COMMANDER AL JALLAD</p>
-        </div>
-
-        <div class="radar-overlay-window" id="radar-window">
-            <div class="radar-display">
-                <div class="radar-line"></div>
-                <div class="target-dot" style="top: 20%; left: 70%;"></div>
-                <div class="target-dot" style="top: 80%; left: 30%;"></div>
-                <div class="target-dot" style="top: 40%; left: 15%;"></div>
-            </div>
-            <button class="close-radar-btn" onclick="closeRadar()">CLOSE RADAR</button>
-        </div>
-
-        <div class="icon-grid">
-            <div class="app-icon-item" onclick="openApp('app-window-legal')">
-                <div class="icon-box green">🛡️</div>
-                <div class="icon-label">Legal_Report</div>
-            </div>
-            <div class="app-icon-item" onclick="openApp('app-window-direct')">
-                <div class="icon-box red">💥</div>
-                <div class="icon-label">Direct_Attack</div>
-            </div>
-            <div class="app-icon-item" onclick="openApp('app-window-matrix')">
-                <div class="icon-box blue">📡</div>
-                <div class="icon-label">Matrix_Generator</div>
-            </div>
-            <div class="app-icon-item" onclick="openRadar()">
-                <div class="icon-box green">🛰️</div>
-                <div class="icon-label">Radar_Scan</div>
-            </div>
-            <div class="app-icon-item" onclick="alert('Module Offline')">
-                <div class="icon-box grey">🔑</div>
-                <div class="icon-label">Decryptor</div>
-            </div>
-            <div class="app-icon-item" onclick="alert('Module Offline')">
-                <div class="icon-box grey">⚙️</div>
-                <div class="icon-label">Settings</div>
-            </div>
-            <div class="app-icon-item" onclick="alert('Module Offline')">
-                <div class="icon-box grey">🔌</div>
-                <div class="icon-label">Net_Injector</div>
-            </div>
-            <div class="app-icon-item" onclick="rebootSystem()">
-                <div class="icon-box grey">🔄</div>
-                <div class="icon-label">System_Reboot</div>
+<div class="phone">
+    <div class="overlay"></div>
+    <div class="content">
+        <div class="header">
+            <div id="time">00:00</div>
+            <div class="title-box">
+                <div style="font-size: 0.8rem; color: var(--neon);">جيش التبليغ الجزائري</div>
+                <div style="font-size: 0.6rem;">بـقيادة الـجلاد الـجزائري</div>
             </div>
         </div>
 
-        <pre class="terminal-output" id="terminal-log">
-        [SYSTEM ONLINE] BOOT SEQUENCE INITIATED...
-        Establishing secure connection to ALGERIAN_CYBER_HQ...
-        TARGET ACQUISITION PROTOCOL ENGAGED.
-        Awaiting Commander's Orders...
-        </pre>
+        <div class="app-grid">
+            <div class="app" onclick="openW('w-report')"><div class="icon">🛡️</div><div class="label">بلاغ رسمي</div></div>
+            <div class="app" onclick="openW('w-attack')"><div class="icon">🧨</div><div class="label">اقتحام</div></div>
+            <div class="app" onclick="openW('w-report')"><div class="icon">📡</div><div class="label">المصفوفة</div></div>
+            <div class="app" onclick="location.reload()"><div class="icon">🔄</div><div class="label">تحديث</div></div>
+            <div class="app"><div class="icon" style="opacity:0.5">🛰️</div><div class="label">رادار</div></div>
+            <div class="app"><div class="icon" style="opacity:0.5">🔐</div><div class="label">تشفير</div></div>
+            <div class="app"><div class="icon" style="opacity:0.5">🤖</div><div class="label">بوتات</div></div>
+            <div class="app"><div class="icon" style="opacity:0.5">⚙️</div><div class="label">إعدادات</div></div>
+        </div>
     </div>
 
-    <div class="app-window" id="app-window-legal">
-        <h2>LEGAL REPORT PROTOCOL</h2>
-        <p style="color:#aaa; text-align:center;">Generate matrix first, then execute strike.</p>
-        <button class="action-button green" onclick="executeStrike('https://www.tiktok.com/legal/report/feedback')">EXECUTE LEGAL STRIKE</button>
-        <button class="action-button back" onclick="closeApp('app-window-legal')">BACK TO DESKTOP</button>
+    <div class="win" id="w-report">
+        <h3 style="color:var(--neon)">[ مصفوفة البلاغ الرسمي ]</h3>
+        <textarea id="txt-matrix" readonly></textarea>
+        <button class="btn" style="background:var(--neon)" onclick="strike('mailto')">🚀 إطـلاق الـقـنبلة</button>
+        <button class="btn" style="background:#333; color:red;" onclick="closeW()">🔙 خـروج</button>
     </div>
 
-    <div class="app-window" id="app-window-direct">
-        <h2>DIRECT ATTACK PROTOCOL</h2>
-        <p style="color:#aaa; text-align:center;">Repeated strikes ensure target neutralization.</p>
-        <button class="action-button red" id="direct-attack-btn" onclick="executeStrike(current_target_url)">LAUNCH DIRECT ATTACK</button>
-        <button class="action-button back" onclick="closeApp('app-window-direct')">BACK TO DESKTOP</button>
+    <div class="win" id="w-attack">
+        <h3 style="color:red">[ هـجوم مـيداني ]</h3>
+        <div style="flex-grow:1; display:flex; align-items:center; justify-content:center; font-size:4rem;">💥</div>
+        <button class="btn" style="background:red; color:white;" onclick="strike('https://www.tiktok.com/')">🧨 تـدمـير الآن</button>
+        <button class="btn" style="background:#333; color:red;" onclick="closeW()">🔙 خـروج</button>
     </div>
-
-    <div class="app-window" id="app-window-matrix">
-        <h2>MATRIX GENERATOR</h2>
-        <textarea id="matrix-output" readonly>Generating secure legal report matrix...</textarea>
-        <button class="action-button blue" onclick="generateHeavyMatrix()">GENERATE HEAVY MATRIX</button>
-        <button class="action-button green" onclick="executeStrike('mailto')">INITIATE GMAIL STRIKE</button>
-        <button class="action-button back" onclick="closeApp('app-window-matrix')">BACK TO DESKTOP</button>
-    </div>
-
 </div>
 
 <script>
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    let backgroundMusic = null;
-    let current_target_url = "https://www.tiktok.com"; // Default target
+    const audio = new (window.AudioContext || window.webkitAudioContext)();
+    let music = null;
 
-    // --- Audio Functions ---
-    function playBackgroundMusic() {
-        if (backgroundMusic) return;
-        const masterGain = audioCtx.createGain();
-        masterGain.gain.setValueAtTime(0.04, audioCtx.currentTime); // Lower volume
-        masterGain.connect(audioCtx.destination);
-
-        // Simple synthwave / cyber war loop
+    function playMusic() {
+        if(music) return;
+        const g = audio.createGain(); g.gain.setValueAtTime(0.05, audio.currentTime); g.connect(audio.destination);
         const loop = () => {
-            const t = audioCtx.currentTime;
-            [110, 164, 110, 220, 196, 147].forEach((f, i) => { // More complex melody
-                const oscillator = audioCtx.createOscillator();
-                const gainNode = audioCtx.createGain();
-                oscillator.type = 'sawtooth';
-                oscillator.frequency.setValueAtTime(f, t + i * 0.25);
-                oscillator.connect(gainNode);
-                gainNode.connect(masterGain);
-                gainNode.gain.setValueAtTime(0.15, t + i * 0.25);
-                gainNode.gain.exponentialRampToValueAtTime(0.001, t + i * 0.25 + 0.6);
-                oscillator.start(t + i * 0.25);
-                oscillator.stop(t + i * 0.25 + 0.6);
+            const t = audio.currentTime;
+            [82, 103, 82, 123].forEach((f, i) => {
+                const o = audio.createOscillator(); o.type = 'sawtooth'; o.frequency.setValueAtTime(f, t + i*0.4);
+                const og = audio.createGain(); og.gain.setValueAtTime(0.1, t + i*0.4); og.gain.exponentialRampToValueAtTime(0.001, t + i*0.4 + 0.8);
+                o.connect(og); og.connect(g); o.start(t + i*0.4); o.stop(t + i*0.4 + 0.8);
             });
         };
-        backgroundMusic = setInterval(loop, 2000); // Repeat every 2 seconds
+        music = setInterval(loop, 2000);
     }
 
-    function stopBackgroundMusic() {
-        if (backgroundMusic) {
-            clearInterval(backgroundMusic);
-            backgroundMusic = null;
-        }
+    function start() { audio.resume(); playMusic(); document.getElementById('splash').style.display = 'none'; }
+    function openW(id) { document.getElementById(id).classList.add('active'); if(id === 'w-report') gen(); }
+    function closeW() { document.querySelectorAll('.win').forEach(w => w.classList.remove('active')); }
+
+    function gen() {
+        const matrix = `OFFICIAL LEGAL REPORT - CASE ID: DZ-${Math.floor(Math.random()*999999)}\n------------------------------------------------\n` +
+            `SUBJECT: URGENT SAFETY VIOLATION COMPLAINT\n\n` +
+            `THIS IS A FORMAL LEGAL REPORT GENERATED BY THE ALGERIAN CYBER SECURITY UNIT. THE TARGET ACCOUNT HAS BEEN FLAGGED FOR REPEATED VIOLATIONS OF PLATFORM POLICIES. ` +
+            `OUR ANALYSIS DETECTED COORDINATED EFFORTS TO PROMOTE HARMFUL CONTENT AND CIRCUMVENT MODERATION FILTERS. ` +
+            `WE DEMAND AN IMMEDIATE REVIEW AND PERMANENT TERMINATION OF THIS PROFILE TO PROTECT THE INTEGRITY OF THE PLATFORM. ` +
+            `THIS COMPLAINT IS CLASSIFIED AS A PRIORITY LEVEL ONE BREACH REPORT.\n\n` +
+            `UNIT: ALGERIAN_CYBER_ARMY\nREPORT_ID: ${btoa(Math.random()).substring(0,12).toUpperCase()}`;
+        document.getElementById('txt-matrix').value = matrix;
+        navigator.clipboard.writeText(matrix);
     }
 
-    function playClickSound() {
-        const oscillator = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-        oscillator.type = 'square';
-        oscillator.frequency.setValueAtTime(1600, audioCtx.currentTime); // Higher pitch for click
-        oscillator.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-        gainNode.gain.setValueAtTime(0.02, audioCtx.currentTime);
-        oscillator.start();
-        oscillator.stop(audioCtx.currentTime + 0.05);
+    function strike(url) {
+        const o = audio.createOscillator(); const g = audio.createGain();
+        o.type = 'sine'; o.frequency.setValueAtTime(40, audio.currentTime);
+        o.connect(g); g.connect(audio.destination);
+        g.gain.setValueAtTime(1, audio.currentTime); g.gain.exponentialRampToValueAtTime(0.001, audio.currentTime + 1.2);
+        o.start(); o.stop(audio.currentTime + 1.2);
+        setTimeout(() => { window.location.href = url === 'mailto' ? 'mailto:legal@tiktok.com' : url; }, 800);
     }
 
-    function playExplosionSound() {
-        const oscillator = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-        oscillator.type = 'sine';
-        oscillator.frequency.setValueAtTime(30, audioCtx.currentTime); // Low frequency for boom
-        oscillator.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-        gainNode.gain.setValueAtTime(1, audioCtx.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.2);
-        oscillator.start();
-        oscillator.stop(audioCtx.currentTime + 1.2);
-        if (navigator.vibrate) navigator.vibrate(600); // Stronger vibration
-    }
-
-    // --- System UI Functions ---
-    function updateTime() {
-        const now = new Date();
-        document.getElementById('current-time').innerText = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
-    }
-    setInterval(updateTime, 1000); // Update time every second
-
-    function appendToTerminal(message) {
-        const terminal = document.getElementById('terminal-log');
-        terminal.innerHTML += `\n[${new Date().toLocaleTimeString()}] ${message}`;
-        terminal.scrollTop = terminal.scrollHeight; // Scroll to bottom
-    }
-
-    function bootSystem() {
-        audioCtx.resume();
-        playBackgroundMusic();
-        document.getElementById('splash-screen').style.display = 'none';
-        appendToTerminal("SYSTEM FULLY OPERATIONAL. AWAITING COMMANDS.");
-        initTargetUrl();
-    }
-
-    function openApp(appId) {
-        playClickSound();
-        stopBackgroundMusic();
-        document.getElementById(appId).style.display = 'flex';
-        appendToTerminal(`APP LAUNCHED: ${appId.replace('app-window-', '').toUpperCase()}`);
-        if (appId === 'app-window-matrix') {
-            generateHeavyMatrix(); // Generate matrix on opening
-        }
-    }
-
-    function closeApp(appId) {
-        playClickSound();
-        document.getElementById(appId).style.display = 'none';
-        playBackgroundMusic(); // Resume music when closing app
-        appendToTerminal(`APP CLOSED: ${appId.replace('app-window-', '').toUpperCase()}`);
-    }
-
-    function openRadar() {
-        playClickSound();
-        document.getElementById('radar-window').style.display = 'flex';
-        appendToTerminal("RADAR SCAN INITIATED. TARGETS DETECTED.");
-    }
-
-    function closeRadar() {
-        playClickSound();
-        document.getElementById('radar-window').style.display = 'none';
-        appendToTerminal("RADAR SCAN TERMINATED.");
-    }
-
-    function rebootSystem() {
-        playClickSound();
-        appendToTerminal("SYSTEM REBOOTING... STAND BY.");
-        setTimeout(() => location.reload(), 1500); // Simulate reboot
-    }
-
-    function initTargetUrl() {
-        const params = new URLSearchParams(window.location.search);
-        let targetParam = params.get('target') || params.get('url');
-        if (targetParam) {
-            current_target_url = targetParam;
-            document.getElementById('direct-attack-btn').onclick = () => executeStrike(current_target_url);
-            appendToTerminal(`TARGET URL SET: ${current_target_url}`);
-        } else {
-            appendToTerminal(`DEFAULT TARGET: ${current_target_url}`);
-        }
-    }
-
-    function executeStrike(actionType) {
-        playExplosionSound();
-        appendToTerminal(`STRIKE INITIATED: ${actionType}`);
-        setTimeout(() => {
-            if (actionType === 'mailto') {
-                const body = encodeURIComponent(document.getElementById('matrix-output').value);
-                window.location.href = `mailto:legal@tiktok.com?subject=URGENT_LEGAL_COMPLAINT_REF_DZ&body=${body}`;
-            } else {
-                window.location.href = actionType; // Direct URL for legal report/direct attack
-            }
-        }, 1000); // Short delay for explosion sound
-    }
-
-    // --- Heavy Matrix Generator (700+ characters, purely legal/technical) ---
-    function generateHeavyMatrix() {
-        appendToTerminal("GENERATING HEAVY MATRIX... COMPILING DATA.");
-        const matrixContent = `OFFICIAL PRIORITY CLASSIFIED REPORT - CYBER COMMAND DIVISION\n` +
-            `---------------------------------------------------------------------------\n` +
-            `ATTENTION: LEGAL COMPLIANCE AND SAFETY ENFORCEMENT TEAM.\n` +
-            `SUBJECT: CRITICAL VIOLATIONS ALERT - ACCOUNT BEHAVIOR ANALYSIS (${current_target_url})\n\n` +
-            `THIS IS AN AUTOMATED LEGAL DOCUMENT GENERATED BY THE ALGERIAN BLACK HOLE SYSTEM'S AI PROTOCOL. ` +
-            `THE REFERENCED ACCOUNT HAS BEEN IDENTIFIED FOR SYSTEMATIC BREACHES OF PLATFORM TERMS OF SERVICE AND INTERNATIONAL DIGITAL CONDUCT GUIDELINES. ` +
-            `ANALYSIS INDICATES CONSISTENT PROMOTION OF HARMFUL CONTENT, INCLUDING BUT NOT LIMITED TO: ` +
-            `THE INCITEMENT OF VIOLENCE, DISSEMINATION OF MISINFORMATION, AND THE CIRCUMVENTION OF MODERATION MECHANISMS ` +
-            `THROUGH ADVANCED ENCRYPTION TECHNIQUES AND THIRD-PARTY EXPLOITS. ` +
-            `THESE ACTIONS POSE A SIGNIFICANT RISK TO USER SAFETY AND THE INTEGRITY OF THE PLATFORM'S OPERATIONAL FRAMEWORK. ` +
-            `WE DEMAND AN IMMEDIATE, COMPREHENSIVE FORENSIC REVIEW OF ALL ASSOCIATED DATA, ` +
-            `LEADING TO THE PERMANENT SUSPENSION OF THE ACCOUNT AND A DEVICE-LEVEL BAN TO PREVENT RE-REGISTRATION. ` +
-            `FAILURE TO ACT PROMPTLY WILL BE INTERPRETED AS A LACK OF COMMITMENT TO DIGITAL SECURITY STANDARDS. ` +
-            `THIS REPORT IS CLASSIFIED AS "RED LEVEL PRIORITY" AND REQUIRES URGENT RESPONSE.\n\n` +
-            `CASE_REFERENCE_ID: ABHS_DZ-${Math.random().toString(36).substring(2, 10).toUpperCase()}_${Date.now()}\n` +
-            `REPORTING_ENTITY: ALGERIAN_CYBER_ARMY (ANONYMOUS)\n` +
-            `CONFIDENTIALITY: STRICTLY ENFORCED\n` +
-            `---------------------------------------------------------------------------\n`;
-
-        document.getElementById('matrix-output').value = matrixContent;
-        navigator.clipboard.writeText(matrixContent);
-        appendToTerminal("MATRIX GENERATION COMPLETE. READY FOR DEPLOYMENT.");
-    }
-
-    // Initial load
-    updateTime();
+    setInterval(() => { const n = new Date(); document.getElementById('time').innerText = n.getHours() + ":" + n.getMinutes().toString().padStart(2, '0'); }, 1000);
 </script>
 </body>
 </html>
-```http://googleusercontent.com/image_generation_content/3
