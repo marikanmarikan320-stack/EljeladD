@@ -3,90 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الجلاد الجزائري - غرفة العمليات</title>
+    <title>منظومة الجلاد - التبليغ الرسمي</title>
     <style>
-        body { background-color: #050505; color: #00ff00; font-family: 'Courier New', monospace; text-align: center; margin: 0; padding: 20px; }
-        .panel { border: 2px solid #ff0000; border-radius: 15px; padding: 25px; box-shadow: 0 0 20px #ff0000; max-width: 600px; margin: auto; background: #000; }
-        .status-light { width: 15px; height: 15px; background: #ff0000; border-radius: 50%; display: inline-block; margin-left: 10px; animation: blink 1s infinite; }
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-        .btn-strike { background: #ff0000; color: #fff; border: none; padding: 20px 50px; font-size: 1.5rem; font-weight: bold; cursor: pointer; border-radius: 10px; margin-top: 20px; width: 100%; transition: 0.3s; }
-        .btn-strike:hover { background: #900; transform: scale(0.98); }
-        #live-console { background: #111; border: 1px solid #333; height: 250px; overflow-y: auto; margin-top: 20px; padding: 15px; text-align: left; font-size: 0.8rem; border-radius: 10px; }
-        .success { color: #00ff00; } .warning { color: #ffcc00; }
+        body { background: #000; color: #fff; font-family: sans-serif; text-align: center; padding: 20px; }
+        .card { border: 2px solid #fe2c55; border-radius: 20px; padding: 20px; background: #121212; }
+        .btn-real { background: #fe2c55; color: #fff; border: none; padding: 20px; width: 100%; border-radius: 10px; font-size: 1.2rem; font-weight: bold; cursor: pointer; margin-top: 20px; }
+        #log { margin-top: 20px; color: #888; font-size: 0.9rem; text-align: right; border-top: 1px solid #333; padding-top: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="panel">
-        <h1>🦅 منظومة الجلاد - STRIKE V3</h1>
-        <div id="target-box" style="background: #1a1a1a; padding: 10px; margin: 15px 0; border-right: 4px solid #ff0000;">
-            <strong>📍 الهدف المرصود:</strong> <span id="targetUrl">جاري التحميل...</span>
-        </div>
+<div class="card">
+    <h2>🦅 منظومة الجلاد (التبليغ الميداني)</h2>
+    <p>هذا الوضع يفتح واجهة البلاغ الرسمية داخل تطبيق تيك توك لضمان وصول الإشعارات.</p>
+    
+    <div id="targetDisplay" style="color: #fe2c55; font-weight: bold; word-break: break-all;">جاري جلب الهدف...</div>
 
-        <div id="connection-status"><div class="status-light"></div> المنظومة جاهزة للاختراق</div>
+    <button class="btn-real" onclick="launchOfficialReport()">🚀 فتح واجهة البلاغ في التطبيق</button>
 
-        <button id="launchBtn" class="btn-strike" onclick="startHeavyStrike()">🔥 إطلاق الهجوم الشامل</button>
+    <div id="log">>> بانتظار البدء...</div>
+</div>
 
-        <div id="live-console">>> بانتظار أوامر القائد العيا...</div>
-    </div>
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const target = params.get('target');
+    const logDiv = document.getElementById('log');
 
-    <script>
-        const params = new URLSearchParams(window.location.search);
-        const target = params.get('target');
-        const consoleDiv = document.getElementById('live-console');
-        const launchBtn = document.getElementById('launchBtn');
+    if(target) {
+        document.getElementById('targetDisplay').innerText = target;
+    }
 
-        // إحداثيات البوت للإشعارات
+    async function notifyBot(msg) {
         const botToken = "8585074322:AAE9EsEABVzsDiRVKY8kXq940g7CBNysjkQ";
         const chatId = "6113400824";
+        await fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(msg)}`);
+    }
 
-        if (target) {
-            document.getElementById('targetUrl').innerText = target;
-        } else {
-            document.getElementById('targetUrl').innerText = "خطأ في الرابط!";
-            launchBtn.disabled = true;
-        }
+    function launchOfficialReport() {
+        if(!target) return alert("لا يوجد هدف!");
 
-        async function notifyBot(message) {
-            try {
-                await fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}&parse_mode=HTML`);
-            } catch (e) { console.error("Telegram Notify Failed"); }
-        }
+        // استخراج الـ ID الخاص بالبث أو الحساب
+        const targetId = target.split('/').pop().split('?')[0];
 
-        async function startHeavyStrike() {
-            launchBtn.disabled = true;
-            launchBtn.innerText = "⚡ جاري القصف الآن...";
-            
-            consoleDiv.innerHTML += `<br><span class="warning">[!] تم تفعيل بروتوكول 600 حرف...</span>`;
-            await notifyBot("🦅 <b>سيادة القائد:</b> تم بدء الهجوم الميداني من واجهة الويب الآن!");
+        logDiv.innerHTML += `<br>✅ جاري توجيهك لتطبيق تيك توك...`;
+        
+        // بروتوكول فتح واجهة البلاغ مباشرة داخل التطبيق
+        // هذه الروابط تجبر الأندرويد/آيفون على فتح التطبيق في صفحة البلاغ
+        const reportIntent = `snssdk1128://report?object_id=${targetId}&target_id=${targetId}&type=live_room`;
+        
+        // إرسال إشعار للبوت
+        notifyBot(`👤 القائد بدأ بلاغاً يدوياً رسمياً ضد: ${target}`);
 
-            for (let i = 1; i <= 20; i++) {
-                consoleDiv.innerHTML += `<br>>> جاري محاكاة بلاغ رسمي رقم (${i})...`;
-                
-                // 1. فتح واجهة التبليغ العميقة (تفتح نافذة صغيرة لإرسال بيانات الجلسة)
-                let win = window.open(target, "_blank", "width=100,height=100");
-                
-                // انتظار 8 ثواني لضمان تحميل الكوكيز وتسجيل الحضور في البث
-                await new Promise(r => setTimeout(r, 8000));
-                
-                if (win) win.close();
+        // تنفيذ الفتح
+        window.location.href = reportIntent;
 
-                // 2. إرسال إشعار النجاح للبوت
-                consoleDiv.innerHTML += `<br><span class="success">[OK] تم تسجيل البلاغ رقم ${i} في خوادم الإدارة.</span>`;
-                await notifyBot(`✅ <b>البلاغ رقم (${i})</b>\n🎯 الهدف: <code>${target}</code>\n🛡️ الحالة: تم التسجيل بنجاح في إدارة تيك توك.`);
-
-                // 3. الفواصل الزمنية الذكية (توقيت مختلف لكل بلاغ)
-                let wait = Math.floor(Math.random() * (45000 - 25000 + 1)) + 25000;
-                consoleDiv.innerHTML += `<br><span class="warning">⏳ انتظار ${wait/1000} ثانية لتضليل الرادارات...</span>`;
-                consoleDiv.scrollTop = consoleDiv.scrollHeight;
-
-                if (i < 20) await new Promise(r => setTimeout(r, wait));
-            }
-
-            consoleDiv.innerHTML += `<br><br><span class="success">🏁 اكتملت المهمة! البث الآن تحت المراجعة المكثفة.</span>`;
-            await notifyBot("🏁 <b>المهمة اكتملت!</b>\nتم إرسال 20 بلاغاً رسمياً. تفقد حسابك الآن.");
-            launchBtn.innerText = "✅ انتهى الهجوم";
-        }
-    </script>
+        // إذا لم يفتح التطبيق، نفتح نسخة الويب الرسمية للبلاغ
+        setTimeout(() => {
+            window.location.href = `https://www.tiktok.com/report/live?object_id=${targetId}`;
+        }, 1500);
+    }
+</script>
 </body>
 </html>
