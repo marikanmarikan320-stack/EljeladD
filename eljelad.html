@@ -2,8 +2,8 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>منظومة الجلاد v18.5 - مركز القيادة</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>منظومة الجلاد v18.5 - النظام الموحد</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
@@ -11,255 +11,237 @@
 
     <style>
         :root { 
-            --green: #006233; --white: #ffffff; --red: #d21034; 
-            --neon: #00ff41; --gold: #ffcc00; --bg: #000000;
-        }
-        
-        body, html { 
-            margin: 0; padding: 0; background: var(--bg); 
-            color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow-x: hidden;
+            --samsung-primary: #0355d0; --war-red: #ff3b30; --cyber-green: #00ff41;
+            --gold: #ffcc00; --bg: #000000; --card-bg: rgba(10, 10, 10, 0.98);
+            --algeria-green: #006233; --algeria-red: #d21034;
         }
 
-        /* إضاءة حواف الهاتف */
-        .edge-lighting {
-            position: fixed; inset: 0; pointer-events: none; z-index: 10000;
-            box-shadow: inset 0 0 15px var(--green); animation: pulse 2s infinite;
-        }
-        @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
 
-        /* نص علم الجزائر الوامض */
+        /* --- إضاءة علم الجزائر الوامضة --- */
         .army-title {
             font-size: 1.5rem; text-align: center; font-weight: bold;
-            animation: algeria-flash 2.5s infinite; padding: 20px; line-height: 1.6;
+            animation: algeria-glow 2.5s infinite; padding: 15px;
         }
-        @keyframes algeria-flash {
-            0%, 100% { color: var(--green); text-shadow: 0 0 20px var(--green); }
-            33% { color: var(--white); text-shadow: 0 0 20px var(--white); }
-            66% { color: var(--red); text-shadow: 0 0 20px var(--red); }
+        @keyframes algeria-glow {
+            0%, 100% { color: var(--algeria-green); text-shadow: 0 0 15px var(--algeria-green); }
+            33% { color: #ffffff; text-shadow: 0 0 15px #ffffff; }
+            66% { color: var(--algeria-red); text-shadow: 0 0 15px var(--algeria-red); }
         }
 
-        /* شاشة الدخول */
-        #login-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
-        
+        .edge-lighting { position: fixed; inset: 0; pointer-events: none; z-index: 10000; box-shadow: inset 0 0 20px var(--cyber-green); animation: pulse-edge 2s infinite; }
+        @keyframes pulse-edge { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+        /* --- واجهات النظام --- */
+        .view { display: none; width: 100%; height: 100%; position: relative; overflow: hidden; }
+        .active-view { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+        /* --- شاشة الدخول --- */
         .circular-logo {
-            width: 160px; height: 160px; border-radius: 50%;
-            border: 4px solid var(--neon);
+            width: 140px; height: 140px; border-radius: 50%; border: 3px solid var(--cyber-green);
             background: url('https://i.postimg.cc/vmdZn4vn/Screenshot-20260222-031125-Tik-Tok.jpg') center/cover;
-            box-shadow: 0 0 30px var(--neon); margin-bottom: 20px;
+            box-shadow: 0 0 30px var(--cyber-green); margin-bottom: 20px;
         }
 
-        .btn-login {
-            background: white; color: black; padding: 15px 40px; border-radius: 50px;
-            font-weight: bold; border: none; cursor: pointer; font-size: 1.1rem;
-            box-shadow: 0 5px 15px rgba(255,255,255,0.3);
+        .btn-login { background: white; color: black; padding: 15px 40px; border-radius: 50px; font-weight: bold; border: none; cursor: pointer; transition: 0.3s; }
+
+        /* --- قائمة الأهداف --- */
+        #target-menu { overflow-y: auto; padding: 20px; justify-content: flex-start; }
+        .admin-panel { background: #111; border: 2px dashed var(--cyber-green); width: 100%; padding: 15px; border-radius: 15px; margin-bottom: 20px; display: none; }
+        input { width: 100%; padding: 12px; margin-bottom: 10px; background: #000; border: 1px solid var(--cyber-green); color: var(--cyber-green); border-radius: 8px; }
+        .target-card { 
+            width: 100%; background: #0a0a0a; border: 1px solid #333; padding: 15px; 
+            border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;
         }
 
-        /* واجهة قائمة الأهداف */
-        #target-menu { display: none; padding: 20px; text-align: center; }
+        /* --- غرفة العمليات --- */
+        #strike-room { background: url('https://i.postimg.cc/j2fHMWGY/unnamed-3.jpg') no-repeat center/cover; }
+        #digital-clock { position: absolute; top: 40px; width: 100%; text-align: center; color: var(--cyber-green); font-size: 3.5rem; font-weight: bold; text-shadow: 0 0 20px var(--cyber-green); }
+        .radar-box { position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); width: 280px; height: 280px; border: 1px solid rgba(0, 255, 65, 0.3); border-radius: 50%; pointer-events: none; }
+        .radar-sweep { width: 100%; height: 100%; border-radius: 50%; background: conic-gradient(from 0deg, transparent, rgba(0, 255, 65, 0.2)); animation: sweep 4s linear infinite; }
+        @keyframes sweep { to { transform: rotate(360deg); } }
         
-        .admin-panel {
-            background: rgba(20, 20, 20, 0.95); border: 2px dashed var(--neon);
-            padding: 20px; border-radius: 20px; margin-bottom: 30px; display: none;
-        }
-        
-        input {
-            width: 85%; padding: 12px; margin-bottom: 10px; border-radius: 10px;
-            border: 1px solid var(--neon); background: #000; color: var(--neon);
-        }
+        /* أشرطة الأزرار السفلية */
+        .bottom-dock { position: absolute; bottom: 30px; width: 100%; display: flex; justify-content: space-evenly; padding: 0 10px; z-index: 100; }
+        .app-icon { width: 75px; text-align: center; cursor: pointer; }
+        .icon-shape { width: 65px; height: 65px; border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin-bottom: 5px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); }
 
-        .target-card {
-            background: linear-gradient(145deg, #0a0a0a, #1a1a1a);
-            border: 1px solid rgba(0, 255, 65, 0.2); border-radius: 15px;
-            margin: 10px 0; padding: 20px; display: flex; justify-content: space-between;
-            align-items: center; transition: 0.3s;
-        }
-        .target-card:active { transform: scale(0.95); }
-
-        /* واجهة القصف (الماتريكس والرادار) */
-        #strike-room { display: none; position: relative; height: 100vh; width: 100%; }
-        #matrix-canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.15; }
+        /* الشيتات المنبثقة */
+        .modal-sheet { position: fixed; bottom: -100%; left: 0; right: 0; height: 85vh; background: var(--card-bg); backdrop-filter: blur(20px); border-radius: 40px 40px 0 0; z-index: 1000; padding: 30px 25px; transition: 0.5s ease; border-top: 2px solid var(--cyber-green); }
+        .modal-sheet.active { bottom: 0; }
+        textarea { width: 100%; height: 160px; background: #000; color: var(--cyber-green); border: 1px solid var(--cyber-green); border-radius: 20px; padding: 15px; font-family: monospace; }
+        #matrix-bg { position: fixed; inset: 0; z-index: -1; opacity: 0.1; }
     </style>
 </head>
 <body>
 
 <div class="edge-lighting"></div>
+<canvas id="matrix-bg"></canvas>
 
-<div id="login-screen">
+<div id="view-login" class="view active-view">
     <h1 class="army-title">منظومة جيش تبليغ الجزائر<br>بقيادة الجلاد الجزائري</h1>
     <div class="circular-logo"></div>
-    <button class="btn-login" onclick="googleLogin()">تسجيل الدخول عبر GOOGLE 🛡️</button>
+    <button class="btn-login" onclick="login()">دخول النظام 🛡️</button>
 </div>
 
-<div id="target-menu">
-    <h2 style="color: var(--gold);">🎯 قائمة العمليات النشطة</h2>
-    
-    <div id="admin-controls" class="admin-panel">
-        <h3 style="color: var(--neon); margin-top: 0;">لوحة القيادة والسيطرة</h3>
-        <input type="text" id="target-url" placeholder="أدخل رابط الحساب المستهدف...">
-        <button onclick="addNewTarget()" style="background: var(--neon); color: black; padding: 10px 30px; border-radius: 10px; font-weight: bold; border: none;">إرسال الهدف للجنود 🚀</button>
-        
-        <div id="owner-tools" style="display:none; margin-top: 15px; border-top: 1px solid #333; pt: 10px;">
-            <input type="email" id="new-mod-email" placeholder="إيميل المشرف الجديد...">
-            <button onclick="promoteMod()" style="background: var(--gold); border: none; padding: 8px 15px; border-radius: 10px; font-weight: bold;">تعيين مشرف 🎖️</button>
+<div id="view-menu" class="view">
+    <h2 style="color: var(--gold); text-align: center;">🎯 الأهداف المسندة</h2>
+    <div id="admin-panel" class="admin-panel">
+        <input type="text" id="target-input" placeholder="أدخل رابط الضحية الجديد...">
+        <button onclick="addTarget()" style="width:100%; padding:10px; background:var(--cyber-green); border:none; font-weight:bold;">إرسال للجنود 🚀</button>
+        <div id="owner-only" style="display:none; margin-top:10px;">
+            <input type="email" id="mod-email" placeholder="إيميل المشرف...">
+            <button onclick="addMod()" style="width:100%; background:gray; border:none; padding:5px; color:white;">إضافة مشرف 🎖️</button>
         </div>
     </div>
-
-    <div id="targets-display">
-        </div>
+    <div id="targets-list" style="width:100%;"></div>
 </div>
 
-<div id="strike-room">
-    <div id="digital-clock" style="position:absolute; top:30px; width:100%; text-align:center; color:var(--neon); font-size:3rem; font-weight:bold; text-shadow:0 0 20px var(--neon);">00:00:00</div>
-    <canvas id="matrix-canvas"></canvas>
+<div id="view-strike" class="view">
+    <div id="digital-clock">00:00:00</div>
+    <div class="radar-box"><div class="radar-sweep"></div></div>
     
-    <div style="position: absolute; bottom: 50px; width: 100%; display: flex; justify-content: space-around;">
-        <button onclick="window.location.reload()" style="background:none; border:1px solid gray; color:gray; padding:10px; border-radius:10px;">رجوع للقائمة</button>
-        <h2 id="target-status" style="color: var(--neon); font-size: 0.8rem;">Target Injected: READY</h2>
+    <div class="bottom-dock">
+        <div class="app-icon" onclick="openSheet('s1')"><div class="icon-shape" style="background: linear-gradient(135deg, #0a74da, #0355d0);">🛡️</div><div style="font-size:12px;">البوابة</div></div>
+        <div class="app-icon" onclick="launchRadar()"><div class="icon-shape" style="background: linear-gradient(135deg, #00ff41, #008f11);">🔍</div><div style="font-size:12px;">الرادار</div></div>
+        <div class="app-icon" onclick="openSheet('s2')"><div class="icon-shape" style="background: linear-gradient(135deg, #ff5e57, #ff3b30);">🎯</div><div style="font-size:12px;">اقتحام</div></div>
+        <div class="app-icon" onclick="openSheet('s3')"><div class="icon-shape" style="background: linear-gradient(135deg, #ffcc00, #ff9500);">☣️</div><div style="font-size:12px;">المولد</div></div>
     </div>
+    <button onclick="goBack()" style="position:absolute; top:10px; left:10px; background:none; border:none; color:gray;">✕ خروج</button>
+</div>
+
+<div class="modal-sheet" id="s1">
+    <div style="width:40px; height:5px; background:#333; margin: -10px auto 20px; border-radius:10px;"></div>
+    <p style="color:var(--cyber-green);">تعليمات القيادة: أرسل القذيفة القانونية عبر الاستمارة.</p>
+    <button onclick="strikeAction('https://www.tiktok.com/legal/report/feedback')" style="width:100%; padding:20px; background:var(--samsung-primary); color:white; border:none; border-radius:15px; font-weight:bold;">إطلاق القذيفة 🚀</button>
+    <button onclick="closeSheets()" style="width:100%; margin-top:10px; background:none; color:gray; border:none;">إغلاق</button>
+</div>
+
+<div class="modal-sheet" id="s2">
+    <p style="color:var(--war-red);">تعليمات القيادة: ابدأ الهجوم اليدوي فوراً من الحساب.</p>
+    <button onclick="launchTikTok()" style="width:100%; padding:20px; background:var(--war-red); color:white; border:none; border-radius:15px; font-weight:bold;">بدء الاقتحام 🎯</button>
+    <button onclick="closeSheets()" style="width:100%; margin-top:10px; background:none; color:gray; border:none;">إغلاق</button>
+</div>
+
+<div class="modal-sheet" id="s3">
+    <textarea id="mail-text" readonly></textarea>
+    <button onclick="generateReport()" style="width:100%; padding:15px; background:var(--gold); border:none; border-radius:15px; margin-top:10px; font-weight:bold;">🔄 توليد ونسخ الشفرة</button>
+    <button onclick="sendMail()" style="width:100%; padding:15px; background:white; border:none; border-radius:15px; margin-top:10px; font-weight:bold;">🚀 قصف الجيميلات</button>
+    <button onclick="closeSheets()" style="width:100%; margin-top:10px; background:none; color:gray; border:none;">رجوع</button>
 </div>
 
 <script>
-    // إعدادات Firebase الخاصة بك
-    const firebaseConfig = {
-        databaseURL: "https://elje-b6343-default-rtdb.firebaseio.com",
-    };
+    // --- إعدادات القائد وقاعدة البيانات ---
+    const firebaseConfig = { databaseURL: "https://elje-b6343-default-rtdb.firebaseio.com" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-    const auth = firebase.auth();
-
     const OWNER_EMAIL = "marikanmarikan320@gmail.com";
+    
     let userEmail = "";
     let userRole = "SOLDIER";
+    let finalTarget = "";
 
-    // 1. تسجيل الدخول
-    function googleLogin() {
+    // 1. نظام الدخول
+    function login() {
         const provider = new firebase.auth.GoogleAuthProvider();
-        auth.signInWithPopup(provider).then((result) => {
-            userEmail = result.user.email;
+        firebase.auth().signInWithPopup(provider).then(res => {
+            userEmail = res.user.email;
             checkRole();
-        }).catch(err => alert("خطأ في تسجيل الدخول: " + err.message));
+        });
     }
 
-    // 2. فحص الرتبة
     function checkRole() {
         if(userEmail === OWNER_EMAIL) {
             userRole = "OWNER";
-            document.getElementById('admin-controls').style.display = 'block';
-            document.getElementById('owner-tools').style.display = 'block';
-            loadApp();
-        } else {
-            db.ref('moderators').once('value', snapshot => {
-                snapshot.forEach(child => {
-                    if(child.val().email === userEmail) {
-                        userRole = "MODERATOR";
-                        document.getElementById('admin-controls').style.display = 'block';
-                    }
-                });
-                loadApp();
-            });
+            document.getElementById('admin-panel').style.display = 'block';
+            document.getElementById('owner-only').style.display = 'block';
+        }
+        showView('view-menu');
+        listenTargets();
+    }
+
+    // 2. إدارة الأهداف
+    function addTarget() {
+        const url = document.getElementById('target-input').value;
+        if(url) {
+            db.ref('targets').push({ url: url, admin: userEmail });
+            document.getElementById('target-input').value = "";
         }
     }
 
-    function loadApp() {
-        document.getElementById('login-screen').style.display = 'none';
-        document.getElementById('target-menu').style.display = 'block';
-        listenToTargets();
-    }
-
-    // 3. إضافة هدف جديد (تطبيق -> قاعدة بيانات)
-    function addNewTarget() {
-        const url = document.getElementById('target-url').value;
-        if(!url) return alert("ضع رابطاً أولاً!");
-        
-        db.ref('targets').push({
-            url: url,
-            admin: userEmail,
-            time: Date.now()
-        });
-        document.getElementById('target-url').value = "";
-    }
-
-    // 4. الاستماع للأهداف (قاعدة بيانات -> تطبيقات الجنود)
-    function listenToTargets() {
-        db.ref('targets').on('value', (snapshot) => {
-            const display = document.getElementById('targets-display');
-            display.innerHTML = "";
+    function listenTargets() {
+        db.ref('targets').on('value', snap => {
+            const list = document.getElementById('targets-list');
+            list.innerHTML = "";
             let i = 1;
-            snapshot.forEach((child) => {
-                const data = child.val();
+            snap.forEach(child => {
+                let data = child.val();
                 let html = `
                     <div class="target-card">
-                        <div onclick="startStrike('${data.url}')" style="flex-grow:1; text-align:right;">
-                            <span style="color:var(--neon); font-weight:bold; font-size:1.2rem;">الهدف رقم ${i} 🎯</span><br>
-                            <small style="color:#888;">${data.url.substring(0,35)}...</small>
-                        </div>`;
-                
-                if(userRole === "OWNER") {
-                    html += `<button onclick="deleteTarget('${child.key}')" style="background:none; border:none; color:var(--red); font-size:1.5rem;">❌</button>`;
-                }
-                
-                html += `</div>`;
-                display.innerHTML += html;
+                        <div onclick="startWar('${data.url}')" style="flex-grow:1;">الهدف رقم ${i} 🎯</div>
+                        ${userRole === 'OWNER' ? `<button onclick="deleteTarget('${child.key}')" style="background:none; border:none; color:red;">❌</button>` : ''}
+                    </div>`;
+                list.innerHTML += html;
                 i++;
             });
         });
     }
 
-    // 5. الحذف (للقائد فقط)
-    function deleteTarget(key) {
-        if(confirm("هل تم تدمير الهدف؟ سيتم حذفه من عند الجميع.")) {
-            db.ref('targets').child(key).remove();
-        }
-    }
+    function deleteTarget(key) { db.ref('targets').child(key).remove(); }
 
-    // 6. تعيين مشرف
-    function promoteMod() {
-        const email = document.getElementById('new-mod-email').value;
-        if(email) {
-            db.ref('moderators').push({ email: email });
-            alert("تم منح الصلاحيات للمشرف الجديد 🎖️");
-            document.getElementById('new-mod-email').value = "";
-        }
-    }
-
-    // 7. تفعيل واجهة القصف وحقن الرابط
-    function startStrike(url) {
-        document.getElementById('target-menu').style.display = 'none';
-        document.getElementById('strike-room').style.display = 'block';
-        document.getElementById('target-status').innerText = "TARGET INJECTED: " + url;
-        
-        // تشغيل الساعة والماتريكس
-        updateClock();
+    // 3. غرفة العمليات
+    function startWar(url) {
+        finalTarget = url;
+        showView('view-strike');
         initMatrix();
-        
-        // هنا يمكن استدعاء واجهة الأزرار الأربعة والمولد وحقن الـ url فيها
-        console.log("رابط الهدف المحقون هو: " + url);
+        updateClock();
+        generateReport();
     }
 
-    // دوال تكميلية للزينة
-    function updateClock() {
-        document.getElementById('digital-clock').innerText = new Date().toLocaleTimeString('en-GB');
-        setTimeout(updateClock, 1000);
+    function launchRadar() {
+        const username = finalTarget.includes('@') ? finalTarget.split('@')[1].split('/')[0] : "ELJELAD_DZ";
+        window.location.href = `https://www.tiktok.com/search?q=${username}`;
     }
+
+    function launchTikTok() { window.location.href = finalTarget; }
+
+    function generateReport() {
+        const report = `URGENT: Community Violation Report. User (${finalTarget}) is violating safety terms. Coordinated harassment detected. Token: ${Math.random().toString(36).substr(2,9).toUpperCase()}`;
+        document.getElementById('mail-text').value = report;
+        navigator.clipboard.writeText(report);
+    }
+
+    function sendMail() {
+        const body = encodeURIComponent(document.getElementById('mail-text').value);
+        window.location.href = `mailto:legal@tiktok.com,feedback@tiktok.com?subject=URGENT_REPORT&body=${body}`;
+    }
+
+    // --- وظائف مساعدة ---
+    function showView(id) {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active-view'));
+        document.getElementById(id).classList.add('active-view');
+    }
+    function openSheet(id) { document.getElementById(id).classList.add('active'); }
+    function closeSheets() { document.querySelectorAll('.modal-sheet').forEach(s => s.classList.remove('active')); }
+    function goBack() { showView('view-menu'); }
+    function updateClock() { document.getElementById('digital-clock').innerText = new Date().toLocaleTimeString('en-GB'); setTimeout(updateClock, 1000); }
+    function strikeAction(url) { window.location.href = url; }
 
     function initMatrix() {
-        const canvas = document.getElementById('matrix-canvas');
+        const canvas = document.getElementById('matrix-bg');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        const columns = Math.floor(canvas.width / 20);
-        const drops = new Array(columns).fill(1);
-        function draw() {
+        const drops = Array(Math.floor(canvas.width/20)).fill(1);
+        setInterval(() => {
             ctx.fillStyle = "rgba(0,0,0,0.05)"; ctx.fillRect(0,0,canvas.width,canvas.height);
-            ctx.fillStyle = "#0f0"; ctx.font = "15px monospace";
-            drops.forEach((y, i) => {
+            ctx.fillStyle = "#0f0"; drops.forEach((y, i) => {
                 ctx.fillText(Math.floor(Math.random()*2), i*20, y*20);
                 if(y*20 > canvas.height && Math.random() > 0.975) drops[i] = 0;
                 drops[i]++;
             });
-        }
-        setInterval(draw, 33);
+        }, 33);
     }
 </script>
 </body>
-</html>
+    </html>
