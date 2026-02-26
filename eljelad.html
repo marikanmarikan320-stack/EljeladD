@@ -2,71 +2,264 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منظومة الجلاد - الهجوم المباشر</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>منظومة الجلاد v18.5 - مركز القيادة</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+
     <style>
-        body { background: #050505; color: #00ff00; font-family: 'Courier New', monospace; text-align: center; padding: 20px; }
-        .panel { border: 2px solid #ff0000; border-radius: 15px; padding: 25px; box-shadow: 0 0 20px #ff0000; max-width: 500px; margin: auto; }
-        .btn-strike { background: #ff0000; color: #fff; border: none; padding: 20px; width: 100%; border-radius: 10px; font-size: 1.3rem; font-weight: bold; cursor: pointer; }
-        #log { background: #000; border: 1px solid #333; height: 150px; overflow-y: auto; margin-top: 20px; padding: 10px; text-align: left; font-size: 0.8rem; }
+        :root { 
+            --green: #006233; --white: #ffffff; --red: #d21034; 
+            --neon: #00ff41; --gold: #ffcc00; --bg: #000000;
+        }
+        
+        body, html { 
+            margin: 0; padding: 0; background: var(--bg); 
+            color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* إضاءة حواف الهاتف */
+        .edge-lighting {
+            position: fixed; inset: 0; pointer-events: none; z-index: 10000;
+            box-shadow: inset 0 0 15px var(--green); animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+        /* نص علم الجزائر الوامض */
+        .army-title {
+            font-size: 1.5rem; text-align: center; font-weight: bold;
+            animation: algeria-flash 2.5s infinite; padding: 20px; line-height: 1.6;
+        }
+        @keyframes algeria-flash {
+            0%, 100% { color: var(--green); text-shadow: 0 0 20px var(--green); }
+            33% { color: var(--white); text-shadow: 0 0 20px var(--white); }
+            66% { color: var(--red); text-shadow: 0 0 20px var(--red); }
+        }
+
+        /* شاشة الدخول */
+        #login-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
+        
+        .circular-logo {
+            width: 160px; height: 160px; border-radius: 50%;
+            border: 4px solid var(--neon);
+            background: url('https://i.postimg.cc/vmdZn4vn/Screenshot-20260222-031125-Tik-Tok.jpg') center/cover;
+            box-shadow: 0 0 30px var(--neon); margin-bottom: 20px;
+        }
+
+        .btn-login {
+            background: white; color: black; padding: 15px 40px; border-radius: 50px;
+            font-weight: bold; border: none; cursor: pointer; font-size: 1.1rem;
+            box-shadow: 0 5px 15px rgba(255,255,255,0.3);
+        }
+
+        /* واجهة قائمة الأهداف */
+        #target-menu { display: none; padding: 20px; text-align: center; }
+        
+        .admin-panel {
+            background: rgba(20, 20, 20, 0.95); border: 2px dashed var(--neon);
+            padding: 20px; border-radius: 20px; margin-bottom: 30px; display: none;
+        }
+        
+        input {
+            width: 85%; padding: 12px; margin-bottom: 10px; border-radius: 10px;
+            border: 1px solid var(--neon); background: #000; color: var(--neon);
+        }
+
+        .target-card {
+            background: linear-gradient(145deg, #0a0a0a, #1a1a1a);
+            border: 1px solid rgba(0, 255, 65, 0.2); border-radius: 15px;
+            margin: 10px 0; padding: 20px; display: flex; justify-content: space-between;
+            align-items: center; transition: 0.3s;
+        }
+        .target-card:active { transform: scale(0.95); }
+
+        /* واجهة القصف (الماتريكس والرادار) */
+        #strike-room { display: none; position: relative; height: 100vh; width: 100%; }
+        #matrix-canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.15; }
     </style>
 </head>
 <body>
 
-    <div class="panel">
-        <h1>🦅 الجـلاد - هـجوم الـويب الآلـي</h1>
-        <p>التبليغ سيتم آلياً باسم حسابك المسجل في المتصفح</p>
+<div class="edge-lighting"></div>
+
+<div id="login-screen">
+    <h1 class="army-title">منظومة جيش تبليغ الجزائر<br>بقيادة الجلاد الجزائري</h1>
+    <div class="circular-logo"></div>
+    <button class="btn-login" onclick="googleLogin()">تسجيل الدخول عبر GOOGLE 🛡️</button>
+</div>
+
+<div id="target-menu">
+    <h2 style="color: var(--gold);">🎯 قائمة العمليات النشطة</h2>
+    
+    <div id="admin-controls" class="admin-panel">
+        <h3 style="color: var(--neon); margin-top: 0;">لوحة القيادة والسيطرة</h3>
+        <input type="text" id="target-url" placeholder="أدخل رابط الحساب المستهدف...">
+        <button onclick="addNewTarget()" style="background: var(--neon); color: black; padding: 10px 30px; border-radius: 10px; font-weight: bold; border: none;">إرسال الهدف للجنود 🚀</button>
         
-        <div id="targetDisplay" style="color:#ff0000; margin-bottom: 15px;">بانتظار الرابط...</div>
-
-        <button id="actionBtn" class="btn-strike" onclick="startDigitalAssault()">🔥 إطلاق الهجوم الآلي</button>
-
-        <div id="log">>> بانتظار إشارة البدء...</div>
+        <div id="owner-tools" style="display:none; margin-top: 15px; border-top: 1px solid #333; pt: 10px;">
+            <input type="email" id="new-mod-email" placeholder="إيميل المشرف الجديد...">
+            <button onclick="promoteMod()" style="background: var(--gold); border: none; padding: 8px 15px; border-radius: 10px; font-weight: bold;">تعيين مشرف 🎖️</button>
+        </div>
     </div>
 
-    <script>
-        const params = new URLSearchParams(window.location.search);
-        const target = params.get('target');
-        const logDiv = document.getElementById('log');
+    <div id="targets-display">
+        </div>
+</div>
 
-        if(target) document.getElementById('targetDisplay').innerText = target;
+<div id="strike-room">
+    <div id="digital-clock" style="position:absolute; top:30px; width:100%; text-align:center; color:var(--neon); font-size:3rem; font-weight:bold; text-shadow:0 0 20px var(--neon);">00:00:00</div>
+    <canvas id="matrix-canvas"></canvas>
+    
+    <div style="position: absolute; bottom: 50px; width: 100%; display: flex; justify-content: space-around;">
+        <button onclick="window.location.reload()" style="background:none; border:1px solid gray; color:gray; padding:10px; border-radius:10px;">رجوع للقائمة</button>
+        <h2 id="target-status" style="color: var(--neon); font-size: 0.8rem;">Target Injected: READY</h2>
+    </div>
+</div>
 
-        async function notifyTelegram(msg) {
-            const botToken = "8585074322:AAE9EsEABVzsDiRVKY8kXq940g7CBNysjkQ";
-            await fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=6113400824&text=${encodeURIComponent(msg)}&parse_mode=HTML`);
+<script>
+    // إعدادات Firebase الخاصة بك
+    const firebaseConfig = {
+        databaseURL: "https://elje-b6343-default-rtdb.firebaseio.com",
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const auth = firebase.auth();
+
+    const OWNER_EMAIL = "marikanmarikan320@gmail.com";
+    let userEmail = "";
+    let userRole = "SOLDIER";
+
+    // 1. تسجيل الدخول
+    function googleLogin() {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        auth.signInWithPopup(provider).then((result) => {
+            userEmail = result.user.email;
+            checkRole();
+        }).catch(err => alert("خطأ في تسجيل الدخول: " + err.message));
+    }
+
+    // 2. فحص الرتبة
+    function checkRole() {
+        if(userEmail === OWNER_EMAIL) {
+            userRole = "OWNER";
+            document.getElementById('admin-controls').style.display = 'block';
+            document.getElementById('owner-tools').style.display = 'block';
+            loadApp();
+        } else {
+            db.ref('moderators').once('value', snapshot => {
+                snapshot.forEach(child => {
+                    if(child.val().email === userEmail) {
+                        userRole = "MODERATOR";
+                        document.getElementById('admin-controls').style.display = 'block';
+                    }
+                });
+                loadApp();
+            });
         }
+    }
 
-        async function startDigitalAssault() {
-            document.getElementById('actionBtn').disabled = true;
-            logDiv.innerHTML += `<br>[!] تم بدء القصف الرقمي.. لا تغلق الصفحة.`;
+    function loadApp() {
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('target-menu').style.display = 'block';
+        listenToTargets();
+    }
 
-            for (let i = 1; i <= 20; i++) {
-                logDiv.innerHTML += `<br>>> تنفيذ الضربة رقم (${i})...`;
+    // 3. إضافة هدف جديد (تطبيق -> قاعدة بيانات)
+    function addNewTarget() {
+        const url = document.getElementById('target-url').value;
+        if(!url) return alert("ضع رابطاً أولاً!");
+        
+        db.ref('targets').push({
+            url: url,
+            admin: userEmail,
+            time: Date.now()
+        });
+        document.getElementById('target-url').value = "";
+    }
 
-                // 1. فتح البث في نافذة مخفية (لجلب الصلاحيات)
-                let hiddenWin = window.open(target, "_blank", "width=1,height=1");
+    // 4. الاستماع للأهداف (قاعدة بيانات -> تطبيقات الجنود)
+    function listenToTargets() {
+        db.ref('targets').on('value', (snapshot) => {
+            const display = document.getElementById('targets-display');
+            display.innerHTML = "";
+            let i = 1;
+            snapshot.forEach((child) => {
+                const data = child.val();
+                let html = `
+                    <div class="target-card">
+                        <div onclick="startStrike('${data.url}')" style="flex-grow:1; text-align:right;">
+                            <span style="color:var(--neon); font-weight:bold; font-size:1.2rem;">الهدف رقم ${i} 🎯</span><br>
+                            <small style="color:#888;">${data.url.substring(0,35)}...</small>
+                        </div>`;
                 
-                // 2. محاكاة بلاغ رسمي عبر طلب API مباشر (هنا تكمن القوة)
-                const reportText = "OFFICIAL COMPLAINT: This live stream violates TikTok safety standards. Hate speech detected. Under protocol 992-B, immediate manual review is required. Action ID: " + Math.random().toString(36).substring(7);
+                if(userRole === "OWNER") {
+                    html += `<button onclick="deleteTarget('${child.key}')" style="background:none; border:none; color:var(--red); font-size:1.5rem;">❌</button>`;
+                }
                 
-                // انتظار 5 ثواني لضمان تحميل الجلسة
-                await new Promise(r => setTimeout(r, 5000));
-                if(hiddenWin) hiddenWin.close();
+                html += `</div>`;
+                display.innerHTML += html;
+                i++;
+            });
+        });
+    }
 
-                // 3. إرسال إشعار للبوت
-                logDiv.innerHTML += `<br><span style="color:white">✅ الضربة ${i} وصلت لخوادم الإدارة.</span>`;
-                await notifyTelegram(`🚀 <b>الضـربة (${i}/20)</b>\nتم إرسال بلاغ رسمي آلياً بنجاح من داخل حسابك.`);
-
-                // توقيت عشوائي (40-60 ثانية)
-                let wait = Math.floor(Math.random() * (60000 - 40000 + 1)) + 40000;
-                logDiv.innerHTML += `<br>⏳ انتظار ${wait/1000} ثانية...`;
-                logDiv.scrollTop = logDiv.scrollHeight;
-
-                if (i < 20) await new Promise(r => setTimeout(r, wait));
-            }
-
-            logDiv.innerHTML += `<br>🏁 تم انتهاء المهمة بنجاح!`;
+    // 5. الحذف (للقائد فقط)
+    function deleteTarget(key) {
+        if(confirm("هل تم تدمير الهدف؟ سيتم حذفه من عند الجميع.")) {
+            db.ref('targets').child(key).remove();
         }
-    </script>
+    }
+
+    // 6. تعيين مشرف
+    function promoteMod() {
+        const email = document.getElementById('new-mod-email').value;
+        if(email) {
+            db.ref('moderators').push({ email: email });
+            alert("تم منح الصلاحيات للمشرف الجديد 🎖️");
+            document.getElementById('new-mod-email').value = "";
+        }
+    }
+
+    // 7. تفعيل واجهة القصف وحقن الرابط
+    function startStrike(url) {
+        document.getElementById('target-menu').style.display = 'none';
+        document.getElementById('strike-room').style.display = 'block';
+        document.getElementById('target-status').innerText = "TARGET INJECTED: " + url;
+        
+        // تشغيل الساعة والماتريكس
+        updateClock();
+        initMatrix();
+        
+        // هنا يمكن استدعاء واجهة الأزرار الأربعة والمولد وحقن الـ url فيها
+        console.log("رابط الهدف المحقون هو: " + url);
+    }
+
+    // دوال تكميلية للزينة
+    function updateClock() {
+        document.getElementById('digital-clock').innerText = new Date().toLocaleTimeString('en-GB');
+        setTimeout(updateClock, 1000);
+    }
+
+    function initMatrix() {
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        const columns = Math.floor(canvas.width / 20);
+        const drops = new Array(columns).fill(1);
+        function draw() {
+            ctx.fillStyle = "rgba(0,0,0,0.05)"; ctx.fillRect(0,0,canvas.width,canvas.height);
+            ctx.fillStyle = "#0f0"; ctx.font = "15px monospace";
+            drops.forEach((y, i) => {
+                ctx.fillText(Math.floor(Math.random()*2), i*20, y*20);
+                if(y*20 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            });
+        }
+        setInterval(draw, 33);
+    }
+</script>
 </body>
 </html>
