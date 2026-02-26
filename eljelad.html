@@ -6,50 +6,51 @@
     <title>منظومة الجلاد الجزائري</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #000; color: white; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
+        body { background-color: #000; color: white; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
         
-        /* حواف الهاتف المضيئة */
+        /* حواف الهاتف المضيئة بألوان العلم */
         .phone-border {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             border: 4px solid #111; z-index: 50; pointer-events: none;
             animation: borderGlow 3s infinite alternate;
         }
         @keyframes borderGlow {
-            0% { box-shadow: inset 0 0 20px #006233, 0 0 20px #006233; }
-            50% { box-shadow: inset 0 0 20px #ffffff, 0 0 20px #ffffff; }
-            100% { box-shadow: inset 0 0 20px #d52b1e, 0 0 20px #d52b1e; }
+            0% { box-shadow: inset 0 0 25px #006233, 0 0 25px #006233; }
+            50% { box-shadow: inset 0 0 25px #ffffff, 0 0 25px #ffffff; }
+            100% { box-shadow: inset 0 0 25px #d52b1e, 0 0 25px #d52b1e; }
         }
 
-        /* الشعار الكبير والمتوهج */
+        /* الشعار الكبير جداً والمتوهج */
         .main-logo {
-            width: 220px; height: 220px; border-radius: 50%;
-            border: 4px solid #fff;
+            width: 250px; height: 250px; border-radius: 50%;
+            border: 5px solid #fff;
             background: url('https://i.postimg.cc/1VVx8Y5k/Screenshot-20260222-031125-Tik-Tok.jpg') no-repeat center center;
             background-size: cover;
-            box-shadow: 0 0 40px #00ff00;
+            box-shadow: 0 0 50px #00ff00;
             animation: pulseLogo 2s infinite;
         }
         @keyframes pulseLogo {
-            0% { transform: scale(1); box-shadow: 0 0 25px #00ff00; }
-            50% { transform: scale(1.05); box-shadow: 0 0 50px #d52b1e; }
-            100% { transform: scale(1); box-shadow: 0 0 25px #00ff00; }
+            0% { transform: scale(1); box-shadow: 0 0 30px #00ff00; }
+            50% { transform: scale(1.08); box-shadow: 0 0 60px #d52b1e; }
+            100% { transform: scale(1); box-shadow: 0 0 30px #00ff00; }
         }
 
-        /* نصوص متوهجة */
-        .flag-text { animation: flagColors 3s infinite; font-weight: bold; }
+        /* نصوص علم الجزائر المتحركة */
+        .flag-text { animation: flagColors 3s infinite; font-weight: bold; text-align: center; }
         @keyframes flagColors {
-            0%, 33% { color: #006233; text-shadow: 0 0 10px #006233; }
-            34%, 66% { color: #ffffff; text-shadow: 0 0 10px #ffffff; }
-            67%, 100% { color: #d52b1e; text-shadow: 0 0 10px #d52b1e; }
+            0%, 33% { color: #006233; text-shadow: 0 0 15px #006233; }
+            34%, 66% { color: #ffffff; text-shadow: 0 0 15px #ffffff; }
+            67%, 100% { color: #d52b1e; text-shadow: 0 0 15px #d52b1e; }
         }
 
         .samsung-btn {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 28px;
             transition: all 0.3s ease;
         }
+        .samsung-btn:active { transform: scale(0.92); }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-6">
@@ -57,28 +58,31 @@
     <div class="phone-border"></div>
 
     <div id="login-section" class="text-center z-20 w-full max-w-sm">
-        <h1 class="flag-text text-2xl mb-6">منظومة جيش التبليغ الجزائري<br><span class="text-sm">بقيادة الجلاد الجزائري</span></h1>
-        <div class="main-logo mx-auto mb-10"></div>
-        <button onclick="handleLogin()" class="w-full bg-white text-black font-bold py-4 rounded-full shadow-lg hover:bg-gray-200 transition active:scale-95">
-            تسجيل الدخول عبر GOOGLE
+        <h1 class="flag-text text-3xl mb-8 leading-tight">منظومة جيش التبليغ الجزائري<br><span class="text-lg">بقيادة الجلاد الجزائري</span></h1>
+        <div class="main-logo mx-auto mb-12"></div>
+        <button onclick="handleLogin()" class="w-full bg-white text-black font-extrabold py-5 rounded-full shadow-[0_0_20px_rgba(255,255,255,0.4)] hover:bg-gray-100 transition active:scale-95 text-xl">
+            دخول القوات (Google)
         </button>
     </div>
 
     <div id="admin-section" class="hidden z-20 w-full max-w-md">
-        <h2 class="text-red-500 font-bold text-center mb-6">لوحة التحكم العليا - القائد</h2>
-        <div class="bg-gray-900/80 p-6 rounded-3xl border border-white/10 mb-6">
-            <input type="text" id="target-url" placeholder="أدخل رابط البث هنا..." class="w-full bg-black border border-white/10 p-4 rounded-2xl mb-4 text-white outline-none focus:border-red-600">
-            <button onclick="sendTarget()" class="w-full bg-red-600 py-4 rounded-2xl font-bold shadow-lg shadow-red-600/30">إرسال الهجوم للجنود</button>
+        <div class="text-center mb-8">
+            <h2 class="text-red-600 font-black text-2xl mb-2">غرفة العمليات المركزية</h2>
+            <p class="text-gray-400">مرحباً أيها القائد الجلاد</p>
         </div>
-        <div id="admin-targets-list" class="space-y-3 overflow-y-auto max-h-60"></div>
+        <div class="bg-gray-900/90 p-8 rounded-[2rem] border border-red-600/50 mb-8 shadow-2xl">
+            <input type="text" id="target-url" placeholder="انسخ رابط البث هنا..." class="w-full bg-black border border-white/20 p-5 rounded-2xl mb-5 text-white outline-none focus:border-red-600 transition-all">
+            <button onclick="sendTarget()" class="w-full bg-red-600 py-5 rounded-2xl font-black text-white shadow-[0_10px_30px_rgba(220,38,38,0.4)] hover:bg-red-700 active:scale-95 transition-all">إرسال أمر هجوم فوري</button>
+        </div>
+        <div id="admin-targets-list" class="space-y-4 max-h-[40vh] overflow-y-auto pr-2"></div>
     </div>
 
     <div id="soldier-section" class="hidden z-20 w-full max-w-md">
-        <div class="text-center mb-8">
-            <div class="w-20 h-20 mx-auto rounded-full border-2 border-green-600 mb-2" style="background: url('https://i.postimg.cc/1VVx8Y5k/Screenshot-20260222-031125-Tik-Tok.jpg') center/cover;"></div>
-            <h2 class="text-xl font-bold">الترسانة الحربية</h2>
+        <div class="text-center mb-10">
+            <div class="w-24 h-24 mx-auto rounded-full border-4 border-green-600 mb-4 shadow-[0_0_20px_#006233]" style="background: url('https://i.postimg.cc/1VVx8Y5k/Screenshot-20260222-031125-Tik-Tok.jpg') center/cover;"></div>
+            <h2 class="text-2xl font-black text-green-500">الترسانة الحربية النشطة</h2>
         </div>
-        <div id="soldier-targets-list" class="space-y-4"></div>
+        <div id="soldier-targets-list" class="space-y-5"></div>
     </div>
 
     <script type="module">
@@ -86,7 +90,6 @@
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // إعدادات مشروعك elje-b6343
         const firebaseConfig = {
             apiKey: "AIzaSyB9Ezo3W4NsVxMtIoYlCxrto4xITfnXXig",
             authDomain: "elje-b6343.firebaseapp.com",
@@ -101,37 +104,35 @@
         const db = getFirestore(app);
         const provider = new GoogleAuthProvider();
         
-        // بريد القائد (الماركا الماريكان)
-        const ADMIN_EMAIL = "hanidouha595@gmail.com";
+        // تم استبدال البريد ببريدك الجديد "الماركا الماريكان" كما طلبت
+        const ADMIN_EMAIL = "hanidouha595@gmail.com"; 
 
-        // تفعيل تسجيل الدخول
         window.handleLogin = async () => {
             try { await signInWithPopup(auth, provider); } 
-            catch (e) { console.error(e); alert("فشل الاتصال بـ Google"); }
+            catch (e) { alert("حدث خطأ في الاتصال بقاعدة البيانات!"); }
         };
 
-        // مراقبة الحالة
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                document.getElementById('login-section').style.display = 'none';
+                document.getElementById('login-section').classList.add('hidden');
+                // إذا كان الجيميل هو ملكة الملكة يفتح لوحة القائد
                 if (user.email === ADMIN_EMAIL) {
-                    document.getElementById('admin-section').style.display = 'block';
+                    document.getElementById('admin-section').classList.remove('hidden');
                 } else {
-                    document.getElementById('soldier-section').style.display = 'block';
+                    document.getElementById('soldier-section').classList.remove('hidden');
                 }
             }
         });
 
-        // إرسال الأهداف
         window.sendTarget = async () => {
             const url = document.getElementById('target-url').value;
             if (url) {
                 await addDoc(collection(db, "targets"), { url, time: Date.now() });
                 document.getElementById('target-url').value = "";
+                alert("تم تعميم الهدف على جميع الجنود!");
             }
         };
 
-        // تحديث القوائم لحظياً
         onSnapshot(query(collection(db, "targets"), orderBy("time", "desc")), (snap) => {
             const aList = document.getElementById('admin-targets-list');
             const sList = document.getElementById('soldier-targets-list');
@@ -140,15 +141,15 @@
             snap.forEach((d) => {
                 const data = d.data();
                 sList.innerHTML += `
-                    <button onclick="window.open('${data.url}')" class="w-full samsung-btn p-5 flex items-center justify-between shadow-xl">
-                        <span class="font-bold">هدف هجوم نشط - اضغط للتبليغ</span>
-                        <div class="h-3 w-3 bg-red-600 rounded-full animate-ping"></div>
+                    <button onclick="window.open('${data.url}')" class="w-full samsung-btn p-6 flex items-center justify-between shadow-[0_5px_15px_rgba(0,0,0,0.3)]">
+                        <span class="font-black text-lg">تحرك الآن للتبليغ</span>
+                        <div class="h-4 w-4 bg-red-600 rounded-full animate-ping"></div>
                     </button>`;
                 
                 aList.innerHTML += `
-                    <div class="flex gap-2 items-center bg-white/5 p-3 rounded-2xl">
-                        <span class="flex-1 text-xs truncate">${data.url}</span>
-                        <button onclick="deleteTarget('${d.id}')" class="bg-red-600/20 text-red-500 px-3 py-1 rounded-lg text-xs">حذف</button>
+                    <div class="flex gap-3 items-center bg-white/10 p-4 rounded-2xl border border-white/5">
+                        <span class="flex-1 text-xs truncate opacity-70">${data.url}</span>
+                        <button onclick="deleteTarget('${d.id}')" class="bg-red-600/30 text-red-500 px-4 py-2 rounded-xl text-xs font-bold">إزالة</button>
                     </div>`;
             });
         });
