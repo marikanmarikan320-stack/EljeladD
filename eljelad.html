@@ -24,20 +24,22 @@
         const db = getFirestore(app);
         const provider = new GoogleAuthProvider();
 
-        // نظام التنقل
+        // وظيفة التنقل بين الصفحات
         window.showPage = (pageId) => {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
         };
 
-        // تفعيل واجهة الترحيب لـ 5 ثوانٍ
+        // التحكم في تسلسل الواجهات
         window.onload = () => {
+            // واجهة الترحيب تظهر لمدة 5 ثوانٍ
             setTimeout(() => {
                 onAuthStateChanged(auth, (user) => {
                     if (user) {
                         showPage('main-page');
+                        // إظهار زر الإدارة فقط لإيميلك
                         if (user.email === "marikanmarikan320@gmail.com") {
-                            document.getElementById('admin-toggle-btn').style.display = 'block';
+                            document.getElementById('admin-toggle-btn').style.display = 'flex';
                         }
                     } else {
                         showPage('login-page');
@@ -47,75 +49,86 @@
         };
 
         window.loginWithGoogle = async () => {
-            try { await signInWithPopup(auth, provider); } catch (e) { alert("خطأ: " + e.message); }
+            try {
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
+                await setDoc(doc(db, "users", user.uid), {
+                    name: user.displayName,
+                    email: user.email,
+                    lastLogin: new Date()
+                }, { merge: true });
+            } catch (e) {
+                alert("فشل تسجيل الدخول: " + e.message);
+            }
         };
     </script>
 
     <style>
-        :root { --main-blue: #007aff; --bg-dark: #000; --glass: rgba(255, 255, 255, 0.1); }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg-dark); color: #fff; font-family: 'Segoe UI', Roboto, sans-serif; overflow: hidden; }
+        :root { --accent: #007aff; --bg: #000; --card-bg: rgba(255, 255, 255, 0.08); }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
         
-        .page { position: fixed; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; transition: 0.5s; z-index: 10; }
-        .active { display: flex; }
+        .page { position: fixed; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 10; background: var(--bg); }
+        .active { display: flex; animation: fadeIn 0.8s ease; }
 
-        /* 1. واجهة الترحيب (Splash) */
+        /* 1. واجهة الترحيب */
         #splash-screen { background: radial-gradient(circle, #001f3f 0%, #000 100%); z-index: 100; }
-        .logo-big { width: 180px; height: 180px; border-radius: 50%; background: url('https://i.postimg.cc/QV1Ynfq8/FB-IMG-1772200963086.jpg') center/cover; border: 4px solid #fff; box-shadow: 0 0 50px var(--main-blue); animation: pulse 2s infinite; }
-        
-        /* 2. واجهة الدخول (Login) */
-        .login-card { width: 85%; max-width: 380px; padding: 40px 20px; background: var(--glass); backdrop-filter: blur(20px); border-radius: 40px; border: 1px solid rgba(255,255,255,0.1); text-align: center; }
-        .btn-google { width: 100%; padding: 18px; border-radius: 20px; border: none; background: #fff; color: #000; font-weight: bold; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .logo-glow { width: 160px; height: 160px; border-radius: 50%; background: url('https://i.postimg.cc/QV1Ynfq8/FB-IMG-1772200963086.jpg') center/cover; border: 4px solid #fff; box-shadow: 0 0 40px var(--accent); animation: pulse 2s infinite; }
 
-        /* 3. الواجهة الرئيسية (Main) */
-        .app-header { width: 100%; padding: 40px 20px; text-align: right; }
-        .main-menu { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 20px; width: 90%; }
-        .menu-item { background: var(--glass); padding: 25px; border-radius: 25px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
+        /* 2. واجهة الدخول */
+        .glass-card { width: 85%; max-width: 380px; padding: 40px 20px; background: var(--card-bg); backdrop-filter: blur(20px); border-radius: 40px; border: 1px solid rgba(255,255,255,0.1); text-align: center; }
+        .btn-google { width: 100%; padding: 18px; border-radius: 20px; border: none; background: #fff; color: #000; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 20px; font-size: 16px; }
 
-        /* زر الإدارة المخفي */
-        #admin-toggle-btn { display: none; position: fixed; bottom: 30px; left: 30px; background: var(--main-blue); width: 60px; height: 60px; border-radius: 50%; border: none; color: #fff; font-size: 24px; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        /* 3. الواجهة الرئيسية (Main UI) */
+        .header { width: 100%; padding: 40px 25px; text-align: right; box-sizing: border-box; }
+        .grid-menu { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 0 20px; width: 100%; box-sizing: border-box; }
+        .menu-box { background: var(--card-bg); padding: 30px 10px; border-radius: 25px; text-align: center; border: 1px solid rgba(255,255,255,0.05); font-size: 18px; }
+
+        /* زر الإدارة العائم */
+        #admin-toggle-btn { display: none; position: fixed; bottom: 30px; left: 30px; background: var(--accent); width: 60px; height: 60px; border-radius: 50%; border: none; color: #fff; font-size: 24px; cursor: pointer; align-items: center; justify-content: center; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
 
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
     <div id="splash-screen" class="page active">
-        <div class="logo-big"></div>
-        <h1 style="margin-top: 30px; color: #ffcc00;">تطبيق مدينة منعة</h1>
-        <p style="color: #ccc; padding: 0 40px; text-align: center;">جسر رقمي لخدمة أهلنا ببلدة منعة - باتنة</p>
+        <div class="logo-glow"></div>
+        <h1 style="margin-top: 30px; color: #ffcc00; font-size: 24px;">تطبيق مدينة منعة</h1>
+        <p style="color: #aaa; text-align: center; padding: 0 30px;">نحو مستقبل رقمي لبلدتنا</p>
     </div>
 
     <div id="login-page" class="page">
-        <div class="login-card">
-            <div class="logo-big" style="width: 100px; height: 100px; margin-bottom: 20px;"></div>
-            <h2>دخول المنظومة</h2>
+        <div class="glass-card">
+            <div class="logo-glow" style="width: 100px; height: 100px; margin: 0 auto 20px;"></div>
+            <h2>تسجيل الدخول</h2>
             <button class="btn-google" onclick="loginWithGoogle()">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" width="20">
-                التسجيل عبر Google
+                متابعة باستخدام جوجل
             </button>
         </div>
     </div>
 
     <div id="main-page" class="page" style="justify-content: flex-start;">
-        <div class="app-header">
-            <h1 style="font-size: 32px;">مرحباً بك</h1>
-            <p style="color: #aaa;">اختر الخدمة التي تحتاجها</p>
+        <div class="header">
+            <h1 style="margin: 0; font-size: 30px;">أهلاً بك</h1>
+            <p style="color: #888; margin-top: 5px;">تطبيق صفحة مدينة منعة - ولاية باتنة</p>
         </div>
-        <div class="main-menu">
-            <div class="menu-item">🚌 الحافلات</div>
-            <div class="menu-item">🩺 أطباء</div>
-            <div class="menu-item">📢 أخبار</div>
-            <div class="menu-item">📞 اتصل بنا</div>
+        <div class="grid-menu">
+            <div class="menu-box">🚌 الحافلات</div>
+            <div class="menu-box">🩺 الأطباء</div>
+            <div class="menu-box">📡 الأخبار</div>
+            <div class="menu-box">☎️ الطوارئ</div>
         </div>
         <button id="admin-toggle-btn" onclick="showPage('admin-page')">⚙️</button>
     </div>
 
     <div id="admin-page" class="page">
-        <button onclick="showPage('main-page')" style="position: absolute; top: 30px; right: 20px; background: none; border: none; color: var(--main-blue); font-size: 18px;">← عودة</button>
-        <div class="login-card" style="background: rgba(0, 122, 255, 0.1);">
-            <h2 style="color: var(--main-blue);">لوحة الإدارة</h2>
-            <p>هذه الصفحة تراها أنت فقط يا هاني.</p>
-            <button class="btn-google" style="background: #28a745; color: #fff;">إضافة قسم جديد</button>
+        <button onclick="showPage('main-page')" style="position: absolute; top: 40px; right: 25px; background: none; border: none; color: var(--accent); font-size: 18px; font-weight: bold;">← عودة</button>
+        <div class="glass-card" style="border-color: var(--accent);">
+            <h2 style="color: var(--accent);">لوحة التحكم</h2>
+            <p>أهلاً يا هاني، يمكنك التحكم في الأقسام من هنا.</p>
+            <button class="btn-google" style="background: #28a745; color: #fff;">إضافة بيانات جديدة</button>
         </div>
     </div>
 
