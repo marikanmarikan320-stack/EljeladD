@@ -5,66 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>تطبيق مدينة منعة</title>
     <style>
-        /* شاشة كاملة */
-        body, html { 
-            margin: 0; padding: 0; width: 100%; height: 100%; 
+        /* الخلفية التكنولوجية */
+        body {
+            margin: 0; padding: 0; height: 100vh;
+            background: #050505; color: #fff;
             font-family: 'Segoe UI', Roboto, sans-serif;
-            background: #0a0a0a; color: white;
-            display: flex; flex-direction: column; align-items: center;
+            display: flex; justify-content: center; align-items: center;
+            background-image: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #000 100%);
         }
 
-        /* خلفية تكنولوجية ناعمة */
-        .full-bg {
-            position: absolute; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a0a 100%);
-            z-index: -1;
+        /* حاوية البطاقة الاحترافية (Glassmorphism Card) */
+        .tech-card {
+            width: 90%; max-width: 400px;
+            padding: 30px; border-radius: 45px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
         }
 
-        /* الحاوية الأساسية */
-        .app-wrapper {
-            width: 100%; height: 100%; display: flex; flex-direction: column;
-            justify-content: space-between; padding: 40px 20px; box-sizing: border-box;
-            background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,20,40,0.4) 100%);
-        }
-
-        /* العنوان في الأعلى */
-        h1 { font-size: 22px; margin-top: 20px; text-align: center; color: #e0e0e0; font-weight: 300; }
-
-        /* الشعار */
-        .logo-box {
-            width: 160px; height: 160px; margin: 0 auto;
-            border-radius: 40px; overflow: hidden;
-            border: 2px solid rgba(255,255,255,0.1);
+        /* الشعار الدائري المضيء */
+        .logo-circle {
+            width: 140px; height: 140px; border-radius: 50%;
+            margin: 0 auto 20px;
             background: url('https://i.postimg.cc/QV1Ynfq8/FB-IMG-1772200963086.jpg') center/cover;
+            border: 3px solid rgba(255,255,255,0.2);
+            box-shadow: 0 0 25px rgba(0, 162, 255, 0.5); /* إضاءة ناعمة */
         }
 
-        /* معلومات التطبيق */
-        .info-box { text-align: center; padding: 20px; }
-        .info-box p { color: #aaa; font-size: 15px; line-height: 1.8; }
+        h1 { font-size: 20px; font-weight: 600; margin-bottom: 15px; color: #fff; }
+        p { font-size: 15px; color: #b3b3b3; line-height: 1.6; margin-bottom: 30px; }
 
-        /* زر التسجيل */
-        .action-btn {
-            width: 100%; padding: 18px; border: none; border-radius: 20px;
-            background: #ffffff; color: #000; font-weight: bold; font-size: 16px;
-            margin-bottom: 30px; cursor: pointer; transition: 0.3s;
+        /* الزر الاحترافي (Call to Action) */
+        .cta-btn {
+            width: 100%; padding: 18px; border-radius: 20px;
+            background: linear-gradient(135deg, #007bff, #00d4ff);
+            color: white; border: none; font-size: 16px; font-weight: bold;
+            cursor: pointer; transition: transform 0.2s;
+            box-shadow: 0 8px 20px rgba(0, 123, 255, 0.3);
         }
-        .action-btn:active { transform: scale(0.98); }
+        .cta-btn:active { transform: scale(0.97); }
     </style>
 </head>
 <body>
 
-<div class="full-bg"></div>
-
-<div class="app-wrapper">
+<div class="tech-card">
+    <div class="logo-circle"></div>
     <h1>تطبيق صفحة مدينة منعة - ولاية باتنة</h1>
-    
-    <div class="logo-box"></div>
-    
-    <div class="info-box">
-        <p>نقدم لكم واجهة تكنولوجية متطورة تخدم سكان بلدتنا. هدفنا تسهيل الوصول للخدمات، الأرقام العاجلة، والأخبار المحلية بضغطة زر واحدة في منصة آمنة ومستقرة.</p>
-    </div>
-
-    <button class="action-btn" onclick="alert('جارٍ ربط نظام Firebase...')">تسجيل الدخول</button>
+    <p>منصة رقمية متكاملة تضع بين يديك دليل الخدمات، الأخبار العاجلة، والأرقام الضرورية. نخدم بلدتنا بتكنولوجيا حديثة وتصميم يليق بأهالينا.</p>
+    <button class="cta-btn">تسجيل الدخول</button>
 </div>
 
 </body>
