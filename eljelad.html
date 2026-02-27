@@ -2,135 +2,32 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>تطبيق مدينة منعة</title>
-    
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyB-sD-OVOlY9yk6vNja_vF83YzOFdZp6yQ",
-            authDomain: "menaa-4ad54.firebaseapp.com",
-            projectId: "menaa-4ad54",
-            storageBucket: "menaa-4ad54.firebasestorage.app",
-            messagingSenderId: "500170947175",
-            appId: "1:500170947175:web:5779fce4590d4cd050f2c2"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const provider = new GoogleAuthProvider();
-
-        // وظيفة التنقل بين الصفحات
-        window.showPage = (pageId) => {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-        };
-
-        // التحكم في تسلسل الواجهات
-        window.onload = () => {
-            // واجهة الترحيب تظهر لمدة 5 ثوانٍ
-            setTimeout(() => {
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        showPage('main-page');
-                        // إظهار زر الإدارة فقط لإيميلك
-                        if (user.email === "marikanmarikan320@gmail.com") {
-                            document.getElementById('admin-toggle-btn').style.display = 'flex';
-                        }
-                    } else {
-                        showPage('login-page');
-                    }
-                });
-            }, 5000);
-        };
-
-        window.loginWithGoogle = async () => {
-            try {
-                const result = await signInWithPopup(auth, provider);
-                const user = result.user;
-                await setDoc(doc(db, "users", user.uid), {
-                    name: user.displayName,
-                    email: user.email,
-                    lastLogin: new Date()
-                }, { merge: true });
-            } catch (e) {
-                alert("فشل تسجيل الدخول: " + e.message);
-            }
-        };
-    </script>
-
-    <style>
-        :root { --accent: #007aff; --bg: #000; --card-bg: rgba(255, 255, 255, 0.08); }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
-        
-        .page { position: fixed; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 10; background: var(--bg); }
-        .active { display: flex; animation: fadeIn 0.8s ease; }
-
-        /* 1. واجهة الترحيب */
-        #splash-screen { background: radial-gradient(circle, #001f3f 0%, #000 100%); z-index: 100; }
-        .logo-glow { width: 160px; height: 160px; border-radius: 50%; background: url('https://i.postimg.cc/QV1Ynfq8/FB-IMG-1772200963086.jpg') center/cover; border: 4px solid #fff; box-shadow: 0 0 40px var(--accent); animation: pulse 2s infinite; }
-
-        /* 2. واجهة الدخول */
-        .glass-card { width: 85%; max-width: 380px; padding: 40px 20px; background: var(--card-bg); backdrop-filter: blur(20px); border-radius: 40px; border: 1px solid rgba(255,255,255,0.1); text-align: center; }
-        .btn-google { width: 100%; padding: 18px; border-radius: 20px; border: none; background: #fff; color: #000; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 20px; font-size: 16px; }
-
-        /* 3. الواجهة الرئيسية (Main UI) */
-        .header { width: 100%; padding: 40px 25px; text-align: right; box-sizing: border-box; }
-        .grid-menu { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 0 20px; width: 100%; box-sizing: border-box; }
-        .menu-box { background: var(--card-bg); padding: 30px 10px; border-radius: 25px; text-align: center; border: 1px solid rgba(255,255,255,0.05); font-size: 18px; }
-
-        /* زر الإدارة العائم */
-        #admin-toggle-btn { display: none; position: fixed; bottom: 30px; left: 30px; background: var(--accent); width: 60px; height: 60px; border-radius: 50%; border: none; color: #fff; font-size: 24px; cursor: pointer; align-items: center; justify-content: center; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
-
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    </style>
+    <title>صفحة التحكم</title>
 </head>
 <body>
 
-    <div id="splash-screen" class="page active">
-        <div class="logo-glow"></div>
-        <h1 style="margin-top: 30px; color: #ffcc00; font-size: 24px;">تطبيق مدينة منعة</h1>
-        <p style="color: #aaa; text-align: center; padding: 0 30px;">نحو مستقبل رقمي لبلدتنا</p>
+    <div id="app">
+        <h1>مرحباً بك في لوحة التحكم</h1>
+        <button onclick="logout()">تسجيل الخروج</button>
     </div>
 
-    <div id="login-page" class="page">
-        <div class="glass-card">
-            <div class="logo-glow" style="width: 100px; height: 100px; margin: 0 auto 20px;"></div>
-            <h2>تسجيل الدخول</h2>
-            <button class="btn-google" onclick="loginWithGoogle()">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" width="20">
-                متابعة باستخدام جوجل
-            </button>
-        </div>
-    </div>
+    <script>
+        // دالة تسجيل الخروج
+        function logout() {
+            // مسح بيانات المستخدم من المتصفح
+            localStorage.clear();
+            
+            // إعادة التوجيه إلى صفحة تسجيل الدخول (استبدل login.html بمسار صفحتك)
+            window.location.href = "login.html";
+        }
 
-    <div id="main-page" class="page" style="justify-content: flex-start;">
-        <div class="header">
-            <h1 style="margin: 0; font-size: 30px;">أهلاً بك</h1>
-            <p style="color: #888; margin-top: 5px;">تطبيق صفحة مدينة منعة - ولاية باتنة</p>
-        </div>
-        <div class="grid-menu">
-            <div class="menu-box">🚌 الحافلات</div>
-            <div class="menu-box">🩺 الأطباء</div>
-            <div class="menu-box">📡 الأخبار</div>
-            <div class="menu-box">☎️ الطوارئ</div>
-        </div>
-        <button id="admin-toggle-btn" onclick="showPage('admin-page')">⚙️</button>
-    </div>
-
-    <div id="admin-page" class="page">
-        <button onclick="showPage('main-page')" style="position: absolute; top: 40px; right: 25px; background: none; border: none; color: var(--accent); font-size: 18px; font-weight: bold;">← عودة</button>
-        <div class="glass-card" style="border-color: var(--accent);">
-            <h2 style="color: var(--accent);">لوحة التحكم</h2>
-            <p>أهلاً يا هاني، يمكنك التحكم في الأقسام من هنا.</p>
-            <button class="btn-google" style="background: #28a745; color: #fff;">إضافة بيانات جديدة</button>
-        </div>
-    </div>
+        // تحقق بسيط عند تحميل الصفحة للتأكد من وجود جلسة نشطة
+        window.onload = function() {
+            if (!localStorage.getItem("isLoggedIn")) {
+                window.location.href = "login.html";
+            }
+        };
+    </script>
 
 </body>
 </html>
