@@ -3,58 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>تطبيق منعة الرقمي</title>
+    <title>تطبيق صفحة مدينة منعة - ولاية باتنة</title>
     <style>
         body { 
             margin: 0; padding: 0; height: 100vh; 
-            background: #000; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
 
-        /* خلفية تكنولوجية ناعمة جداً ومندمجة */
+        /* صورة خلفية تكنولوجية مع تعتيم "هيبة" */
         .app-bg {
             position: absolute; width: 100%; height: 100%;
-            background: linear-gradient(180deg, #0f0f13 0%, #000 100%);
-            z-index: -1;
+            background: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000') center/cover;
+            filter: brightness(0.25); z-index: -1;
         }
 
-        /* كتلة الهوية (الشعار + الاسم) */
-        .identity-block {
-            display: flex; flex-direction: column; align-items: center;
-            margin-bottom: 60px; animation: fadeIn 1s ease;
-        }
-
+        .identity-block { display: flex; flex-direction: column; align-items: center; margin-bottom: 40px; }
+        
         .logo-box {
-            width: 120px; height: 120px; border-radius: 30px;
+            width: 130px; height: 130px; border-radius: 35px;
             background: url('https://i.postimg.cc/QV1Ynfq8/FB-IMG-1772200963086.jpg') center/cover;
             margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 2px solid rgba(255,255,255,0.1);
         }
 
-        h1 { 
-            font-size: 20px; font-weight: 600; color: #fff; margin: 0;
-            letter-spacing: 0.5px;
-        }
+        h1 { font-size: 22px; color: #fff; margin: 0; text-align: center; }
 
-        /* منطقة تسجيل الدخول (نمط فيسبوك/إنستقرام) */
-        .login-box {
-            width: 85%; max-width: 350px;
-            display: flex; flex-direction: column; gap: 15px;
-        }
+        .login-box { width: 85%; max-width: 350px; display: flex; flex-direction: column; gap: 15px; }
 
         input {
-            width: 100%; padding: 15px; border-radius: 12px;
-            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-            color: white; box-sizing: border-box;
+            width: 100%; padding: 16px; border-radius: 14px;
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+            color: white; box-sizing: border-box; backdrop-filter: blur(5px);
         }
 
         .btn-login {
-            width: 100%; padding: 15px; border-radius: 12px;
-            background: #0095f6; color: white; border: none;
+            width: 100%; padding: 16px; border-radius: 14px;
+            background: #007bff; color: white; border: none;
             font-weight: bold; font-size: 16px; cursor: pointer;
-            transition: 0.2s;
         }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        /* أيقونة جوجل الاحترافية */
+        .google-login {
+            margin-top: 25px; text-align: center; color: #fff;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
+            padding: 10px; background: rgba(255,255,255,0.05); border-radius: 14px;
+        }
+        .google-icon { width: 24px; height: 24px; background: url('https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg') center/contain; }
     </style>
 </head>
 <body>
@@ -63,16 +58,18 @@
 
     <div class="identity-block">
         <div class="logo-box"></div>
-        <h1>تطبيق صفحة مدينة منعة</h1>
+        <h1>تطبيق صفحة مدينة منعة - ولاية باتنة</h1>
     </div>
 
     <div class="login-box">
         <input type="email" placeholder="البريد الإلكتروني">
         <input type="password" placeholder="كلمة المرور">
         <button class="btn-login">تسجيل الدخول</button>
-        <p style="text-align: center; color: #777; font-size: 13px; margin-top: 15px;">
-            تطبيق تكنولوجي - النسخة الاحترافية
-        </p>
+        
+        <div class="google-login" onclick="alert('جارٍ فتح خيارات حسابات Google...')">
+            <div class="google-icon"></div>
+            <span>التسجيل بواسطة Google</span>
+        </div>
     </div>
 
 </body>
