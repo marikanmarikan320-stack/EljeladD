@@ -2,45 +2,211 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة تحكم جيش التبليغ الجزائري</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>منظومة الجلاد v26.0 - One UI War Edition</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+
     <style>
-        /* تنسيق بسيط للزر */
-        .logout-btn {
-            background-color: #ff4d4d;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-family: Arial, sans-serif;
+        :root { 
+            --samsung-blue: #0355d0; --algeria-green: #006233; --algeria-red: #d21034;
+            --cyber-green: #00ff41; --war-gold: #ffcc00; --glass: rgba(10, 10, 10, 0.98);
         }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; color: white; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
+        
+        /* إضاءة الحواف المتوهجة */
+        .edge-glow { position: fixed; inset: 0; pointer-events: none; z-index: 10000; box-shadow: inset 0 0 25px var(--algeria-red); animation: threat-pulse 2s infinite; }
+        @keyframes threat-pulse { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.7; } }
+
+        .view { display: none; width: 100%; height: 100%; position: absolute; inset: 0; flex-direction: column; align-items: center; padding: 20px; overflow-y: auto; background: #000; }
+        .active-view { display: flex !important; }
+
+        /* الهوية البصرية */
+        .logo-main { width: 140px; height: 140px; border-radius: 50%; border: 3px solid var(--cyber-green); box-shadow: 0 0 30px var(--cyber-green); margin-bottom: 25px; background: url('https://i.postimg.cc/vmdZn4vn/Screenshot-20260222-031125-Tik-Tok.jpg') center/cover; }
+        
+        /* أزرار One UI المضيئة */
+        .btn-ui { width: 100%; max-width: 320px; padding: 18px; border-radius: 25px; border: none; font-weight: bold; cursor: pointer; font-size: 1rem; margin-bottom: 15px; }
+        .btn-google { background: white; color: black; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .target-card { 
+            width: 100%; max-width: 400px; background: var(--glass); border: 2px solid var(--cyber-green);
+            border-radius: 25px; padding: 20px; margin-bottom: 15px; text-align: center;
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.3); cursor: pointer; animation: glow-pulse 3s infinite;
+        }
+        @keyframes glow-pulse { 0%, 100% { border-color: rgba(0,255,65,0.3); } 50% { border-color: var(--cyber-green); } }
+
+        /* لوحة القائد المركزية */
+        .commander-box { width: 100%; max-width: 420px; background: #0a0a0a; border: 2px solid var(--samsung-blue); border-radius: 30px; padding: 20px; margin-bottom: 20px; }
+        .data-list { background: #111; padding: 10px; border-radius: 15px; max-height: 120px; overflow-y: auto; font-size: 0.8rem; margin: 10px 0; border: 1px solid #222; }
+        .item-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #222; }
+        .btn-delete { color: var(--algeria-red); font-weight: bold; cursor: pointer; }
+
+        input { width: 100%; padding: 15px; border-radius: 20px; border: 1px solid #333; background: #000; color: white; margin-bottom: 10px; text-align: center; }
+
+        /* واجهة الهجوم (The Strike Modal) */
+        .modal-strike { position: fixed; top: 100%; left: 0; width: 100%; height: 100%; background: #000; z-index: 20000; transition: 0.5s ease; display: flex; flex-direction: column; align-items: center; padding: 20px; overflow-y: auto; }
+        .modal-strike.active { top: 0; }
+        .hacker-banner { width: 100%; height: 220px; border-radius: 30px; background: url('https://i.postimg.cc/j2fHMWGY/unnamed-3.jpg') center/cover; margin-bottom: 20px; border: 2px solid var(--algeria-red); box-shadow: 0 0 25px var(--algeria-red); }
+        .war-instructions { background: rgba(0, 98, 51, 0.2); border-right: 5px solid var(--algeria-green); padding: 15px; border-radius: 15px; margin-bottom: 20px; font-size: 0.9rem; line-height: 1.6; }
     </style>
 </head>
 <body>
 
-    <div id="main-content">
-        <h2>مرحباً بك في النظام</h2>
-        <button class="logout-btn" onclick="handleLogout()">تسجيل الخروج والعودة</button>
+<div class="edge-glow"></div>
+
+<div id="view-login" class="view active-view" style="justify-content: center;">
+    <div class="logo-main"></div>
+    <h2 style="text-align: center; font-weight: 300;">منظومة الجلاد v26.0</h2>
+    <p style="color: gray; margin-bottom: 30px;">بانتظار إشارة القائد للبدء..</p>
+    <button class="btn-ui btn-google" onclick="login()">
+        <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" width="20">
+        الدخول عبر Google 🔐
+    </button>
+</div>
+
+<div id="view-main" class="view">
+    <div class="logo-main" style="width: 80px; height: 80px;"></div>
+    
+    <div id="commander-ui" style="display: none; width: 100%; max-width: 400px;">
+        <div class="commander-box">
+            <h4 style="color: var(--samsung-blue); margin: 0;">📊 مركز الرقابة (المسجلون: <span id="user-count">0</span>)</h4>
+            <div id="users-log" class="data-list"></div>
+            <h4 style="margin: 10px 0; color: var(--war-gold);">🎖️ إدارة المشرفين</h4>
+            <div id="mods-log" class="data-list"></div>
+            <input type="email" id="mod-email" placeholder="جيميل المشرف الجديد...">
+            <button class="btn-ui btn-google" onclick="addMod()" style="padding: 12px; background: var(--samsung-blue); color:white; border-radius: 15px;">إضافة مشرف 🎖️</button>
+        </div>
+        
+        <div class="commander-box" style="border-color: var(--algeria-red);">
+            <input type="text" id="target-input" placeholder="رابط الهدف الجديد...">
+            <button class="btn-ui" onclick="pushTarget()" style="padding: 15px; background: var(--algeria-red); color:white; border-radius: 15px;">تعميم الإحداثيات للجيش 🚀</button>
+        </div>
     </div>
 
-    <script>
-        function handleLogout() {
-            // مسح بيانات الجلسة
-            localStorage.removeItem("isLoggedIn");
-            
-            // التوجيه إلى الصفحة الرئيسية للمستودع (تجنباً لخطأ 404)
-            // سيقوم هذا بنقلك إلى الجذر (Root) الخاص بموقعك على GitHub
-            window.location.href = "./"; 
-        }
+    <h3 style="color: gray; font-weight: 400;">رادار الأهداف النشطة</h3>
+    <div id="targets-list" style="width: 100%; display: flex; flex-direction: column; align-items: center;"></div>
+</div>
 
-        // التأكد من أن المستخدم مسجل دخول أصلاً
-        window.onload = function() {
-            if (localStorage.getItem("isLoggedIn") !== "true") {
-                // إذا لم يكن مسجلاً، وجهه للصفحة الرئيسية
-                window.location.href = "./";
+<div class="modal-strike" id="strike-ui">
+    <div class="hacker-banner"></div>
+    <h2 style="color: var(--algeria-red); margin: 0;">تعليمات القيادة العليا</h2>
+    
+    <div class="war-instructions" id="war-text">
+        🌪 <b>إعـصـار جـيـش الـتـبـلـيـغ الـجـزائـري</b><br>
+        👤 <b>الـقـائد:</b> الـجـلاد الـجـزائـري<br><br>
+        👊 <b>يـا أسـود، اضربـوا ولا تـبـالـوا! زلـزلـوا هـواتـفـكم بـالـبـلاغات!</b><br>
+        حـطمـوا كـبـريـاء الـهـدف، ولا تـتـركوا لـه أثـراً.. الـنصر حـلـيـفـكم.
+    </div>
+
+    <button class="btn-ui" style="background: var(--algeria-red); color:white;" onclick="launchTikTok()">📍 اقتحام تيك توك</button>
+    <button class="btn-ui" style="background: white; color: black;" onclick="launchGmail()">📧 قصف إيميل (English)</button>
+    <button class="btn-ui" style="background: var(--samsung-blue); color:white;" onclick="window.location.href='https://www.tiktok.com/legal/report/feedback'">📜 استمارة البلاغ</button>
+    <button class="btn-ui" onclick="closeStrike()" style="background: none; color: gray;">تراجع للرادار ✕</button>
+</div>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyB9Ezo3W4NsVxMtIoYlCxrto4xITfnXXig",
+        authDomain: "elje-b6343.firebaseapp.com",
+        databaseURL: "https://elje-b6343-default-rtdb.firebaseio.com",
+        projectId: "elje-b6343",
+        storageBucket: "elje-b6343.firebasestorage.app",
+        messagingSenderId: "295465762171",
+        appId: "1:295465762171:web:6af4eea3818558fd0191de"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const auth = firebase.auth();
+    const MASTER = "marikanmarikan320@gmail.com";
+    let activeLink = "";
+
+    // إدارة الدخول والمزامنة
+    auth.onAuthStateChanged(user => {
+        if(user) {
+            db.ref('users/' + user.uid).set({ email: user.email, ts: Date.now() });
+            document.getElementById('view-login').style.display = 'none';
+            document.getElementById('view-main').classList.add('active-view');
+            
+            if(user.email === MASTER) {
+                document.getElementById('commander-ui').style.display = 'block';
+                loadAdminTools();
             }
-        };
-    </script>
+            loadTargets();
+        }
+    });
+
+    function login() {
+        auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(() => {
+            return auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+        });
+    }
+
+    // أدوات القائد المركزية
+    function loadAdminTools() {
+        db.ref('users').on('value', s => {
+            document.getElementById('user-count').innerText = s.numChildren();
+            let h = "";
+            s.forEach(u => h += `<div>🟢 ${u.val().email}</div>`);
+            document.getElementById('users-log').innerHTML = h;
+        });
+        db.ref('mods').on('value', s => {
+            let h = "";
+            s.forEach(m => h += `<div class="item-row"><span>🎖️ ${m.val()}</span><span class="btn-delete" onclick="removeMod('${m.key}')">حذف</span></div>`);
+            document.getElementById('mods-log').innerHTML = h;
+        });
+    }
+
+    function addMod() {
+        const e = document.getElementById('mod-email').value;
+        if(e) { db.ref('mods').push(e); document.getElementById('mod-email').value = ""; }
+    }
+    function removeMod(key) { db.ref('mods').child(key).remove(); }
+
+    function pushTarget() {
+        const u = document.getElementById('target-input').value;
+        if(u.includes('http')) {
+            db.ref('targets').push({ url: u, time: Date.now() });
+            document.getElementById('target-input').value = "";
+        }
+    }
+
+    // رادار الأهداف للجنود
+    function loadTargets() {
+        db.ref('targets').limitToLast(15).on('value', s => {
+            const list = document.getElementById('targets-list');
+            list.innerHTML = "";
+            s.forEach(t => {
+                const b = document.createElement('div');
+                b.className = 'target-card';
+                b.innerHTML = `⚔️ <b>بـدء الاقتحام</b><br><small style="color:gray">${t.val().url.substring(0,35)}...</small>`;
+                b.onclick = () => {
+                    activeLink = t.val().url;
+                    document.getElementById('strike-ui').classList.add('active');
+                };
+                list.prepend(b);
+            });
+        });
+    }
+
+    // وظائف الهجوم المحقونة (الجيميلات الخمسة + النص المنسوخ)
+    function launchTikTok() {
+        window.location.href = activeLink.replace("https://www.tiktok.com/", "snssdk1128://");
+        setTimeout(() => { window.location.href = activeLink; }, 1000);
+    }
+
+    function launchGmail() {
+        const emails = "feedback@tiktok.com,legal@tiktok.com,communitymanager@tiktok.com,privacy@tiktok.com,reports@tiktok.com";
+        const engMsg = `Dear Safety Team,\n\nI am reporting this account for serious violations: ${activeLink}.\nThis user promotes content that violates international safety standards and TikTok terms. We demand a manual review and permanent ban.\n\nTarget: ${activeLink}\nSupport ID: DZ-ELJELAD-2026`;
+        
+        navigator.clipboard.writeText(engMsg).then(() => {
+            alert("تم نسخ البلاغ الإنجليزي القتالي! سيفتح Gmail الآن.");
+            window.location.href = `mailto:${emails}?subject=Urgent: Violation Report&body=${encodeURIComponent(engMsg)}`;
+        });
+    }
+
+    function closeStrike() { document.getElementById('strike-ui').classList.remove('active'); }
+</script>
 </body>
 </html>
