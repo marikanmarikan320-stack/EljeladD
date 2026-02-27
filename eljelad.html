@@ -3,81 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>تطبيق مدينة منعة</title>
+    <title>تطبيق منعة الرقمي</title>
     <style>
-        /* شاشة كاملة مع خلفية تكنولوجية بالموشن بلور */
-        body, html { 
-            margin: 0; padding: 0; width: 100%; height: 100%; 
-            font-family: 'Segoe UI', Roboto, sans-serif;
-            background: #000; overflow: hidden;
-        }
+        /* الأساس السينمائي */
+        body { margin: 0; padding: 0; width: 100%; height: 100vh; background: #000; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'Segoe UI', Roboto, sans-serif; }
 
-        .bg-motion-blur {
+        /* الخلفية التكنولوجية العمق */
+        .deep-space-bg {
             position: absolute; width: 100%; height: 100%;
-            background: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000') center/cover;
-            filter: blur(12px) brightness(0.5); /* موشن بلور وتعتيم */
-            transform: scale(1.1); /* لإخفاء حواف الصورة */
-            z-index: -1;
+            background: radial-gradient(circle at 50% 50%, #001f3f, #000);
+            background-image: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000');
+            background-size: cover; filter: blur(20px) brightness(0.3); z-index: -1;
         }
 
-        .app-container {
-            width: 100%; height: 100%;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: space-between;
-            padding: 50px 20px; box-sizing: border-box;
+        /* البطاقة المركزية الطافية (Glassmorphism Pro) */
+        .hero-card {
+            width: 85%; max-width: 380px; padding: 40px 25px;
+            background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(40px);
+            border-radius: 50px; border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center; box-shadow: 0 40px 60px rgba(0,0,0,0.8);
         }
 
-        /* اسم التطبيق في الأعلى */
-        h1 { 
-            font-size: 26px; font-weight: 800; color: #fff;
-            text-shadow: 0 0 20px rgba(0, 212, 255, 0.8);
-            margin-top: 10px;
-        }
-
-        /* الشعار المتوهج */
-        .logo-circle {
-            width: 170px; height: 170px; border-radius: 50%;
+        /* الشعار في المنتصف بوهج عالي */
+        .hero-logo {
+            width: 140px; height: 140px; border-radius: 50%;
             background: url('https://i.postimg.cc/QV1Ynfq8/FB-IMG-1772200963086.jpg') center/cover;
-            border: 4px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 0 50px rgba(0, 212, 255, 0.6);
-            animation: float 3s ease-in-out infinite;
-        }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-
-        /* البطاقة الترحيبية الزجاجية */
-        .welcome-card {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(20px);
-            padding: 25px; border-radius: 40px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            text-align: center; color: #fff;
-            max-width: 350px;
+            margin: 0 auto 25px; border: 4px solid #fff;
+            box-shadow: 0 0 60px rgba(0, 212, 255, 0.7);
         }
 
-        /* زر احترافي */
-        .btn-entry {
-            width: 90%; padding: 20px; border-radius: 25px;
-            background: linear-gradient(90deg, #00d4ff, #007bff);
-            color: #fff; font-weight: bold; font-size: 18px;
-            border: none; cursor: pointer; box-shadow: 0 10px 25px rgba(0, 123, 255, 0.4);
-            margin-bottom: 20px;
+        /* الطباعة الاحترافية */
+        h1 { color: #fff; font-size: 24px; margin-bottom: 10px; text-shadow: 0 0 10px #00d4ff; }
+        p { color: #ccc; font-size: 15px; line-height: 1.8; margin-bottom: 30px; }
+
+        /* الزر التفاعلي (Neumorphic Glow) */
+        .cta-btn {
+            width: 100%; padding: 20px; border-radius: 30px;
+            background: linear-gradient(135deg, #00d4ff, #007bff);
+            color: #fff; border: none; font-size: 18px; font-weight: bold;
+            cursor: pointer; transition: 0.4s;
+            box-shadow: 0 10px 30px rgba(0, 123, 255, 0.5);
         }
+        .cta-btn:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0, 123, 255, 0.7); }
     </style>
 </head>
 <body>
 
-    <div class="bg-motion-blur"></div>
+    <div class="deep-space-bg"></div>
 
-    <div class="app-container">
-        <h1>تطبيق مدينة منعة - ولاية باتنة</h1>
-        
-        <div class="logo-circle"></div>
-        
-        <div class="welcome-card">
-            <p>أهلاً بكم في واجهتكم الرقمية الرسمية. تم تطوير هذا التطبيق لخدمة أهالي بلدتنا الأعزاء، حيث نضع بين أيديكم كل الخدمات والأخبار العاجلة في منصة واحدة ذكية، متطورة، وآمنة.</p>
-        </div>
-
-        <button class="btn-entry" onclick="alert('جارٍ تهيئة الاتصال بالسيرفر...')">تسجيل الدخول</button>
+    <div class="hero-card">
+        <div class="hero-logo"></div>
+        <h1>تطبيق صفحة مدينة منعة</h1>
+        <p>نضع التكنولوجيا في خدمة أهلنا. منصة متطورة تضم كافة الخدمات والأخبار، مصممة خصيصاً لتكون رفيقكم الرقمي اليومي.</p>
+        <button class="cta-btn">تسجيل الدخول للنظام</button>
     </div>
 
 </body>
