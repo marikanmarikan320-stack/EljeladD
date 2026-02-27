@@ -1,37 +1,57 @@
 <div id="admin-panel" style="display:none; padding: 20px; background: #1a1a1a; color: #fff; border-radius: 30px; margin: 20px;">
-    <h2 style="color: #00d4ff; text-align: center;">لوحة إدارة التطبيق</h2>
+    <h2 style="color: #00d4ff;">⚙️ لوحة التحكم</h2>
     
-    <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 20px;">
-        <h3>إضافة قسم جديد (زر رئيسي)</h3>
-        <input type="text" id="section-name" placeholder="اسم القسم (مثلاً: الحافلات)" style="width: 90%; padding: 12px; border-radius: 10px; border: none; margin-bottom: 10px;">
-        <button onclick="addNewCategory()" style="width: 100%; padding: 15px; background: #00d4ff; border: none; border-radius: 10px; font-weight: bold; cursor: pointer;">إضافة الزر للقائمة</button>
+    <div style="margin-bottom: 20px;">
+        <input type="text" id="cat-name" placeholder="اسم القسم (مثلاً: الحافلات)" style="padding: 10px; border-radius: 8px; width: 70%;">
+        <button onclick="addCategory()" style="padding: 10px; background: #28a745; border: none; color: #fff; border-radius: 8px;">إضافة قسم</button>
+    </div>
+
+    <div style="border-top: 1px solid #444; padding-top: 20px;">
+        <h3>إضافة بيانات داخل القسم</h3>
+        <select id="select-cat" style="width: 100%; padding: 10px; margin-bottom: 10px;"></select>
+        <input type="text" id="item-title" placeholder="اسم العنصر (مثلاً: حافلة باتنة)" style="width: 100%; padding: 10px; margin-bottom: 5px;">
+        <input type="text" id="item-info" placeholder="التوقيت/الهاتف" style="width: 100%; padding: 10px; margin-bottom: 5px;">
+        <button onclick="addItem()" style="width: 100%; padding: 15px; background: #007bff; border: none; color: #fff; border-radius: 10px;">حفظ البيانات في هذا القسم</button>
     </div>
 </div>
 
 <script type="module">
     import { collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-    // ... (تأكد من وجود تعريفات initializeApp و auth و db من الكود السابق)
-
-    // 1. وظيفة التحقق من أنك المدير
-    auth.onAuthStateChanged((user) => {
-        if (user && user.email === "marikanmarikan320@gmail.com") {
-            document.getElementById('admin-panel').style.display = 'block';
-        }
-    });
-
-    // 2. وظيفة إضافة قسم جديد (زر) من الواجهة مباشرة إلى قاعدة البيانات
-    window.addNewCategory = async () => {
-        const name = document.getElementById('section-name').value;
-        if (name) {
-            try {
-                await addDoc(collection(db, "app_sections"), {
-                    title: name,
-                    createdAt: new Date()
-                });
-                alert("تمت إضافة الزر '" + name + "' بنجاح! سيظهر الآن للمستخدمين.");
-            } catch (e) {
-                alert("خطأ: " + e.message);
-            }
-        }
+    
+    // تعريفات Firebase (تأكد من وجودها في الكود)
+    
+    // إضافة قسم رئيسي
+    window.addCategory = async () => {
+        const name = document.getElementById('cat-name').value;
+        await addDoc(collection(db, "app_categories"), { name: name });
+        alert("تم إنشاء القسم!");
+        location.reload();
     };
+
+    // إضافة عنصر داخل القسم
+    window.addItem = async () => {
+        const cat = document.getElementById('select-cat').value;
+        const title = document.getElementById('item-title').value;
+        const info = document.getElementById('item-info').value;
+
+        await addDoc(collection(db, "app_data"), {
+            category: cat,
+            title: title,
+            info: info
+        });
+        alert("تمت الإضافة بنجاح!");
+    };
+
+    // جلب الأقسام تلقائياً للقائمة المنسدلة
+    async function loadCategories() {
+        const snapshot = await getDocs(collection(db, "app_categories"));
+        const select = document.getElementById('select-cat');
+        snapshot.forEach(doc => {
+            let opt = document.createElement('option');
+            opt.value = doc.data().name;
+            opt.innerHTML = doc.data().name;
+            select.appendChild(opt);
+        });
+    }
+    loadCategories();
 </script>
