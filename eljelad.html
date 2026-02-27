@@ -1,76 +1,39 @@
-<div id="auth-container">
-    <h2 id="status-title">تسجيل دخول المنظومة</h2>
-    <input type="email" id="email" placeholder="أدخل البريد الإلكتروني (الجندي)">
-    <button onclick="sendOTP()" id="send-btn">إرسال رمز التحقق</button>
-    
-    <div id="otp-section" style="display:none;">
-        <input type="text" id="otp-code" placeholder="أدخل الرمز المكون من 6 أرقام">
-        <button onclick="verifyOTP()">تأكيد العملية</button>
+<div class="splash-screen">
+    <div class="logo-box">
+        <div class="logo">📱</div>
+        <h1>خدمات [اسم بلدتك]</h1>
+        <p>مرحباً بك في بوابتك المحلية</p>
+        <div class="loader"></div>
     </div>
 </div>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
-  import { getAuth, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js";
-
-  // إعدادات Firebase الخاصة بك التي أرسلتها
-  const firebaseConfig = {
-    apiKey: "AIzaSyB9Ezo3W4NsVxMtIoYlCxrto4xITfnXXig",
-    authDomain: "elje-b6343.firebaseapp.com",
-    databaseURL: "https://elje-b6343-default-rtdb.firebaseio.com",
-    projectId: "elje-b6343",
-    storageBucket: "elje-b6343.firebasestorage.app",
-    messagingSenderId: "295465762171",
-    appId: "1:295465762171:web:6af4eea3818558fd0191de",
-    measurementId: "G-T7YCSLDDZF"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-
-  // وظيفة إرسال الرمز للجنود
-  window.sendOTP = function() {
-    const email = document.getElementById('email').value;
-    
-    // منع استخدام إيميل هاني دوحة وتخصيص الماركا الماريكان كقائد
-    if (email === "hanidouha595@gmail.com") {
-        alert("هذا الحساب لم يعد معتمداً كقائد. يرجى استخدام حساب الماركا الماريكان.");
-        return;
+<style>
+    .splash-screen {
+        background: linear-gradient(135deg, #007bff, #00d2ff);
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        text-align: center;
     }
-
-    const actionCodeSettings = {
-      url: window.location.href, // سيعود المستخدم لنفس الصفحة
-      handleCodeInApp: true,
-    };
-
-    sendSignInLinkToEmail(auth, email, actionCodeSettings)
-      .then(() => {
-        window.localStorage.setItem('emailForSignIn', email);
-        alert("تم إرسال رابط التحقق إلى إيميل الجندي. يرجى التحقق من البريد.");
-        document.getElementById('otp-section').style.display = 'block';
-      })
-      .catch((error) => {
-        console.error("خطأ:", error.message);
-      });
-  }
-
-  // وظيفة التأكيد عند الضغط على الرابط/الرمز
-  window.onload = function() {
-    if (isSignInWithEmailLink(auth, window.location.href)) {
-      let email = window.localStorage.getItem('emailForSignIn');
-      if (!email) {
-        email = window.prompt('يرجى إدخال إيميلك للتأكيد:');
-      }
-      signInWithEmailLink(auth, email, window.location.href)
-        .then((result) => {
-          window.localStorage.removeItem('emailForSignIn');
-          alert("تم تسجيل الدخول بنجاح! القائد: الماركا الماريكان");
-          // هنا يفتح الموقع للترسانة الحربية
-          window.location.href = "main_dashboard.html"; 
-        })
-        .catch((error) => {
-          alert("حدث خطأ في التحقق.");
-        });
+    .logo { font-size: 80px; margin-bottom: 20px; }
+    .loader {
+        border: 5px solid #f3f3f3;
+        border-top: 5px solid #ff4757;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
     }
-  }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+</style>
+
+<script>
+    // الانتقال لصفحة التسجيل بعد 3 ثوانٍ
+    setTimeout(() => {
+        alert("جارٍ الانتقال لصفحة التسجيل...");
+        // هنا سنضيف لاحقاً رابط صفحة تسجيل الدخول
+    }, 3000);
 </script>
