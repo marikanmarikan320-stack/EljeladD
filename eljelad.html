@@ -2,8 +2,9 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تطبيق مدينة منعة - One UI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>تطبيق مدينة منعة</title>
+    
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -23,56 +24,98 @@
         const db = getFirestore(app);
         const provider = new GoogleAuthProvider();
 
-        // منطق التنقل
+        // نظام التنقل
         window.showPage = (pageId) => {
-            document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-            document.getElementById(pageId).style.display = 'block';
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+        };
+
+        // تفعيل واجهة الترحيب لـ 5 ثوانٍ
+        window.onload = () => {
+            setTimeout(() => {
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        showPage('main-page');
+                        if (user.email === "marikanmarikan320@gmail.com") {
+                            document.getElementById('admin-toggle-btn').style.display = 'block';
+                        }
+                    } else {
+                        showPage('login-page');
+                    }
+                });
+            }, 5000);
         };
 
         window.loginWithGoogle = async () => {
-            try { await signInWithPopup(auth, provider); } catch (e) { alert(e.message); }
+            try { await signInWithPopup(auth, provider); } catch (e) { alert("خطأ: " + e.message); }
         };
-
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                showPage('main-page');
-                if (user.email === "marikanmarikan320@gmail.com") {
-                    document.getElementById('admin-btn').style.display = 'block';
-                }
-            }
-        });
     </script>
+
     <style>
-        body { margin: 0; background: #050505; color: #fff; font-family: 'Segoe UI', sans-serif; }
-        .page { display: none; padding: 20px; animation: fadeIn 0.5s; }
-        .card { background: rgba(255,255,255,0.08); backdrop-filter: blur(20px); border-radius: 40px; padding: 30px; text-align: center; }
-        .btn { width: 100%; padding: 18px; border-radius: 20px; border: none; background: #fff; color: #000; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .back-btn { background: none; color: #00d4ff; border: none; cursor: pointer; margin-bottom: 20px; font-size: 16px; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        :root { --main-blue: #007aff; --bg-dark: #000; --glass: rgba(255, 255, 255, 0.1); }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg-dark); color: #fff; font-family: 'Segoe UI', Roboto, sans-serif; overflow: hidden; }
+        
+        .page { position: fixed; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; transition: 0.5s; z-index: 10; }
+        .active { display: flex; }
+
+        /* 1. واجهة الترحيب (Splash) */
+        #splash-screen { background: radial-gradient(circle, #001f3f 0%, #000 100%); z-index: 100; }
+        .logo-big { width: 180px; height: 180px; border-radius: 50%; background: url('https://i.postimg.cc/QV1Ynfq8/FB-IMG-1772200963086.jpg') center/cover; border: 4px solid #fff; box-shadow: 0 0 50px var(--main-blue); animation: pulse 2s infinite; }
+        
+        /* 2. واجهة الدخول (Login) */
+        .login-card { width: 85%; max-width: 380px; padding: 40px 20px; background: var(--glass); backdrop-filter: blur(20px); border-radius: 40px; border: 1px solid rgba(255,255,255,0.1); text-align: center; }
+        .btn-google { width: 100%; padding: 18px; border-radius: 20px; border: none; background: #fff; color: #000; font-weight: bold; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
+
+        /* 3. الواجهة الرئيسية (Main) */
+        .app-header { width: 100%; padding: 40px 20px; text-align: right; }
+        .main-menu { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 20px; width: 90%; }
+        .menu-item { background: var(--glass); padding: 25px; border-radius: 25px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
+
+        /* زر الإدارة المخفي */
+        #admin-toggle-btn { display: none; position: fixed; bottom: 30px; left: 30px; background: var(--main-blue); width: 60px; height: 60px; border-radius: 50%; border: none; color: #fff; font-size: 24px; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
     </style>
 </head>
 <body>
 
-    <div id="login-page" class="page" style="display:block;">
-        <div class="card" style="margin-top: 100px;">
-            <div style="width:100px; height:100px; background: url('https://i.postimg.cc/QV1Ynfq8/FB-IMG-1772200963086.jpg') center/cover; border-radius:30px; margin:0 auto 20px;"></div>
-            <h1>تطبيق مدينة منعة</h1>
-            <button class="btn" onclick="loginWithGoogle()">تسجيل الدخول بـ Google</button>
+    <div id="splash-screen" class="page active">
+        <div class="logo-big"></div>
+        <h1 style="margin-top: 30px; color: #ffcc00;">تطبيق مدينة منعة</h1>
+        <p style="color: #ccc; padding: 0 40px; text-align: center;">جسر رقمي لخدمة أهلنا ببلدة منعة - باتنة</p>
+    </div>
+
+    <div id="login-page" class="page">
+        <div class="login-card">
+            <div class="logo-big" style="width: 100px; height: 100px; margin-bottom: 20px;"></div>
+            <h2>دخول المنظومة</h2>
+            <button class="btn-google" onclick="loginWithGoogle()">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" width="20">
+                التسجيل عبر Google
+            </button>
         </div>
     </div>
 
-    <div id="main-page" class="page">
-        <div class="card">
-            <h2>مرحباً بك في المنصة</h2>
-            <button id="admin-btn" class="btn" style="background:#ffcc00; display:none;" onclick="showPage('admin-page')">⚙️ لوحة تحكم المدير</button>
+    <div id="main-page" class="page" style="justify-content: flex-start;">
+        <div class="app-header">
+            <h1 style="font-size: 32px;">مرحباً بك</h1>
+            <p style="color: #aaa;">اختر الخدمة التي تحتاجها</p>
         </div>
+        <div class="main-menu">
+            <div class="menu-item">🚌 الحافلات</div>
+            <div class="menu-item">🩺 أطباء</div>
+            <div class="menu-item">📢 أخبار</div>
+            <div class="menu-item">📞 اتصل بنا</div>
+        </div>
+        <button id="admin-toggle-btn" onclick="showPage('admin-page')">⚙️</button>
     </div>
 
     <div id="admin-page" class="page">
-        <button class="back-btn" onclick="showPage('main-page')">← عودة</button>
-        <div class="card">
-            <h2>لوحة الإدارة</h2>
-            <p>إدارة الحافلات، الخدمات، والمستخدمين.</p>
+        <button onclick="showPage('main-page')" style="position: absolute; top: 30px; right: 20px; background: none; border: none; color: var(--main-blue); font-size: 18px;">← عودة</button>
+        <div class="login-card" style="background: rgba(0, 122, 255, 0.1);">
+            <h2 style="color: var(--main-blue);">لوحة الإدارة</h2>
+            <p>هذه الصفحة تراها أنت فقط يا هاني.</p>
+            <button class="btn-google" style="background: #28a745; color: #fff;">إضافة قسم جديد</button>
         </div>
     </div>
 
