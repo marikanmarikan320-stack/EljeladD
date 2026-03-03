@@ -9,11 +9,23 @@ h2 {margin-top:20px;}
 .table {margin:auto;border-collapse:collapse;}
 .table th, .table td {padding:8px 12px;border:1px solid gold;}
 button {padding:10px;margin:5px;background:gold;color:black;border:none;cursor:pointer;}
+.signal-شراء {color:green;font-weight:bold;}
+.signal-بيع {color:red;font-weight:bold;}
+.signal-لا {color:white;font-weight:bold;}
 </style>
 </head>
 <body>
 <h2>لوحة تحليل الذهب اللحظي</h2>
 <button onclick="fetchData()">تحديث التحليل</button>
+<select id="interval_select">
+<option value="1m">دقيقة</option>
+<option value="5m">5 دقائق</option>
+<option value="15m">15 دقيقة</option>
+<option value="1h">ساعة</option>
+<option value="4h">4 ساعات</option>
+<option value="1d">يومي</option>
+</select>
+
 <table class="table" id="gold_table">
 <thead>
 <tr>
@@ -25,14 +37,18 @@ button {padding:10px;margin:5px;background:gold;color:black;border:none;cursor:p
 
 <script>
 async function fetchData(){
+    const interval = document.getElementById("interval_select").value;
     const tbody = document.querySelector("#gold_table tbody");
     tbody.innerHTML = "";
-    const response = await fetch("http://127.0.0.1:5000/data");
+    const response = await fetch(`http://127.0.0.1:5000/data?interval=${interval}`);
     const data = await response.json();
     data.forEach(item=>{
+        let cls = "signal-لا";
+        if(item.signal === "شراء") cls = "signal-شراء";
+        if(item.signal === "بيع") cls = "signal-بيع";
         const row = `<tr>
             <td>${item.interval}</td>
-            <td>${item.signal}</td>
+            <td class="${cls}">${item.signal}</td>
             <td>${item.price}</td>
             <td>${item.stop}</td>
             <td>${item.take}</td>
