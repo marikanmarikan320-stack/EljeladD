@@ -3,50 +3,43 @@
 <head>
 <meta charset="UTF-8">
 <title>لوحة تحليل الذهب</title>
-<script src="https://s3.tradingview.com/tv.js"></script>
 <style>
-body {
-    background:#111;
-    color:white;
-    font-family:Arial;
-    text-align:center;
-}
-button {
-    padding:10px;
-    margin:5px;
-    background:gold;
-    border:none;
-    cursor:pointer;
-}
+body {background:#111;color:white;font-family:Arial;text-align:center;}
+h2 {margin-top:20px;}
+.table {margin:auto;border-collapse:collapse;}
+.table th, .table td {padding:8px 12px;border:1px solid gold;}
+button {padding:10px;margin:5px;background:gold;color:black;border:none;cursor:pointer;}
 </style>
 </head>
 <body>
-
 <h2>لوحة تحليل الذهب اللحظي</h2>
-
-<div id="tradingview_chart"></div>
+<button onclick="fetchData()">تحديث التحليل</button>
+<table class="table" id="gold_table">
+<thead>
+<tr>
+<th>الفريم</th><th>الإشارة</th><th>السعر</th><th>ستوب لوس</th><th>هدف</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
 
 <script>
-new TradingView.widget({
-  "width": "100%",
-  "height": 600,
-  "symbol": "OANDA:XAUUSD",
-  "interval": "5",
-  "timezone": "Etc/UTC",
-  "theme": "dark",
-  "style": "1",
-  "locale": "ar",
-  "toolbar_bg": "#111",
-  "enable_publishing": false,
-  "hide_top_toolbar": false,
-  "studies": [
-    "Moving Average Exponential@tv-basicstudies",
-    "RSI@tv-basicstudies",
-    "MACD@tv-basicstudies"
-  ],
-  "container_id": "tradingview_chart"
-});
+async function fetchData(){
+    const tbody = document.querySelector("#gold_table tbody");
+    tbody.innerHTML = "";
+    const response = await fetch("http://127.0.0.1:5000/data");
+    const data = await response.json();
+    data.forEach(item=>{
+        const row = `<tr>
+            <td>${item.interval}</td>
+            <td>${item.signal}</td>
+            <td>${item.price}</td>
+            <td>${item.stop}</td>
+            <td>${item.take}</td>
+        </tr>`;
+        tbody.innerHTML += row;
+    });
+}
 </script>
-
 </body>
 </html>
